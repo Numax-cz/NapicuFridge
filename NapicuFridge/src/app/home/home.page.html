@@ -2,21 +2,10 @@
 <ion-content padding>
   <ion-list padding>
     <ion-list-header>Paired Devices:</ion-list-header>
-    <ion-item *ngFor="let device of pairedDevices">
-      {{device.name}}
+    <ion-item *ngFor="let device of devicess">
+      {{device.name}} - {{device.id}} - {{device.rssi}}
     </ion-item>
-    <button ion-button block (click)="startScanning()">scan</button>
-  </ion-list>
-  <ion-list padding>
-    <ion-list-header>Availlable Devices:</ion-list-header>
-    <ion-item *ngFor='let device of unpairedDevices'>
-      <span (click)="selectDevice(device.address)">
-        {{device.name}}
-      </span>
-    </ion-item>
-    <ion-item text-center>
-      <ion-spinner name="crescent" *ngIf="gettingDevices"></ion-spinner>
-    </ion-item>
-    <button ion-button block (click)="disconnect()">Disconnect</button>
+    {{error}}
+    <button ion-button block (click)="scan()">scan</button>
   </ion-list>
 </ion-content>
