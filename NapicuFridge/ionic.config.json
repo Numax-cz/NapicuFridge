@@ -1,0 +1,7 @@
+{
+  "name": "NapicuFridge",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
