@@ -28,6 +28,7 @@
     "@capacitor/status-bar": "5.0.2",
     "@ionic-native/bluetooth-serial": "^5.36.0",
     "@ionic/angular": "^7.0.9",
+    "bulma": "^0.9.4",
     "cordova-plugin-android-permissions": "^1.1.5",
     "cordova-plugin-ble-central": "^1.7.0",
     "cordova-plugin-bluetooth-serial": "^0.4.7",
