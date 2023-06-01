@@ -8,6 +8,7 @@
 #include <BLE2902.h>
 
 
+
 // definice propojovacích pinů
 // pro analogový vstup a LED diodu
 #define readPin 32
@@ -73,12 +74,17 @@ void setup() {
   // nastavení LED diody jako výstup
   pinMode(LED, OUTPUT);
   // inicializace Bluetooth s nastavením jména zařízení
-  BLEDevice::init("ESP32 BLE");
+  BLEDevice::init("NapicuFridge");
   // vytvoření BLE serveru
   BLEServer *pServer = BLEDevice::createServer();
+
   pServer->setCallbacks(new MyServerCallbacks());
   // vytvoření BLE služby
   BLEService *pService = pServer->createService(SERVICE_UUID);
+
+
+  
+
   // vytvoření BLE komunikačního kanálu pro odesílání (TX)
   pCharacteristic = pService->createCharacteristic(
                       CHARACTERISTIC_UUID_TX,
@@ -90,11 +96,20 @@ void setup() {
                                          CHARACTERISTIC_UUID_RX,
                                          BLECharacteristic::PROPERTY_WRITE
                                        );
+                                       
   pCharacteristic->setCallbacks(new MyCallbacks());
   // zahájení BLE služby
   pService->start();
+  
   // zapnutí viditelnosti BLE
-  pServer->getAdvertising()->start();
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setMinPreferred(0x06); 
+  pAdvertising->setMinPreferred(0x12);
+  BLEDevice::startAdvertising();
+
+
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 }
 void loop() {
