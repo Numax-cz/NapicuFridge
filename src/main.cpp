@@ -22,7 +22,7 @@ std::string prijataZprava;
 // definice unikátních ID pro různé služby,
 // pro vlastní UUID využijte generátor
 // https://www.uuidgenerator.net/
-#define SERVICE_UUID           "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
+#define SERVICE_UUID           "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" //TODO change
 #define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
 #define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 
@@ -100,7 +100,7 @@ void setup() {
   pCharacteristic->setCallbacks(new MyCallbacks());
   // zahájení BLE služby
   pService->start();
-  
+
   // zapnutí viditelnosti BLE
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
