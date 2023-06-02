@@ -7,7 +7,6 @@ interface data {
   id: string,
   advertising: ArrayBuffer,
   rssi: number,
-
 }
 
 
@@ -18,26 +17,16 @@ interface data {
 })
 export class HomePage {
 
-  public devicess: data[] = [
-    // {
-    //   name: "NapicuFridge",
-    //   id: "fjf",
-    //   rssi: 32,
-    //   advertising: new ArrayBuffer(12)
-    // },
-    // {
-    //   name: "NapicuFridge2",
-    //   id: "fjf",
-    //   rssi: 32,
-    //   advertising: new ArrayBuffer(12)
-    // }
-  ];
+  public devices: data[] = [];
 
   public scanning: boolean = false;
 
-  public error: any = "";
 
   constructor() {
+  }
+
+  public auto_connect(): void {
+
   }
 
   public scan(): void {
@@ -48,7 +37,7 @@ export class HomePage {
     BLE.startScan(["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]).subscribe(
       {
         next: (data: data) => {
-          this.devicess.push(data);
+          this.devices.push(data);
         },
         error: (data) => {
           console.log(data);

@@ -6,13 +6,13 @@
 
   <div class="section">
 
-    <ng-container *ngIf="devicess.length">
-      <div class="box DeviceItem" *ngFor="let device of devicess; let index = index" (click)="on_click_device(index)">
+    <ng-container *ngIf="devices.length">
+      <div class="box DeviceItem" *ngFor="let device of devices; let index = index" (click)="on_click_device(index)">
         {{device.name}}
       </div>
     </ng-container>
 
-    <ng-container *ngIf="!devicess.length && scanning">
+    <ng-container *ngIf="!devices.length && scanning">
       <progress class="progress is-medium is-dark" max="100">45%</progress>
     </ng-container>
 
