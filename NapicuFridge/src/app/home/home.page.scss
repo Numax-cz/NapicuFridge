@@ -1,48 +1,34 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-.device-container{
-  width: 80%;
-  margin: auto;
-  background-color: #3a7be0;
-  font-size: 2rem;
-}
-
 .MainText{
   padding: 0 !important;
-  font-size: 2rem;
 }
 
 .SearchButton{
-  font-size: 1.5rem;
+  font-size: 1.05rem;
   font-weight: bold;
+  border-radius: 19px;
+  outline: none !important;
+}
+
+.DeviceItem {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
 }
 
 .DeviceItem:active {
   background-color: #e1e1e1;
-
 }
+
+.DeviceIcon {
+  border-radius: 50%;
+  padding: 7px;
+  height: 15px;
+  width: 15px;
+  margin-right: 10px;
+  background: var(--ion-color-primary);
+  color: #fff;
+}
+
+
+
+

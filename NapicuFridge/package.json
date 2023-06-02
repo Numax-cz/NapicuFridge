@@ -6,7 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "sync": "ionic cap sync android"
+    "sync": "ionic cap sync android",
+    "open": "ionic cap open android"
   },
   "private": true,
   "dependencies": {
@@ -30,9 +31,10 @@
     "@ionic/angular": "^7.0.9",
     "bulma": "^0.9.4",
     "cordova-plugin-android-permissions": "^1.1.5",
+    "cordova-plugin-app-version": "^0.1.14",
     "cordova-plugin-ble-central": "^1.7.0",
     "cordova-plugin-bluetooth-serial": "^0.4.7",
-    "ionicons": "^7.1.1",
+    "ionicons": "^7.1.2",
     "rxjs": "~7.8.1",
     "tslib": "^2.5.2",
     "zone.js": "~0.13.0"

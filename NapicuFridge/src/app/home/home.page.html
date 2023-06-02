@@ -1,13 +1,14 @@
 
 
 <div class="section">
-  <div class="MainText has-text-weight-bold p-4">Spárujte nové zařízení</div>
-  <p class="has-text-centered">Pokud máte zařízení NapicuFridge, můžete ho spárovat zde.</p>
+  <div class="MainText has-text-weight-bold has-text-centered p-4 is-size-3 has-text-black">Spárujte nové zařízení</div>
+  <p class="has-text-centered is-size-7">Pokud máte zařízení NapicuFridge, můžete ho spárovat zde.</p>
 
-  <div class="section">
+  <div class="section pl-0 pr-0">
 
     <ng-container *ngIf="devices.length">
       <div class="box DeviceItem" *ngFor="let device of devices; let index = index" (click)="on_click_device(index)">
+        <ion-icon icon="/assets/component.svg" class="DeviceIcon icon"></ion-icon>
         {{device.name}}
       </div>
     </ng-container>
@@ -21,10 +22,11 @@
 
 
 
-  <div class="section has-text-centered">
-    <button ion-button block class="button SearchButton" [ngClass]="{'is-danger': scanning, 'is-dark': !scanning}" (click)="scanning ? stop_scan() : scan()">
+  <div class="section has-text-centered pb-0">
+    <a ion-button block class="button SearchButton mb-5" [ngClass]="{'is-danger': scanning, 'is-dark': !scanning}" (click)="scanning ? stop_scan() : scan()">
       {{!scanning ? 'Vyhledat zařízení' : 'Zastavit'}}
-    </button>
+    </a>
+    <div class="pb-2" style="color: #00000047;">{{get_app_version()}}</div>
   </div>
 
 

@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 
 import {BLE} from "@awesome-cordova-plugins/ble";
+import {AppVersion} from "@awesome-cordova-plugins/app-version";
+import {AppComponent} from "../app.component";
 
 interface data {
   name: string,
@@ -17,7 +19,20 @@ interface data {
 })
 export class HomePage {
 
-  public devices: data[] = [];
+  public devices: data[] = [
+    {
+      name: "NapicuFridge",
+      id: "fjf",
+      rssi: 32,
+      advertising: new ArrayBuffer(12)
+    },
+    {
+      name: "NapicuFridge2",
+      id: "fjf",
+      rssi: 32,
+      advertising: new ArrayBuffer(12)
+    }
+  ];
 
   public scanning: boolean = false;
 
@@ -58,7 +73,10 @@ export class HomePage {
 
   public on_click_device(device_id: number): void {
     this.stop_scan();
+  }
 
+  public get_app_version(): string {
+    return `${AppComponent.application_name} ${AppComponent.application_version_code}`;
   }
 
 }
