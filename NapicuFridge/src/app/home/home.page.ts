@@ -3,6 +3,7 @@ import {Component} from '@angular/core';
 import {BLE} from "@awesome-cordova-plugins/ble";
 import {AppVersion} from "@awesome-cordova-plugins/app-version";
 import {AppComponent} from "../app.component";
+import {environment} from "../../environments/environment";
 
 interface data {
   name: string,
@@ -19,31 +20,37 @@ interface data {
 })
 export class HomePage {
 
-  public devices: data[] = [
+  //Deklarace proměnné pod podmínkout
+  //Pokud je aplikace v režimu "vývoje", nastaví se vyplněné pole.
+  //Pokud tak není, pole je prázdné
+  public devices: data[] = environment.production? [] : [
     {
       name: "NapicuFridge",
-      id: "fjf",
+      id: "test",
       rssi: 32,
-      advertising: new ArrayBuffer(12)
+      advertising: new ArrayBuffer(0)
     },
     {
       name: "NapicuFridge2",
-      id: "fjf",
+      id: "test",
       rssi: 32,
-      advertising: new ArrayBuffer(12)
+      advertising: new ArrayBuffer(0)
     }
   ];
 
+  //Proměnná, která uchovává stav skenování
   public scanning: boolean = false;
 
 
   constructor() {
   }
 
+  //Funkce pro automatické připojení k poslednímu spárovanému zařízení
   public auto_connect(): void {
 
   }
 
+  //Funkce pro zahájení skenování NapicuFridge zařízení
   public scan(): void {
 
     this.scanning = true;
@@ -66,15 +73,22 @@ export class HomePage {
 
   }
 
+  //Funkce pro stopnutí skenování
   public stop_scan(): void {
     BLE.stopScan();
     this.scanning = false;
   }
 
+  //Funkce, která se spustí po kliknutí na vyhledané zařízení
   public on_click_device(device_id: number): void {
     this.stop_scan();
+
+
+
+
   }
 
+  //Funkce, která vrátí verzi aplikace v požadovaném formátu
   public get_app_version(): string {
     return `${AppComponent.application_name} ${AppComponent.application_version_code}`;
   }
