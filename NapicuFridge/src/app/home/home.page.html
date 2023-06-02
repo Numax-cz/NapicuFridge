@@ -22,8 +22,9 @@
 
 
   <div class="section has-text-centered">
-
-    <button ion-button block class="button is-dark SearchButton" (click)="scan()" [ngStyle]="{'Disabled': scanning}" [disabled]="scanning">Vyhledat zařízení</button>
+    <button ion-button block class="button SearchButton" [ngClass]="{'is-danger': scanning, 'is-dark': !scanning}" (click)="scanning ? stop_scan() : scan()">
+      {{!scanning ? 'Vyhledat zařízení' : 'Zastavit'}}
+    </button>
   </div>
 
 

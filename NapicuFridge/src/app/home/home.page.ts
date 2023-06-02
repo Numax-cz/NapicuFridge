@@ -62,9 +62,13 @@ export class HomePage {
 
   }
 
-  public on_click_device(device_id: number): void {
+  public stop_scan(): void {
     BLE.stopScan();
+    this.scanning = false;
+  }
 
+  public on_click_device(device_id: number): void {
+    this.stop_scan();
 
   }
 
