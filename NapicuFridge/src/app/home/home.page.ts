@@ -1,11 +1,11 @@
 import {Component, NgZone} from '@angular/core';
 
 import {BLE} from "@awesome-cordova-plugins/ble";
-import {AppVersion} from "@awesome-cordova-plugins/app-version";
 import {AppComponent} from "../app.component";
 import {environment} from "../../environments/environment";
 import {BluetoothScanData} from "../interface/Bluetooth";
 import {Router} from "@angular/router";
+import {Configuration} from "../config/configuration";
 
 
 @Component({
@@ -58,7 +58,7 @@ export class HomePage {
     //Nastavit stav skenování na log1
     this.scanning = true;
     //Zahájení skenování bluetooth zařízení s požadovaným UUID
-    BLE.startScan(["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]).subscribe(
+    BLE.startScan([Configuration.SERVICE_UUID]).subscribe(
       {
         next: (data: BluetoothScanData) => {
           //Provést následující po nalezení nového zařízení

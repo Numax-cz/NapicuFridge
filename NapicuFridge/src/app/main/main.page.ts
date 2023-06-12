@@ -1,6 +1,7 @@
 import {Component, NgZone} from '@angular/core';
 import {BLE} from "@awesome-cordova-plugins/ble";
 import {AppComponent} from "../app.component";
+import {Configuration} from "../config/configuration";
 
 
 interface data {
@@ -22,7 +23,7 @@ export class MainPage  {
     //Kontrola, zda je připojené zařízení
     if(AppComponent.connected_device) {
       //Získání aktuálních informací o teplotě
-      BLE.startNotification(AppComponent.connected_device, "6E400001-B5A3-F393-E0A9-E50E24DCCA9E", "6E400003-B5A3-F393-E0A9-E50E24DCCA9E").subscribe(
+      BLE.startNotification(AppComponent.connected_device, Configuration.SERVICE_UUID, Configuration.CHARACTERISTIC_UUID_TX).subscribe(
         {
           next: (buffer) => {
             //Vytvoření DataView proměnné

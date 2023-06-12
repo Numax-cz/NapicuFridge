@@ -34,6 +34,7 @@
     "cordova-plugin-app-version": "^0.1.14",
     "cordova-plugin-ble-central": "^1.7.0",
     "cordova-plugin-bluetooth-serial": "^0.4.7",
+    "cordova-plugin-screen-orientation": "^3.0.3",
     "ionicons": "^7.1.2",
     "rxjs": "~7.8.1",
     "tslib": "^2.5.3",

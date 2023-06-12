@@ -35,6 +35,9 @@ export class AppComponent {
         AppVersion.getAppName().then((value: string) => AppComponent.application_name = value);
         //Získání verze aplikace
         AppVersion.getVersionNumber().then((value: string) => AppComponent.application_version_code = value);
+
+        //Zamknutí orientace aplikace (na výšku)
+        screen.orientation.lock("portrait");
       }
     });
   }
