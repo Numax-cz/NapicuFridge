@@ -10,11 +10,17 @@ import {AppVersion} from "@awesome-cordova-plugins/app-version";
 })
 export class AppComponent {
 
+  //Statická proměnná pro local storage nastavení aplikace
+  public static application_settings: Storage = window.localStorage;
+
   //Statická proměnná pro uložení jména aplikace
   public static application_name: string | null = null;
 
   //Statická proměnná pro uložení verze aplikace
   public static application_version_code: string | null = null;
+
+  //Statická proměnná pro uložení ID připojeného zařízení
+  public static connected_device: string | null = null;
 
   constructor(private platform: Platform) {
     platform.ready().then(() => {

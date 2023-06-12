@@ -6,14 +6,15 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 #include <EEPROM.h>
-
+#include <DHT.h>
+#include <sstream>
 // připojení potřebných lokálních knihoven z /src/include
 #include <include/CallBack.h>
 #include <include/main.h>
 
 
 bool zarizeniPripojeno = false;
-std::string prijataZprava;
+
 
 // inicializace modulu z knihovny
 BLECharacteristic *pCharacteristic;
@@ -21,8 +22,10 @@ BLECharacteristic *pCharacteristic;
 
 BLEServer* pServer = NULL;
 
+#define DHTPIN 17
+#define DHTTYPE DHT11  
 
-
+DHT dht(DHTPIN, DHTTYPE);
 
 void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t* param) {
   switch(event){
@@ -43,6 +46,7 @@ void setup() {
   // nastavení LED diody jako výstup
   pinMode(CONNECTION_LED, OUTPUT);
   pinMode(TEST_LED, OUTPUT);
+
 
   // inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init("NapicuFridge");
@@ -67,7 +71,9 @@ void setup() {
   // vytvoření BLE komunikačního kanálu pro odesílání (TX)
   pCharacteristic = pService->createCharacteristic(
                       CHARACTERISTIC_UUID_TX,
-                      BLECharacteristic::PROPERTY_NOTIFY
+                      BLECharacteristic::PROPERTY_INDICATE |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_READ
                     );
 
   pCharacteristic->addDescriptor(new BLE2902());
@@ -99,6 +105,7 @@ void setup() {
  
   BLEDevice::startAdvertising();
 
+  dht.begin();
 
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 }
@@ -106,27 +113,25 @@ void loop() {
   // pokud je zařízení připojeno k ESP32
   // začneme s odesíláním dat
   if (zarizeniPripojeno == true) {
-    // načtení dat z analogového pinu s dělením pro
-    // vytvoření čísla s desetinnou hodnotou
-    float data = analogRead(readPin) / 3.456;
-    // vytvoření zprávy z textu a naměřených dat
-    // znak \n slouží k odřádkování
-    String zprava = "Analog: ";
-    zprava += data;
-    zprava += "\n";
 
 
-    // vytvoření dočasné proměnné, do které
-    // je převedna zpráva na znaky
-    char zpravaChar[zprava.length() + 1];
-    zprava.toCharArray(zpravaChar, zprava.length() + 1);
-    // přepsání zprávy do BLE služby
-    pCharacteristic->setValue(zpravaChar);
+    //Získání teploty
+    float temp = dht.readTemperature();
+
+
+    //Převedení floatu na string
+    std::ostringstream ss;
+    ss << temp;
+    pCharacteristic->setValue(ss.str());
+ 
+
+    //pCharacteristic->setValue(zpravaChar);
     // odeslání zprávy skrze BLE do připojeného zařízení
     pCharacteristic->notify();
+
     // vytištění odeslané zprávy po sériové lince
     Serial.print("*** Odeslana zprava: ");
-    Serial.print(zprava);
+    Serial.print(temp);
   }
   // pauza před novým během smyčky
   delay(1000);

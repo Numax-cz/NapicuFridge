@@ -1,5 +1,3 @@
-
-
 <div class="section">
   <div class="MainText has-text-weight-bold has-text-centered p-4 is-size-3 has-text-black">Spárujte nové zařízení</div>
   <p class="has-text-centered is-size-7">Pokud máte zařízení NapicuFridge, můžete ho spárovat zde.</p>
@@ -13,7 +11,7 @@
       </div>
     </ng-container>
 
-    <ng-container *ngIf="!devices.length && scanning">
+    <ng-container *ngIf="scanning">
       <progress class="progress is-medium is-dark" max="100">45%</progress>
     </ng-container>
 
@@ -22,11 +20,12 @@
 
 
 
-  <div class="section has-text-centered pb-0">
-    <a ion-button block class="button SearchButton mb-5" [ngClass]="{'is-danger': scanning, 'is-dark': !scanning}" (click)="scanning ? stop_scan() : scan()">
-      {{!scanning ? 'Vyhledat zařízení' : 'Zastavit'}}
-    </a>
-    <div class="pb-2" style="color: #00000047;">{{get_app_version()}}</div>
-  </div>
+<div class="section has-text-centered pb-0">
+  <a ion-button block class="button SearchButton mb-5" [ngClass]="{'is-danger': scanning, 'is-dark': !scanning}" (click)="scanning ? stop_scan() : scan()">
+    {{!scanning ? 'Vyhledat zařízení' : 'Zastavit'}}
+  </a>
+  <div class="pb-2" style="color: #00000047;">{{get_app_version()}}</div>
+</div>
+
 
 

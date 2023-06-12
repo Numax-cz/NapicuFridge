@@ -2,7 +2,7 @@
 #pragma once
 
 // připojení potřebných knihoven
-#include <include/main.h>
+#include "main.h"
 
 #include <BLEDevice.h>
 #include <BLEServer.h>

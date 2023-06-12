@@ -17,6 +17,3 @@
 
 // proměnná pro kontrolu připojených zařízení
 extern bool zarizeniPripojeno;
-
-// proměnná pro ukládání přijaté zprávy
-extern std::string prijataZprava;

@@ -17,26 +17,23 @@ void ServerCallBack::onDisconnect(BLEServer* pServer) {
 void CharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     // při příjmu zprávy proveď následující
 
-    // načti přijatou zprávu do proměnné
-    prijataZprava = pCharacteristic->getValue();
-    // pokud není zpráva prázdná, vypiš její obsah
-    // po znacích po sériové lince
-    if (prijataZprava.length() > 0) {
-        Serial.print("Prijata zprava: ");
-        for (int i = 0; i < prijataZprava.length(); i++) {
-            Serial.print(prijataZprava[i]);
-        }
-        Serial.println();
-        //kontrola přijaté zprávy
-        //pokud obsahuje znak A, rozsviť LED diodu
-        if (prijataZprava.find("A") != -1) {
+    
+    // proměnná pro ukládání přijaté zprávy
+    uint8_t prijataZprava = *pCharacteristic->getData();
+
+    Serial.print("Prijata zprava: ");
+    Serial.print(prijataZprava);
+    Serial.println();
+
+    //kontrola přijaté zprávy
+    //pokud obsahuje znak 1, rozsviť LED diodu
+    if (prijataZprava == 1) {
         Serial.println("Zapnutí LED!");
         digitalWrite(TEST_LED, HIGH);
-        }
-        // pokud obsahuje znak B, zhasni LED diodu
-        else if (prijataZprava.find("B") != -1) {
+    }
+    // pokud obsahuje znak 0, zhasni LED diodu
+    else if (prijataZprava == 0) {
         Serial.println("Vypnutí LED!");
         digitalWrite(TEST_LED, LOW);
-        }
     }
 };
