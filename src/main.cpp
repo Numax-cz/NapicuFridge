@@ -11,21 +11,18 @@
 // připojení potřebných lokálních knihoven z /src/include
 #include <include/CallBack.h>
 #include <include/main.h>
-
+#include <include/fridgeTempDHT.h>
 
 bool zarizeniPripojeno = false;
 
 
 // inicializace modulu z knihovny
-BLECharacteristic *pCharacteristic;
-
 
 BLEServer* pServer = NULL;
 
-#define DHTPIN 17
-#define DHTTYPE DHT11  
+FridgeTempDHT* insideTempDHT = NULL;
 
-DHT dht(DHTPIN, DHTTYPE);
+
 
 void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t* param) {
   switch(event){
@@ -58,8 +55,7 @@ void setup() {
   // vytvoření BLE serveru
   pServer = BLEDevice::createServer();
   //pServer->getAdvertising()->setScanFilter(false, true);
-
-
+  
 
 
   pServer->setCallbacks(new ServerCallBack());
@@ -68,15 +64,12 @@ void setup() {
 
 
 
-  // vytvoření BLE komunikačního kanálu pro odesílání (TX)
-  pCharacteristic = pService->createCharacteristic(
-                      CHARACTERISTIC_UUID_TX,
-                      BLECharacteristic::PROPERTY_INDICATE |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_READ
-                    );
+  // vytvoření teploměru pro vnitřní zaznamenávání teploty
+  insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_UUID_TX, pService);
+  
+  
 
-  pCharacteristic->addDescriptor(new BLE2902());
+  
   // vytvoření BLE komunikačního kanálu pro příjem (RX)
   BLECharacteristic *pCharacteristic = pService->createCharacteristic(
                                          CHARACTERISTIC_UUID_RX,
@@ -105,7 +98,7 @@ void setup() {
  
   BLEDevice::startAdvertising();
 
-  dht.begin();
+  insideTempDHT->begin();
 
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 }
@@ -115,23 +108,11 @@ void loop() {
   if (zarizeniPripojeno == true) {
 
 
-    //Získání teploty
-    float temp = dht.readTemperature();
-
-
-    //Převedení floatu na string
-    std::ostringstream ss;
-    ss << temp;
-    pCharacteristic->setValue(ss.str());
- 
-
-    //pCharacteristic->setValue(zpravaChar);
-    // odeslání zprávy skrze BLE do připojeného zařízení
-    pCharacteristic->notify();
+    insideTempDHT->sendTemperature();
 
     // vytištění odeslané zprávy po sériové lince
     Serial.print("*** Odeslana zprava: ");
-    Serial.print(temp);
+    //Serial.print(temp);
   }
   // pauza před novým během smyčky
   delay(1000);

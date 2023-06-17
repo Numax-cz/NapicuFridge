@@ -7,6 +7,10 @@
 #define CONNECTION_LED 19
 #define TEST_LED 18
 
+// definice propojovacích pinů veškerých teploměrů 
+#define DHT_TYPE DHT11  
+#define DHT_INSIDE 17 
+
 // definice unikátních ID pro různé služby,
 // pro vlastní UUID využijte generátor
 // https://www.uuidgenerator.net/
