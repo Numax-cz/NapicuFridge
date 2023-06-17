@@ -25,11 +25,24 @@ FridgeTempDHT* insideTempDHT = NULL;
 
 
 void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t* param) {
-  switch(event){
-      case ESP_GAP_BLE_AUTH_CMPL_EVT:{
-        Serial.print("connected");
-        BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
-        BLEDevice::whiteListAdd(address);
+  switch(event) {
+      // Proveď následující po ověření zařízení
+      case ESP_GAP_BLE_AUTH_CMPL_EVT: {
+        if(param->ble_security.auth_cmpl.success) {
+          // Vypsání zprávy do konzole
+          Serial.print("connected");
+          // Získání adresy spárovaného zařízení
+          BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
+
+          // Vymazání white listu
+          // esp_ble_gap_clear_whitelist();
+
+          // Přidání adresy do white listu
+          BLEDevice::whiteListAdd(address);
+        } else {
+          // Odpojení zařízení v případě neúspěšného ověření
+          esp_ble_gap_disconnect(param->ble_security.auth_cmpl.bd_addr);
+        }
         break;
     }   
   }
