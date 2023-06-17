@@ -45,12 +45,15 @@ void setup() {
   pinMode(TEST_LED, OUTPUT);
 
 
+  
+
   // inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init("NapicuFridge");
-  BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT);
+  // BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT);
+  BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT_NO_MITM);
 
   BLEDevice::setCustomGapHandler(my_gap_event_handler);
-    
+
 
   // vytvoření BLE serveru
   pServer = BLEDevice::createServer();
@@ -81,10 +84,11 @@ void setup() {
   pService->start();
 
 
-  BLESecurity *pSecurity = new BLESecurity();
-  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
-  pSecurity->setCapability(ESP_IO_CAP_NONE);
-  pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+  // BLESecurity *pSecurity = new BLESecurity();
+  // pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
+  // pSecurity->setCapability(ESP_IO_CAP_NONE);
+  // pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+
 
 
 
@@ -111,7 +115,6 @@ void loop() {
     insideTempDHT->sendTemperature();
 
     // vytištění odeslané zprávy po sériové lince
-    Serial.print("*** Odeslana zprava: ");
     //Serial.print(temp);
   }
   // pauza před novým během smyčky

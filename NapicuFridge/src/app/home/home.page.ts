@@ -57,6 +57,8 @@ export class HomePage {
 
     //Nastavit stav skenování na log1
     this.scanning = true;
+
+    
     //Zahájení skenování bluetooth zařízení s požadovaným UUID
     BLE.startScan([Configuration.SERVICE_UUID]).subscribe(
       {

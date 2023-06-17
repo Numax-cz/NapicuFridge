@@ -10,7 +10,7 @@ void ServerCallBack::onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *par
 void ServerCallBack::onDisconnect(BLEServer* pServer) {
     zarizeniPripojeno = false;
     digitalWrite(CONNECTION_LED, LOW);
-    //BLEDevice::startAdvertising();
+    BLEDevice::startAdvertising();
 }
 
 
