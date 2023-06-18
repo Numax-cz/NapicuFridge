@@ -2,13 +2,12 @@
 
 // při připojení zařízení nastav proměnnou na log1
 void ServerCallBack::onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param) {
-    zarizeniPripojeno = true;
     digitalWrite(CONNECTION_LED, HIGH);
 }
 
 // při odpojení zařízení nastav proměnnou na log0
 void ServerCallBack::onDisconnect(BLEServer* pServer) {
-    zarizeniPripojeno = false;
+    devicePaired = false;
     digitalWrite(CONNECTION_LED, LOW);
     BLEDevice::startAdvertising();
 }

@@ -20,4 +20,4 @@
 
 
 // proměnná pro kontrolu připojených zařízení
-extern bool zarizeniPripojeno;
+extern bool devicePaired;

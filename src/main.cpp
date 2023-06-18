@@ -13,7 +13,7 @@
 #include <include/main.h>
 #include <include/fridgeTempDHT.h>
 
-bool zarizeniPripojeno = false;
+bool devicePaired = false;
 
 
 // Inicializace modulu z knihovny
@@ -34,6 +34,8 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
           // Získání adresy spárovaného zařízení
           BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
 
+
+          devicePaired = true;
           // Vymazání white listu
           // esp_ble_gap_clear_whitelist();
 
@@ -44,6 +46,7 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
           esp_ble_gap_disconnect(param->ble_security.auth_cmpl.bd_addr);
         }
         break;
+
     }   
   }
 }
@@ -63,10 +66,10 @@ void setup() {
   // Inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init("NapicuFridge");
   // BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT);
-  BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT_NO_MITM);
+  BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT_MITM);
 
   BLEDevice::setCustomGapHandler(my_gap_event_handler);
-
+ 
 
   // Vytvoření BLE serveru
   pServer = BLEDevice::createServer();
@@ -122,7 +125,7 @@ void setup() {
 void loop() {
   // Pokud je zařízení připojeno k ESP32
   // Začneme s odesíláním dat
-  if (zarizeniPripojeno == true) {
+  if (devicePaired == true) {
 
 
     
