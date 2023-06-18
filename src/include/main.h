@@ -16,7 +16,7 @@
 // https://www.uuidgenerator.net/
 #define SERVICE_UUID           "5ff8dace-0914-11ee-be56-0242ac120002" 
 #define CHARACTERISTIC_UUID_RX "5ff8dda8-0914-11ee-be56-0242ac120002"
-#define CHARACTERISTIC_UUID_TX "5ff8e046-0914-11ee-be56-0242ac120002"
+#define CHARACTERISTIC_DHT_INSIDE_TX "5ff8e046-0914-11ee-be56-0242ac120002"
 
 
 // proměnná pro kontrolu připojených zařízení
