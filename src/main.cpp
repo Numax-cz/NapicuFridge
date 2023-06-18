@@ -1,5 +1,5 @@
 // Arduino ESP32 a Bluetooth Low Energy
-// připojení potřebných knihoven
+// Připojení potřebných knihoven
 #include <Arduino.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
@@ -8,7 +8,7 @@
 #include <EEPROM.h>
 #include <DHT.h>
 #include <sstream>
-// připojení potřebných lokálních knihoven z /src/include
+// Připojení potřebných lokálních knihoven z /src/include
 #include <include/CallBack.h>
 #include <include/main.h>
 #include <include/fridgeTempDHT.h>
@@ -16,7 +16,7 @@
 bool zarizeniPripojeno = false;
 
 
-// inicializace modulu z knihovny
+// Inicializace modulu z knihovny
 
 BLEServer* pServer = NULL;
 
@@ -50,17 +50,17 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
 
 
 void setup() {
-  // zahájení komunikace po sériové lince
-  // rychlostí 9600 baud
+  // Zahájení komunikace po sériové lince
+  // Rychlostí 9600 baud
   Serial.begin(9600);
-  // nastavení LED diody jako výstup
+  // Nastavení LED diody jako výstup
   pinMode(CONNECTION_LED, OUTPUT);
   pinMode(TEST_LED, OUTPUT);
 
 
   
 
-  // inicializace Bluetooth s nastavením jména zařízení
+  // Inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init("NapicuFridge");
   // BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT);
   BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT_NO_MITM);
@@ -68,32 +68,32 @@ void setup() {
   BLEDevice::setCustomGapHandler(my_gap_event_handler);
 
 
-  // vytvoření BLE serveru
+  // Vytvoření BLE serveru
   pServer = BLEDevice::createServer();
   //pServer->getAdvertising()->setScanFilter(false, true);
   
 
 
   pServer->setCallbacks(new ServerCallBack());
-  // vytvoření BLE služby
+  // Vytvoření BLE služby
   BLEService *pService = pServer->createService(SERVICE_UUID);
 
 
 
-  // vytvoření teploměru pro vnitřní zaznamenávání teploty
+  // Vytvoření teploměru pro vnitřní zaznamenávání teploty
   insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_TX, pService);
   
   
 
   
-  // vytvoření BLE komunikačního kanálu pro příjem (RX)
+  // Vytvoření BLE komunikačního kanálu pro příjem (RX)
   BLECharacteristic *pCharacteristic = pService->createCharacteristic(
                                          CHARACTERISTIC_UUID_RX,
                                          BLECharacteristic::PROPERTY_WRITE
                                        );
                                        
   pCharacteristic->setCallbacks(new CharacteristicCallback());
-  // zahájení BLE služby
+  // Zahájení BLE služby
   pService->start();
 
 
@@ -106,13 +106,13 @@ void setup() {
 
 
 
-  // zapnutí viditelnosti BLE
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(true);
   pAdvertising->setMinPreferred(0x06); 
   pAdvertising->setMinPreferred(0x12);
  
+  // Zapnutí viditelnosti BLE 
   BLEDevice::startAdvertising();
 
   insideTempDHT->begin();
@@ -120,16 +120,17 @@ void setup() {
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 }
 void loop() {
-  // pokud je zařízení připojeno k ESP32
-  // začneme s odesíláním dat
+  // Pokud je zařízení připojeno k ESP32
+  // Začneme s odesíláním dat
   if (zarizeniPripojeno == true) {
 
 
+    
     insideTempDHT->sendTemperature();
 
     // vytištění odeslané zprávy po sériové lince
     //Serial.print(temp);
   }
-  // pauza před novým během smyčky
+  // Pauza před novým během smyčky
   delay(1000);
 }
