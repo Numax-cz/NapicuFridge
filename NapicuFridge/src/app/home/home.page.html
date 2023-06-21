@@ -1,31 +1,55 @@
-<div class="section">
-  <div class="MainText has-text-weight-bold has-text-centered p-4 is-size-3 has-text-black">Spárujte nové zařízení</div>
-  <p class="has-text-centered is-size-7">Pokud máte zařízení NapicuFridge, můžete ho spárovat zde.</p>
+<ng-container *ngIf="!pairing">
+  <div class="section">
+    <div class="MainText has-text-weight-bold has-text-centered p-4 is-size-3 has-text-black">Spárujte nové zařízení</div>
+    <p class="has-text-centered is-size-7">Pokud máte zařízení NapicuFridge, můžete ho spárovat zde.</p>
 
-  <div class="section pl-0 pr-0">
+    <div class="section pl-0 pr-0">
 
-    <ng-container *ngIf="devices.length">
-      <div class="box DeviceItem" *ngFor="let device of devices; let index = index" (click)="on_click_device(index)">
-        <ion-icon icon="/assets/component.svg" class="DeviceIcon icon"></ion-icon>
-        {{device.name}}
-      </div>
-    </ng-container>
+      <ng-container *ngIf="devices.length">
+        <div class="box DeviceItem" *ngFor="let device of devices; let index = index" (click)="on_click_device(index)">
+          <ion-icon icon="/assets/component.svg" class="DeviceIcon icon"></ion-icon>
+          {{device.name}}
+        </div>
+      </ng-container>
 
-    <ng-container *ngIf="scanning">
-      <progress class="progress is-medium is-dark" max="100">45%</progress>
-    </ng-container>
+      <ng-container *ngIf="scanning">
+        <progress class="progress is-medium is-dark" max="100">45%</progress>
+      </ng-container>
 
+    </div>
   </div>
-</div>
 
 
 
-<div class="section has-text-centered pb-0">
-  <a ion-button block class="button SearchButton mb-5" [ngClass]="{'is-danger': scanning, 'is-dark': !scanning}" (click)="scanning ? stop_scan() : scan()">
-    {{!scanning ? 'Vyhledat zařízení' : 'Zastavit'}}
-  </a>
-  <div class="pb-2" style="color: #00000047;">{{get_app_version()}}</div>
-</div>
+  <div class="section has-text-centered pb-0">
+    <a ion-button block class="button SearchButton mb-5" [ngClass]="{'is-danger': scanning, 'is-dark': !scanning}" (click)="scanning ? stop_scan() : scan()">
+      {{!scanning ? 'Vyhledat zařízení' : 'Zastavit'}}
+    </a>
+    <div class="pb-2" style="color: #00000047;">{{get_app_version()}}</div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="pairing">
+
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="bonding-loader">
+        <div class="lds-ellipsis">
+          <div class="has-background-dark"></div>
+          <div class="has-background-dark"></div>
+          <div class="has-background-dark"></div>
+          <div class="has-background-dark"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+
+</ng-container>
 
 
 

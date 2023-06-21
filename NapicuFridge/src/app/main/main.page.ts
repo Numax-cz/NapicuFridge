@@ -1,7 +1,14 @@
 import {Component, NgZone} from '@angular/core';
-import {BLE} from "@awesome-cordova-plugins/ble";
 import {AppComponent} from "../app.component";
 import {Configuration} from "../config/configuration";
+import {
+  AndroidGattTransportMode,
+  BluetoothLE,
+  Device,
+  DeviceInfo,
+  OperationResult
+} from "@awesome-cordova-plugins/bluetooth-le";
+import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
 
 
 interface data {
@@ -20,24 +27,61 @@ export class MainPage  {
   }
 
   constructor(private ngZone: NgZone) {
-    //Kontrola, zda je připojené zařízení
+    //Kontrola, zda je zařízení spárované
     if(AppComponent.connected_device) {
-      //Získání aktuálních informací o teplotě
-      BLE.startNotification(AppComponent.connected_device, Configuration.SERVICE_UUID, Configuration.CHARACTERISTIC_UUID_TX).subscribe(
+      //Proměnná pro uložení adresy
+      let address: string = AppComponent.connected_device;
+      //Připojit se k zařízení
+      BluetoothLE.connect({address: address, transport: AndroidGattTransportMode.TRANSPORT_LE}).subscribe(() =>  {
+        //Po úspěšném připojení provést nasledující
+        //Vypsání hodnoty do vývojářské konzole
+        console.log("connected");
+          //Tato funkce zjistí, zda byly zjištěny charakteristiky a deskriptory zařízení,
+          //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
+          BluetoothLE.discover({address: address, clearCache: true})
+            .then((d: Device) => {
+              //Přihlášení se k odběru charakteristiky vnitřní teploty
+              this.subscribe_in_temp();
+            }).catch((e) =>{
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error_discovered" + JSON.stringify(e));
+          });
+      });
+    }
+  }
+
+
+  //Funkce pro přihlášení se k odběru pro získávání dat z vnitřního teploměru
+  public subscribe_in_temp(): void {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Přihlášení se k odběru charakteristiky vnitřní teploty
+      BluetoothLE.subscribe({
+        address: AppComponent.connected_device,
+        service: Configuration.SERVICE_UUID,
+        characteristic: CHARACTERISTIC_UUID_TX
+      }).subscribe(
         {
-          next: (buffer) => {
-            //Vytvoření DataView proměnné
-            let dv = new DataView(buffer[0]);
-            //Spuštění funkce uvnitř zóny Angularu
-            this.ngZone.run(() => {
-              //Nastavení získané hodnoty z bluetooth do proměnné
-              this.data.in_temp = new TextDecoder().decode(dv.buffer);
-            });
-            //Vypsání hodnoty do vývojářské konzoly
-            console.log(`New in_temp: ${this.data.in_temp}`);
+          next: (data: OperationResult) => {
+            //Po získání dat z bluetooth charakteristiky provést následující
+            if(data.value) {
+              //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+              let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+              //Převést bytes na string
+              let value: string = BluetoothLE.bytesToString(bytes);
+              //Spuštění funkce uvnitř zóny Angularu
+              this.ngZone.run(() => {
+              //Zapsat převedený bytes na string do proměnné in_temp
+                this.data.in_temp = value;
+              })
+            }
+          },
+          error: (e) => {
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error" + JSON.stringify(e));
           }
         }
-      )
+      );
     }
   }
 
@@ -46,14 +90,6 @@ export class MainPage  {
 
   public on_click(): void {
 
-
-    var data = new Uint8Array(1);
-
-    data[0] = 1;
-
-    if(AppComponent.connected_device) {
-      BLE.write(AppComponent.connected_device, "6E400001-B5A3-F393-E0A9-E50E24DCCA9E", "6E400002-B5A3-F393-E0A9-E50E24DCCA9E", data.buffer);
-    }
   }
 
 
