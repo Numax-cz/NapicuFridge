@@ -3,9 +3,16 @@ import {AppComponent} from "../app.component";
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
 import {Configuration} from "../config/configuration";
-import {AndroidGattTransportMode, BluetoothLE, DeviceInfo, ScanStatus} from "@awesome-cordova-plugins/bluetooth-le";
+import {
+  AndroidGattTransportMode,
+  BluetoothLE,
+  BondedStatus,
+  DeviceInfo,
+  ScanStatus
+} from "@awesome-cordova-plugins/bluetooth-le";
 import {Config} from "@ionic/angular";
 import {BLE} from "@awesome-cordova-plugins/ble";
+import {add} from "ionicons/icons";
 
 @Component({
   selector: 'app-home',
@@ -37,24 +44,40 @@ export class HomePage {
   //Proměnná, která uchovává stav skenování
   public scanning: boolean = false;
 
-  //Proměnná která uchovává stav párování
-  public pairing: boolean = false;
+  //Proměnná která uchovává stav
+  public loading: boolean = true;
 
 
   constructor(private router: Router, private ngZone: NgZone) {
-
-
-    //Získání adresy z lokálního uložiště
-    let i: string | null = AppComponent.application_settings.getItem("auto_connect_mac_address");
-    if(i) {
-      //this.connect(i);
-    }
+    //Spuštění hlavní funkce
+    this.init();
   }
 
-  //Funkce pro automatické připojení k poslednímu spárovanému zařízení
-  public auto_connect(): void {
+  //Funkce, která se spustí při spuštění aplikace
+  public init(): void {
 
+    BluetoothLE.initialize({statusReceiver: true, request: true}).subscribe(async () => {
+
+      await BluetoothLE.hasPermissionBtScan().then(async (status: {hasPermission: boolean}) => {
+        if(!status.hasPermission) await BluetoothLE.requestPermissionBtScan(); //TODO Při nepovolení => povolte BT
+      });
+
+      await BluetoothLE.hasPermissionBtConnect().then(async (status: {hasPermission: boolean}) => {
+        if(!status.hasPermission) await BluetoothLE.requestPermissionBtConnect(); //TODO Při nepovolení => povolte BT
+      });
+
+
+      //Získání adresy z lokálního uložiště
+      let i: string | null = AppComponent.application_settings.getItem("auto_connect_mac_address");
+      //Připojit se k adrese, pokud je uložena v lokálním uložišti
+      console.log(i);
+      if(i) this.connect(i);
+      else this.loading = false;
+
+
+    });
   }
+
 
   //Funkce pro zahájení skenování NapicuFridge zařízení
   public scan(): void {
@@ -62,39 +85,24 @@ export class HomePage {
     //Nastavit stav skenování na log1
     this.scanning = true;
 
-    //Inicializace bluetooth low energy
-    BluetoothLE.initialize({statusReceiver: true, request: true}).subscribe(() => {
-      // Po inicializaci se provede následující
-      // Zahájení skenování bluetooth zařízení s požadovaným UUID
-      BluetoothLE.startScan({services: [Configuration.SERVICE_UUID]}).subscribe((data: ScanStatus) => {
-        //Provést následující po nalezení nového zařízení
+    // Po inicializaci se provede následující
+    // Zahájení skenování bluetooth zařízení s požadovaným UUID
+    BluetoothLE.startScan({services: [Configuration.SERVICE_UUID]}).subscribe((data: ScanStatus) => {
+      //Provést následující po nalezení nového zařízení
 
-        //Kontrola zda se zařízení již nenachází v najitých zařízení v proměnné devices
-        if(data.address && !this.devices.some((device: ScanStatus) => {
-          return data.address === device.address;
-        })) {
-          //Vypsání hodnoty do vývojářské konzole
-          console.log("New device");
-          //Spuštění funkce uvnitř zóny Angularu
-          this.ngZone.run(() => {
-            //Přidání nového zařízení do proměnné devices
-            this.devices.push(data);
-          });
-        }
-      })
-
-    });
-
-
-
-
-
-
-
-
-
-    //TODO END scan + services
-
+      //Kontrola zda se zařízení již nenachází v najitých zařízení v proměnné devices
+      if(data.address && !this.devices.some((device: ScanStatus) => {
+        return data.address === device.address;
+      })) {
+        //Vypsání hodnoty do vývojářské konzole
+        console.log("New device");
+        //Spuštění funkce uvnitř zóny Angularu
+        this.ngZone.run(() => {
+          //Přidání nového zařízení do proměnné devices
+          this.devices.push(data);
+        });
+      }
+    })
   }
 
   //Funkce pro stopnutí skenování
@@ -113,64 +121,68 @@ export class HomePage {
 
   //Funkce pro připojení se k zařízení s požadovanou adresou
   private connect(address: string): void {
-
-
-
-
-
-
-
-
-    BluetoothLE.bond({address: address}).subscribe((data: DeviceInfo) => {
-      //Když se zařízení páruje
-      if(data.status === "bonding") {
-        //Nastavení proměnné pairing na log1
-        this.pairing = true;
-        //Vypsání hodnoty do vývojářské konzole
-        console.log("Bonding...");
+    //Zkontroluje stav párování
+    BluetoothLE.isBonded({address: address}).then((state: BondedStatus) => {
+      //Když zařízení bylo již spárované
+      if(state.isBonded) {
+        //Přesměrování uživatele
+        this.redirect_user(address);
+      } else {
+        //Spuštění funkce pro párování zařízení
+        this.bond(address);
       }
-
-      //Když je zařízení odparované
-      if(data.status === "unbonded") {
-        console.log("Unbonded");
-      }
-
-      //Když je zařízení úspěšně spárované
-      if(data.status === "bonded") {
-        //Vypsání hodnoty do vývojářské konzole
-        console.log("Bonded");
-
-        //Uložení adresy spárovaného zařízení do proměnné
-        AppComponent.connected_device = address;
-        //Přesměrování uživatele na URL /main
-        this.router.navigateByUrl("main");
-        //Uložení adresy spárovaného zaířzení
-        AppComponent.application_settings.setItem("auto_connect_mac_address", address);
-      }
+    }).catch(e => {
+      //Vypsání hodnoty do vývojářské konzole
+      console.log("error: " + JSON.stringify(e));
     });
   }
 
-  public read (address: string): void {
+  //Funkce pro spárování zařízení
+  public bond(address: string): void {
+    //Nastavení proměnné pairing na log1
+    this.loading = true;
+    BluetoothLE.initialize({statusReceiver: true, request: true}).subscribe(async () => {
+      BluetoothLE.bond({address: address}).subscribe((data: DeviceInfo) => {
+        //Když se zařízení páruje
+        if(data.status === "bonding") {
 
-    // BluetoothLE.connect({address}).subscribe(() => {
-    //   BluetoothLE.isConnected({address}).then(() => {
-    //     console.log("Connected");
-    //   }).catch(e => {
-    //     console.log('Read err: ' + JSON.stringify(e));
-    //   })
-    //
-    //
-    // }, e => {
-    //   console.log('Read err: ' + JSON.stringify(e));
-    //
-    // });
+          //Vypsání hodnoty do vývojářské konzole
+          console.log("Bonding...");
+        }
 
+        //Když je zařízení odparované
+        if(data.status === "unbonded") {
+          //Vypsání hodnoty do vývojářské konzole
+          console.log("Unbonded");
+          
+          // //Nastavení proměnné pairing na log0
+          // this.loading = false;
+          // //Smazání adresy spárovaného zaířzení
+          // AppComponent.application_settings.removeItem("auto_connect_mac_address");
+        }
 
+        //Když je zařízení úspěšně spárované
+        if(data.status === "bonded") {
+          //Vypsání hodnoty do vývojářské konzole
+          console.log("Bonded");
+          //Přesměrování uživatele
+          this.redirect_user(address);
+        }
+      });
+    });
   }
 
+  //Přesměrování uživatele na hlavní část aplikace (/main)
+  public redirect_user(address: string): void {
+    //Uložení adresy spárovaného zařízení do proměnné
+    AppComponent.connected_device = address;
+    //Přesměrování uživatele na URL /main
+    this.router.navigateByUrl("main");
+    //Uložení adresy spárovaného zaířzení
+    AppComponent.application_settings.setItem("auto_connect_mac_address", address);
+  }
 
-
-  //Funkce, která vrátí verzi aplikace v požadovaném formátu
+  //Funkce, která vrací verzi aplikace v požadovaném formátu
   public get_app_version(): string {
     return `${AppComponent.application_name} ${AppComponent.application_version_code}`;
   }

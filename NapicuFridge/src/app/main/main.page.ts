@@ -84,13 +84,4 @@ export class MainPage  {
       );
     }
   }
-
-
-
-
-  public on_click(): void {
-
-  }
-
-
 }

@@ -1,4 +1,4 @@
-<ng-container *ngIf="!pairing">
+<ng-container *ngIf="!loading">
   <div class="section">
     <div class="MainText has-text-weight-bold has-text-centered p-4 is-size-3 has-text-black">Spárujte nové zařízení</div>
     <p class="has-text-centered is-size-7">Pokud máte zařízení NapicuFridge, můžete ho spárovat zde.</p>
@@ -29,7 +29,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="pairing">
+<ng-container *ngIf="loading">
 
   <section class="hero is-fullheight">
     <div class="hero-body">
