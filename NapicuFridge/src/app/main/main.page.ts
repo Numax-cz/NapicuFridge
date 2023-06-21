@@ -32,7 +32,7 @@ export class MainPage  {
       //Proměnná pro uložení adresy
       let address: string = AppComponent.connected_device;
       //Připojit se k zařízení
-      BluetoothLE.connect({address: address, transport: AndroidGattTransportMode.TRANSPORT_LE}).subscribe(() =>  {
+      BluetoothLE.connect({address: address, transport: AndroidGattTransportMode.TRANSPORT_LE, autoConnect: true}).subscribe(() =>  {
         //Po úspěšném připojení provést nasledující
         //Vypsání hodnoty do vývojářské konzole
         console.log("connected");
