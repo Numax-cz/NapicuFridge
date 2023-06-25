@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MainPageRoutingModule } from './main-routing.module';
+import { DevicePageRoutingModule } from './device-routing.module';
 
-import { MainPage } from './main.page';
+import { DevicePage } from './device.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule.forRoot(),
-    MainPageRoutingModule
+    IonicModule,
+    DevicePageRoutingModule
   ],
-  declarations: [MainPage]
+  declarations: [DevicePage]
 })
-export class MainPageModule {}
+export class DevicePageModule {}

@@ -3,6 +3,7 @@ import {Platform} from "@ionic/angular";
 import {StatusBar, Style} from "@capacitor/status-bar";
 import {AppVersion} from "@awesome-cordova-plugins/app-version";
 import {App} from "@capacitor/app";
+import {BluetoothLE, CurrConnectionStatus} from "@awesome-cordova-plugins/bluetooth-le";
 
 @Component({
   selector: 'app-root',
@@ -24,9 +25,6 @@ export class AppComponent {
   public static connected_device: string | null = null;
 
   constructor(private platform: Platform) {
-
-
-
     //Tento blok kódu nastaví, aby zpětné tlačítko vždy ukončilo aplikaci
     platform.backButton.subscribeWithPriority(-1, () => {
 
@@ -51,5 +49,11 @@ export class AppComponent {
         screen.orientation.lock("portrait");
       }
     });
+  }
+
+  //Funkce, která vrátí zda je zařízení připojené
+  public static async is_connected(): Promise<boolean> {
+    if (this.connected_device) return await BluetoothLE.isConnected({address: this.connected_device}).then((status: CurrConnectionStatus) => status.isConnected);
+    return false;
   }
 }

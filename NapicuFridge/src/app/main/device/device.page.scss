@@ -1,0 +1,14 @@
+.settings-container{
+  margin-top: 1rem;
+  > div {
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+.device-logo{
+  ion-img {
+    height: 10rem !important;
+    width: auto !important;
+    align-items: center;
+  }
+}

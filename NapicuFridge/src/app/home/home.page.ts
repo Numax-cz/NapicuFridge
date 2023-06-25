@@ -154,7 +154,7 @@ export class HomePage {
         if(data.status === "unbonded") {
           //Vypsání hodnoty do vývojářské konzole
           console.log("Unbonded");
-          
+
           // //Nastavení proměnné pairing na log0
           // this.loading = false;
           // //Smazání adresy spárovaného zaířzení
@@ -176,8 +176,8 @@ export class HomePage {
   public redirect_user(address: string): void {
     //Uložení adresy spárovaného zařízení do proměnné
     AppComponent.connected_device = address;
-    //Přesměrování uživatele na URL /main
-    this.router.navigateByUrl("main");
+    //Přesměrování uživatele na URL /main/info
+    this.router.navigateByUrl("main/info");
     //Uložení adresy spárovaného zaířzení
     AppComponent.application_settings.setItem("auto_connect_mac_address", address);
   }
