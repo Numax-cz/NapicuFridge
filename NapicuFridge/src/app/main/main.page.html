@@ -1,58 +1,45 @@
-<!--<button (click)="on_click()">LED</button>-->
-<!--<div>{{input}}</div>-->
+<div class="ion-page">
 
-<section class="section">
-  <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
-    <div style="position: relative">
-      <ion-icon name="alert-circle-outline" class="info-icon"></ion-icon>
-      {{data.in_temp}}°C
-    </div>
-  </div>
-
-  <div class="is-flex box-table is-justify-content-space-between">
-
-    <div class="min-box">
-
-      <div class="box info-box has-background-info is-size-4 has-text-weight-bold has-text-centered has-text-white">
-        <div class="is-size-6">
-          Venkovní teplota
-        </div>
-
-          25.6°C
-
+  <section class="section">
+    <ion-icon name="bluetooth-outline"></ion-icon>
+    <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
+      <div style="position: relative">
+        <ion-icon name="alert-circle-outline" class="info-icon"></ion-icon>
+        {{data.in_temp}}°C
       </div>
     </div>
 
-    <div class="min-box">
-
-      <div class="box info-box min-box has-background-info is-size-4 has-text-weight-bold has-text-centered has-text-white">
-        <div class="is-size-6">
-          Teplota chladiče
-        </div>
-
+    <div class="is-flex box-table is-justify-content-space-between">
+      <div class="min-box">
+        <div class="box info-box has-background-info is-size-4 has-text-weight-bold has-text-centered has-text-white">
+          <div class="is-size-6">
+            Venkovní teplota
+          </div>
           25.6°C
+        </div>
+      </div>
 
+      <div class="min-box">
+        <div class="box info-box min-box has-background-info is-size-4 has-text-weight-bold has-text-centered has-text-white">
+          <div class="is-size-6">
+            Teplota chladiče
+          </div>
+          25.6°C
+        </div>
       </div>
     </div>
+  </section>
+  <footer class="footer " style="padding: 0 2rem !important;">
+    <div class="is-flex is-justify-content-space-around settings-footer">
+      <div class="has-text-info">
+        <ion-icon name="apps"></ion-icon>
+        <div class="settings-icon-info">Přehled</div>
+      </div>
 
-  </div>
-
-</section>
-
-
-<!--<footer class="footer" style="padding: 1rem 2rem !important;">-->
-
-<!--  <div class="is-flex">-->
-<!--    <div>-->
-<!--      <ion-icon name="apps-outline"></ion-icon>-->
-<!--    </div>-->
-
-<!--    <div>-->
-<!--      <ion-icon name="git-compare-outline"></ion-icon>-->
-<!--    </div>-->
-
-<!--    <div>-->
-<!--      <ion-icon name="cog-outline"></ion-icon>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</footer>-->
+      <div>
+        <ion-icon name="tv"></ion-icon>
+        <div class="settings-icon-info">Zařízení</div>
+      </div>
+    </div>
+  </footer>
+</div>

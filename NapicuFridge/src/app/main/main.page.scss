@@ -16,3 +16,23 @@
     min-width: 45%;
   }
 }
+
+.settings-footer {
+  ion-icon {
+    font-size: 25px !important;
+  }
+
+  .settings-icon-info{
+    font-weight: bold;
+  }
+
+  > div {
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+  > div:active {
+      background-color: #e1e1e1;
+  }
+}

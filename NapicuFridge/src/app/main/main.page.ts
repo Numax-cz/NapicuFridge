@@ -5,7 +5,6 @@ import {
   AndroidGattTransportMode,
   BluetoothLE,
   Device,
-  DeviceInfo,
   OperationResult
 } from "@awesome-cordova-plugins/bluetooth-le";
 import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;

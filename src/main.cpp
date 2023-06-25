@@ -41,6 +41,10 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
 
           // Přidání adresy do white listu
           BLEDevice::whiteListAdd(address);
+
+
+          BLEDevice::startAdvertising();
+
         } else {
           // Odpojení zařízení v případě neúspěšného ověření
           esp_ble_gap_disconnect(param->ble_security.auth_cmpl.bd_addr);
@@ -86,6 +90,7 @@ void setup() {
   // Vytvoření teploměru pro vnitřní zaznamenávání teploty
   insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_TX, pService);
   
+  insideTempDHT->begin();
   
 
   
@@ -108,7 +113,6 @@ void setup() {
 
 
 
-
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(true);
@@ -118,7 +122,6 @@ void setup() {
   // Zapnutí viditelnosti BLE 
   BLEDevice::startAdvertising();
 
-  insideTempDHT->begin();
 
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 }
