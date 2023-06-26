@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {BluetoothLE} from "@awesome-cordova-plugins/bluetooth-le";
+import {AppComponent} from "../../app.component";
 
 
 @Component({
@@ -15,10 +16,13 @@ export class DevicePage {
 
 
 
+  public is_connected(): boolean {
+    return AppComponent.is_connected();
+  }
 
 
   public get_mac_address(): string {
-    return '4C-54-AE-FF-66-E0';
+    return AppComponent.connected_device?.address || "";
   }
 
 }

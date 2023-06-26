@@ -71,7 +71,7 @@ export class HomePage {
       let i: string | null = AppComponent.application_settings.getItem("auto_connect_mac_address");
       //Připojit se k adrese, pokud je uložena v lokálním uložišti
       console.log(i);
-      if(i) this.connect(i);
+      if(i) this.on_select_device(i);
       else this.loading = false;
 
 
@@ -116,11 +116,11 @@ export class HomePage {
     //Spuštění funkce pro stopnutí skenování
     this.stop_scan();
     //Spuštění funkce pro připojení
-    this.connect(this.devices[device_id].address);
+    this.on_select_device(this.devices[device_id].address);
   }
 
   //Funkce pro připojení se k zařízení s požadovanou adresou
-  private connect(address: string): void {
+  private on_select_device(address: string): void {
     //Zkontroluje stav párování
     BluetoothLE.isBonded({address: address}).then((state: BondedStatus) => {
       //Když zařízení bylo již spárované
@@ -172,10 +172,11 @@ export class HomePage {
     });
   }
 
-  //Přesměrování uživatele na hlavní část aplikace (/main)
+  //Přesměrování uživatele na hlavní část aplikace (/main/info)
   public redirect_user(address: string): void {
-    //Uložení adresy spárovaného zařízení do proměnné
-    AppComponent.connected_device = address;
+    //Připojení se na zařízení
+    AppComponent.connect(address);
+
     //Přesměrování uživatele na URL /main/info
     this.router.navigateByUrl("main/info");
     //Uložení adresy spárovaného zaířzení
