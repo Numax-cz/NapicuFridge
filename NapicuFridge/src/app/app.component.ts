@@ -22,7 +22,6 @@ import {app_animation} from "./main/Animation";
 })
 export class AppComponent {
 
-
   //Funkce pro získání vlastní animace
   public get_animation = () => app_animation;
 
@@ -149,6 +148,11 @@ export class AppComponent {
         }
       );
     }
+  }
+
+  //Funkce, která obnoví tovární nastavení
+  public static factory_reset(): void {
+
   }
 
   //Funkce, která vrátí zda je zařízení připojené

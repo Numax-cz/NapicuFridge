@@ -8,7 +8,7 @@
 }
 
 .info-box{
-  border-radius: 13px;
+  border-radius: 13px !important;
 }
 
 .box-table  {
@@ -21,8 +21,9 @@
   }
 }
 
-.clickable-box:active {
+.is-clickable:active {
   background-color: #e1e1e1 !important;
+  border-radius: 5px;
 }
 
 

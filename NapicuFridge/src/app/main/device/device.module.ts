@@ -10,13 +10,15 @@ import { DevicePage } from './device.page';
 import {InformationComponent} from "./information/information.component";
 import {NapicuSettingsTemplateComponent} from "./napicu-settings-template/napicu-settings-template.component";
 import {SettingsComponent} from "./settings/settings.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DevicePageRoutingModule
+    DevicePageRoutingModule,
+    BrowserAnimationsModule
   ],
   declarations: [DevicePage, InformationComponent, SettingsComponent,NapicuSettingsTemplateComponent]
 })
