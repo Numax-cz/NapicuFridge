@@ -7,6 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { DevicePageRoutingModule } from './device-routing.module';
 
 import { DevicePage } from './device.page';
+import {InformationComponent} from "./information/information.component";
+import {NapicuSettingsTemplateComponent} from "./napicu-settings-template/napicu-settings-template.component";
+import {SettingsComponent} from "./settings/settings.component";
 
 @NgModule({
   imports: [
@@ -15,6 +18,6 @@ import { DevicePage } from './device.page';
     IonicModule,
     DevicePageRoutingModule
   ],
-  declarations: [DevicePage]
+  declarations: [DevicePage, InformationComponent, SettingsComponent,NapicuSettingsTemplateComponent]
 })
 export class DevicePageModule {}

@@ -1,23 +1,19 @@
-<ion-app class="ion-page">
 
-
-  <div>
-
+<div>
   <router-outlet></router-outlet>
-  </div>
+</div>
 
 
-  <footer class="footer " style="padding: 0 2rem !important;">
-    <div class="is-flex is-justify-content-space-around settings-footer">
-      <div [ngClass]="{'has-text-info': router.url === '/main/info'}" (click)="redirect('main/info')">
-        <ion-icon name="apps"></ion-icon>
-        <div class="settings-icon-info">Přehled</div>
-      </div>
-
-      <div [ngClass]="{'has-text-info': router.url === '/main/device'}" (click)="redirect('main/device')">
-        <ion-icon name="tv"></ion-icon>
-        <div class="settings-icon-info">Zařízení</div>
-      </div>
+<footer class="footer " style="padding: 0 2rem !important;">
+  <div class="is-flex is-justify-content-space-around settings-footer">
+    <div [ngClass]="{'has-text-info': router.url === '/main/info'}" (click)="redirect('main/info')">
+      <ion-icon name="apps"></ion-icon>
+      <div class="settings-icon-info">Přehled</div>
     </div>
-  </footer>
-</ion-app>
+
+    <div [ngClass]="{'has-text-info': router.url === '/main/device'}" (click)="redirect('main/device')">
+      <ion-icon name="tv"></ion-icon>
+      <div class="settings-icon-info">Zařízení</div>
+    </div>
+  </div>
+</footer>

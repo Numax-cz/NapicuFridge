@@ -6,6 +6,7 @@ import {InfoPage} from "./info/info.page";
 import {InfoPageModule} from "./info/info.module";
 import {DevicePage} from "./device/device.page";
 import {DevicePageModule} from "./device/device.module";
+import {InformationComponent} from "./device/information/information.component";
 
 const routes: Routes = [
   {
@@ -19,8 +20,7 @@ const routes: Routes = [
     },
     {
       path: 'device',
-      component: DevicePage
-
+      component: DevicePage,
     },
     ],
   },

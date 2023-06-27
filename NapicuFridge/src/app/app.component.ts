@@ -1,5 +1,5 @@
 import {Component, NgZone} from '@angular/core';
-import {Platform} from "@ionic/angular";
+import {AnimationController, Platform} from "@ionic/angular";
 import {StatusBar, Style} from "@capacitor/status-bar";
 import {AppVersion} from "@awesome-cordova-plugins/app-version";
 import {App} from "@capacitor/app";
@@ -12,7 +12,8 @@ import {
 import {FridgeData} from "./interface/FridgeData";
 import {Configuration} from "./config/configuration";
 import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
-import {add} from "ionicons/icons";
+import {add, exit} from "ionicons/icons";
+import {app_animation} from "./main/Animation";
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,10 @@ import {add} from "ionicons/icons";
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+
+
+  //Funkce pro získání vlastní animace
+  public get_animation = () => app_animation;
 
   //Statická proměnná pro local storage nastavení aplikace
   public static application_settings: Storage = window.localStorage;
@@ -42,7 +47,7 @@ export class AppComponent {
     in_temp: ""
   }
 
-  constructor(private platform: Platform, ngZone: NgZone) {
+  constructor(private platform: Platform, ngZone: NgZone, private animationCtrl: AnimationController) {
     AppComponent.ngZone = ngZone;
 
     //Tento blok kódu nastaví, aby zpětné tlačítko vždy ukončilo aplikaci

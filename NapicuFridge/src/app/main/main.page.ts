@@ -9,6 +9,7 @@ import {
 } from "@awesome-cordova-plugins/bluetooth-le";
 import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
 import {Router} from "@angular/router";
+import {app_animation} from "./Animation";
 
 
 

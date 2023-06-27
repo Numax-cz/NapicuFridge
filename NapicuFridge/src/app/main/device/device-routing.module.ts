@@ -1,10 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import {InformationComponent} from "./information/information.component";
+import {SettingsComponent} from "./settings/settings.component";
 
-import { DevicePage } from './device.page';
+
 
 const routes: Routes = [
-
+  {
+    path: "device-information",
+    component: InformationComponent,
+  },
+  {
+    path: "device-settings",
+    component: SettingsComponent,
+  }
 ];
 
 @NgModule({
