@@ -158,14 +158,21 @@ export class AppComponent {
 
   }
 
+  //Funkce, která vrátí uložená data o spárovaném zařízení
+  public static get_paired_device_data_from_storage(): DeviceInfo | null {
+    let i: string | null = AppComponent.application_settings.getItem("device");
+    if(i) return JSON.parse(i) as DeviceInfo;
+    return null;
+  }
+
   //Funkce, která vrátí jméno připojeného zařízení
-  public static get_device_name(): string {
-    return this.connected_device?.name || "";
+  public static get_paired_device_name(): string {
+    return this.get_paired_device_data_from_storage()?.name || "";
   }
 
   //Funkce, která vrátí adresu MAC připojeného zařízení
-  public static get_device_address(): string {
-    return this.connected_device?.address || "";
+  public static get_paired_device_address(): string {
+    return this.get_paired_device_data_from_storage()?.address || "";
   }
 
   //Funkce, která vrátí zda je zařízení připojené

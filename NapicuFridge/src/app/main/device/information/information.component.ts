@@ -13,12 +13,12 @@ export class InformationComponent {
 
   //Funkce, která vrátí jméno připojeného zařízení
   public get_device_name(): string {
-    return AppComponent.get_device_name();
+    return AppComponent.get_paired_device_name();
   }
 
   //Funkce, která vrátí adresu MAC připojeného zařízení
   public get_device_address(): string {
-    return AppComponent.get_device_address();
+    return AppComponent.get_paired_device_address();
   }
 
 }

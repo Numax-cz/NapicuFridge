@@ -69,12 +69,12 @@ export class HomePage {
 
 
       //Získání adresy z lokálního uložiště
-      let i: string | null = AppComponent.application_settings.getItem("device");
+      let i: DeviceInfo | null = AppComponent.get_paired_device_data_from_storage();
       if(i) {
         //Vypsání hodnoty do vývojářské konzole
         console.log(i);
         //Připojit se k adrese, pokud je uložena v lokálním uložišti
-        this.on_select_device((JSON.parse(i) as DeviceInfo).address);
+        this.on_select_device(i.address);
       }
       else this.loading = false;
 
