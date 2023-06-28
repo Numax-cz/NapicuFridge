@@ -52,13 +52,14 @@
 
 
 
-  <div class="alert">
-    <div @AlertAnimation class="box info-box alert-container" *ngIf="active_alert">
-      <div class="is-size-5 has-text-weight-bold">Obnovit tovární nastavení</div>
-      <p class="is-size-6">Nastavení a data ve vašem zařízení budou vymazána.</p>
-      <div class="mt-2 is-flex is-justify-content-space-around">
-        <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="active_alert = false">ZRUŠIT</div>
-        <div class="p-2 is-clickable has-text-info has-text-weight-medium">OBNOVIT</div>
-      </div>
-    </div>
+<div @AlertAnimation class="box info-box alert-container" *ngIf="active_alert">
+  <div class="is-size-5 has-text-weight-bold">Obnovit tovární nastavení</div>
+  <p class="is-size-6">Nastavení a data ve vašem zařízení budou vymazána.</p>
+  <div class="mt-2 is-flex is-justify-content-space-around is-align-items-center">
+    <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="active_alert = false">ZRUŠIT</div>
+    <div class="alert-button-line"></div>
+    <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="active_alert = false">OBNOVIT</div>
   </div>
+</div>
+
+<div @AlertAnimationBackground class="alert" *ngIf="active_alert"></div>

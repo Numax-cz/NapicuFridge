@@ -13,6 +13,7 @@ import {
 import {Config} from "@ionic/angular";
 import {BLE} from "@awesome-cordova-plugins/ble";
 import {add} from "ionicons/icons";
+import {DevicePage} from "../main/device/device.page";
 
 @Component({
   selector: 'app-home',
@@ -68,10 +69,13 @@ export class HomePage {
 
 
       //Získání adresy z lokálního uložiště
-      let i: string | null = AppComponent.application_settings.getItem("auto_connect_mac_address");
-      //Připojit se k adrese, pokud je uložena v lokálním uložišti
-      console.log(i);
-      if(i) this.on_select_device(i);
+      let i: string | null = AppComponent.application_settings.getItem("device");
+      if(i) {
+        //Vypsání hodnoty do vývojářské konzole
+        console.log(i);
+        //Připojit se k adrese, pokud je uložena v lokálním uložišti
+        this.on_select_device((JSON.parse(i) as DeviceInfo).address);
+      }
       else this.loading = false;
 
 
@@ -179,8 +183,6 @@ export class HomePage {
 
     //Přesměrování uživatele na URL /main/info
     this.router.navigateByUrl("main/info");
-    //Uložení adresy spárovaného zaířzení
-    AppComponent.application_settings.setItem("auto_connect_mac_address", address);
   }
 
   //Funkce, která vrací verzi aplikace v požadovaném formátu

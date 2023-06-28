@@ -35,7 +35,7 @@ export class AppComponent {
   public static application_version_code: string | null = null;
 
   //Statická proměnná pro uložení základní informací připojeného zařízení
-  public static connected_device: CommonInfo | null = null;
+  public static connected_device: DeviceInfo | null = null;
 
   //Statická proměnná pro uložení NgZone (jedná se o službu pro provádění funkcí uvnitř zóny Anguláru)
   private static ngZone: NgZone;
@@ -81,6 +81,9 @@ export class AppComponent {
       //Připojit se k zařízení
       BluetoothLE.connect({address: address, transport: AndroidGattTransportMode.TRANSPORT_LE, autoConnect: true}).subscribe((device: DeviceInfo) =>  {
         if(device.status === "connected") {
+          //Uložení adresy spárovaného zaířzení
+          AppComponent.application_settings.setItem("device", JSON.stringify(device));
+
           //Po úspěšném připojení provést následující
           //Nastavit proměnnou pro připojené zařízení
           this.set_connected_device(device);
@@ -108,7 +111,7 @@ export class AppComponent {
   }
 
   //Funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
-  private static set_connected_device(value: CommonInfo | null = null): void {
+  private static set_connected_device(value: DeviceInfo | null = null): void {
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       //Nastavení proměnné dle parametru (value výchozí: null)
@@ -153,6 +156,16 @@ export class AppComponent {
   //Funkce, která obnoví tovární nastavení
   public static factory_reset(): void {
 
+  }
+
+  //Funkce, která vrátí jméno připojeného zařízení
+  public static get_device_name(): string {
+    return this.connected_device?.name || "";
+  }
+
+  //Funkce, která vrátí adresu MAC připojeného zařízení
+  public static get_device_address(): string {
+    return this.connected_device?.address || "";
   }
 
   //Funkce, která vrátí zda je zařízení připojené

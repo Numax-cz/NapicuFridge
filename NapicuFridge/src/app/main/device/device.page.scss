@@ -20,20 +20,19 @@
   top: 0;
   background: #00000057;
   left: 0;
-
-
-
-  .alert-container {
-    position: absolute;
-    transform: translate(-50%, 0%);
-    width: 80%;
-    left: 50%;
-    z-index: 1000;
-    /* top: 50%; */
-    bottom: 15px;
-  }
-
-
 }
 
+.alert-container {
+  position: absolute;
+  transform: translate(-50%, 0%);
+  width: 80%;
+  left: 50%;
+  z-index: 1000;
+  bottom: 0;
 
+  .alert-button-line{
+    width: 1px;
+    height: 30px;
+    background-color: #0000004a;
+  }
+}
