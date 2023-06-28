@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {BluetoothLE} from "@awesome-cordova-plugins/bluetooth-le";
 import {AppComponent} from "../../app.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {StatusBar} from "@capacitor/status-bar";
 
 
 @Component({
@@ -35,12 +36,18 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 })
 export class DevicePage {
 
+  //Proměnná pro uložení stavu alertu
   public active_alert: boolean = false;
 
-  constructor() { }
+  constructor(private ngZone: NgZone) { }
 
+  //Funkce, která se spustí po kliknutí na tlačítko "Obnovit tovární nastavení"
   public on_click_factory_reset(): void {
-    this.active_alert = true;
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() => {
+      //Nastavení proměnné na log1
+      this.active_alert = true;
+    });
   }
 
   //Tato funkce obnoví tovární nastavení. Funkce se spustí po kliknutí na tlačítko

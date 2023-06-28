@@ -60,9 +60,8 @@ export class AppComponent {
       if (platform.is('android')) {
         //Nastavení barvy textu horního status baru v mobilní aplikaci
         StatusBar.setStyle({style: Style.Light});
-        //Nastavení barvy horního statu sbaru v mobilní aplikaci
-        StatusBar.setBackgroundColor({color: "#ffffff"});
-
+        //Nastavení, zda má stavový řádek překrývat webové zobrazení, aby bylo možné využít prostor pod ním.
+        StatusBar.setOverlaysWebView({overlay: true});
         //Získání jména aplikace
         AppVersion.getAppName().then((value: string) => AppComponent.application_name = value);
         //Získání verze aplikace
