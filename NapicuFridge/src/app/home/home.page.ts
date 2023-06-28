@@ -71,12 +71,18 @@ export class HomePage {
       //Získání adresy z lokálního uložiště
       let i: DeviceInfo | null = AppComponent.get_paired_device_data_from_storage();
       if(i) {
+        console.log("Get from storage");
         //Vypsání hodnoty do vývojářské konzole
         console.log(i);
         //Připojit se k adrese, pokud je uložena v lokálním uložišti
         this.on_select_device(i.address);
       }
-      else this.loading = false;
+      else {
+        //Spuštění funkce uvnitř zóny Angularu
+        this.ngZone.run(() => {
+          this.loading = false;
+        })
+      }
 
 
     });

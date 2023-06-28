@@ -53,8 +53,8 @@ export class DevicePage {
     return AppComponent.is_connected();
   }
 
-  //Funkce, která vrátí adresu MAC připojeného zařízení
-  public get_mac_address(): string {
-    return AppComponent.connected_device?.address || "";
+  //Funkce, která vrátí jméno připojeného zařízení
+  public get_paired_device_name(): string {
+    return AppComponent.get_paired_device_name();
   }
 }

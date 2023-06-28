@@ -1,12 +1,9 @@
 <section class="section">
-
-  <div>NapicuFridge 1</div>
+  <div class="is-size-4 has-text-weight-bold">{{get_paired_device_name()}}</div>
 
   <div class="device-logo section">
-
     <ion-img src="/assets/fridge.png" ></ion-img>
   </div>
-
 
   <div class="is-flex is-justify-content-space-between is-align-items-center box info-box has-background-info is-size-4 has-text-weight-bold has-text-centered has-text-white">
     <div class="is-size-6">
@@ -18,9 +15,6 @@
       </div>
     </ng-container>
   </div>
-
-
-
 
   <div class="settings-container">
     <div class="is-size-4">Jiné</div>
@@ -45,12 +39,7 @@
       <div class="is-size-5">></div>
     </div>
   </div>
-
-
 </section>
-
-
-
 
 <div @AlertAnimation class="box info-box alert-container" *ngIf="active_alert">
   <div class="is-size-5 has-text-weight-bold">Obnovit tovární nastavení</div>
