@@ -51,4 +51,4 @@
   </div>
 </div>
 
-<div @AlertAnimationBackground class="alert" *ngIf="active_alert"></div>
+<div @AlertAnimationBackground class="alert" *ngIf="active_alert" (click)="active_alert = false;"></div>

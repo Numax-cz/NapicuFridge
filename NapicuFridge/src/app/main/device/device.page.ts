@@ -20,7 +20,6 @@ import {StatusBar} from "@capacitor/status-bar";
       transition(':leave', [
         animate(200, style({ opacity: 1, transform: 'translate(-50%, 200%)' }))
       ]),
-
     ]),
 
     trigger('AlertAnimationBackground', [
