@@ -30,21 +30,36 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
       case ESP_GAP_BLE_AUTH_CMPL_EVT: {
         if(param->ble_security.auth_cmpl.success) {
           // Vypsání zprávy do konzole
-          Serial.print("connected");
+          Serial.println("connected");
           // Získání adresy spárovaného zařízení
-          BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
+          // BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
+          
+          // Serial.printf(address.toString().c_str());
+
+
+
+
+          // //Získání reprezentační MAC adresy.
+          // esp_bd_addr_t* address_native = address.getNative();
+
+          // for (int i = 0; i < EEPROM_SIZE; ++i) {
+          //   //Zapsání hodnoty do EEPROM
+          //   EEPROM.write(MAC_ADDRESS_EEPROM_ADDR + i, (*address_native)[i]);
+          // }
+
+          // //Potvrzení změn
+          // EEPROM.commit();
 
 
           devicePaired = true;
-          // Vymazání white listu
-          // esp_ble_gap_clear_whitelist();
 
-          // Přidání adresy do white listu
-          BLEDevice::whiteListAdd(address);
 
+          // // Přidání adresy do white listu
+          // BLEDevice::whiteListAdd(address);
+          // //Zapnutí white listu
+          // set_whitelist();
 
           BLEDevice::startAdvertising();
-
         } else {
           // Odpojení zařízení v případě neúspěšného ověření
           esp_ble_gap_disconnect(param->ble_security.auth_cmpl.bd_addr);
@@ -56,10 +71,23 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
 }
 
 
+
 void setup() {
   // Zahájení komunikace po sériové lince
   // Rychlostí 9600 baud
   Serial.begin(9600);
+
+  //Inicializace paměti EEPROM
+  if (!EEPROM.begin(6)) {
+    //Vypsání hodnoty do konzole
+    Serial.println("EEPROM inicializace byla neúspěšná");
+    while (true);
+  } else {
+    //Vypsání hodnoty do konzole
+    Serial.println("EEPROM je dostupné");
+  }
+
+
   // Nastavení LED diody jako výstup
   pinMode(CONNECTION_LED, OUTPUT);
   pinMode(TEST_LED, OUTPUT);
@@ -73,12 +101,34 @@ void setup() {
   BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT_MITM);
 
   BLEDevice::setCustomGapHandler(my_gap_event_handler);
- 
+
 
   // Vytvoření BLE serveru
   pServer = BLEDevice::createServer();
-  //pServer->getAdvertising()->setScanFilter(false, true);
-  
+
+
+  // esp_bd_addr_t data_from_eeprom;
+  // //Přečtení hodnoty MAC adresy z EEPROM
+  // for (int i = 0; i < EEPROM_SIZE; ++i) {
+  //   data_from_eeprom[i] = EEPROM.read(MAC_ADDRESS_EEPROM_ADDR + i);
+  //   //Vypsání hodnoty do konzole
+  //   Serial.println(data_from_eeprom[i]);
+  // }
+
+  // //Pokud je uložená MAC adresa proveď následující
+  // if(data_from_eeprom[0] != 0xFF) {
+  //   //Vypsání hodnoty do konzole
+  //   Serial.println("MAC adresa je uložená v EEPROM.");
+  //   Serial.println(BLEAddress(data_from_eeprom).toString().c_str());  
+  //   //Přidání adresy do white listu
+  //   //BLEDevice::whiteListAdd(BLEAddress(data_from_eeprom));
+    
+  //   esp_ble_gap_update_whitelist(true, data_from_eeprom, BLE_WL_ADDR_TYPE_PUBLIC);
+
+  //   //Zapnutí white listu
+  //   set_whitelist();
+  // }
+
 
 
   pServer->setCallbacks(new ServerCallBack());
@@ -105,10 +155,12 @@ void setup() {
   pService->start();
 
 
-  // BLESecurity *pSecurity = new BLESecurity();
-  // pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
-  // pSecurity->setCapability(ESP_IO_CAP_NONE);
-  // pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+ esp_ble_gap_config_local_privacy(true);
+
+  BLESecurity *pSecurity = new BLESecurity();
+  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
+  pSecurity->setCapability(ESP_IO_CAP_NONE);
+  pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
 
 
@@ -139,4 +191,22 @@ void loop() {
   }
   // Pauza před novým během smyčky
   delay(1000);
+}
+
+
+//Funkce, která zapne white list 
+void set_whitelist() {
+  //Zapnutí white listu (lze připojit pouze zařízení, které se nachází v seznamu povolených zařízení)
+  pServer->getAdvertising()->setScanFilter(false, true);
+  //Vypsání hodnoty do konzole
+
+  Serial.println("WhiteList zapnut.");  
+}
+
+//Funkce, která vymaže white list 
+void del_whitelist() {
+  //Vymazání white listu
+  esp_ble_gap_clear_whitelist();
+  //Vypsání hodnoty do konzole
+  Serial.println("WhiteList byl vymazán.");
 }
