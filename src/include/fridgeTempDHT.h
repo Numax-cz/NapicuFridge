@@ -6,8 +6,7 @@
 #include <BLE2902.h>
 
 
-class FridgeTempDHT
-{
+class FridgeTempDHT{
 private:
     // Proměnná pro DHT senzor 
     DHT *dht;
