@@ -26,9 +26,3 @@
 //Proměnná pro kontrolu připojených zařízení
 extern bool devicePaired;
 
-
-//Definice funkce pro zapnustí white listu 
-void set_whitelist();
-
-//Definice funkce pro vymazání white listu
-void del_whitelist();
