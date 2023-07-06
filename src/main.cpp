@@ -1,15 +1,12 @@
 // Arduino ESP32 a Bluetooth Low Energy
 // Připojení potřebných knihoven
-#include <Arduino.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLE2902.h>
 #include <EEPROM.h>
 #include <DHT.h>
 // Připojení potřebných lokálních knihoven z /src/include
-#include <include/CallBack.h>
 #include <include/main.h>
-#include <include/fridgeTempDHT.h>
 
 bool devicePaired = false;
 

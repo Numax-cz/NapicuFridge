@@ -1,6 +1,10 @@
 #pragma once
 // Připojení potřebných knihoven
-#include <Arduino.h>
+
+#include <include/CallBack.h>
+#include <include/fridgeTempDHT.h>
+
+
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu
 #define readPin 32
