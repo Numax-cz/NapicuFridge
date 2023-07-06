@@ -39,9 +39,13 @@ extern bool devicePaired;
 //Definice struktury pro nastavení chytré ledničky 
 struct fridge_data
 {
-    //Proměnná pro ukládání spárovaného zařízení
-    BLEAddress paired_device_address;
+    //Proměnná pro ukládání mac adresy spárovaného zařízení
+    BLEAddress* paired_device_address = nullptr;
 };
 
 //Proměnná pro globální nastavení chytré ledničky 
 extern fridge_data FridgeData;
+
+
+//Funkce, která vrátí mac adresu spárované zařízení z EEPROM
+BLEAddress* read_paired_device_mac_address_from_eeprom();

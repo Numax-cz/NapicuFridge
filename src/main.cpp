@@ -2,7 +2,6 @@
 
 // Připojení potřebných lokálních knihoven z /src/include
 #include <include/main.h>
-
 bool devicePaired = false;
 
 
@@ -20,7 +19,7 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
       case ESP_GAP_BLE_AUTH_CMPL_EVT: {
         if(param->ble_security.auth_cmpl.success) {
           // Vypsání zprávy do konzole
-          Serial.println("connected");
+          Serial.println("Connected");
           // Získání adresy spárovaného zařízení
           BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
           
@@ -47,7 +46,7 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
           // //Zapnutí white listu
           // set_whitelist();
 
-          //BLEDevice::startAdvertising();
+         // BLEDevice::startAdvertising();
         } else {
           //Odpojení zařízení v případě neúspěšného ověření
           esp_ble_gap_disconnect(param->ble_security.auth_cmpl.bd_addr);
@@ -74,6 +73,17 @@ void setup() {
     //Vypsání hodnoty do konzole
     Serial.println("EEPROM je dostupné");
   }
+
+
+  BLEAddress* data_from_eeprom = read_paired_device_mac_address_from_eeprom();
+
+  if(data_from_eeprom) {
+    //Vypsání hodnoty do konzole
+    Serial.println("MAC adresa je uložená v EEPROM.");
+    Serial.println(data_from_eeprom->toString().c_str());  
+  }
+
+
 
 
   // Nastavení LED diody jako výstup
@@ -122,12 +132,12 @@ void setup() {
   pService->start();
 
 
- esp_ble_gap_config_local_privacy(true);
+  esp_ble_gap_config_local_privacy(true);
 
-  BLESecurity *pSecurity = new BLESecurity();
-  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
-  pSecurity->setCapability(ESP_IO_CAP_NONE);
-  pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+  // BLESecurity *pSecurity = new BLESecurity();
+  // pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
+  // pSecurity->setCapability(ESP_IO_CAP_NONE);
+  // pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
 
 
@@ -162,3 +172,19 @@ void loop() {
 }
 
 
+BLEAddress* read_paired_device_mac_address_from_eeprom() {
+  esp_bd_addr_t data_from_eeprom;
+  //Přečtení hodnoty MAC adresy z EEPROM
+  for (int i = 0; i < EEPROM_SIZE; ++i) {
+    data_from_eeprom[i] = EEPROM.read(MAC_ADDRESS_EEPROM_ADDR + i);
+    //Vypsání hodnoty do konzole
+    Serial.println(data_from_eeprom[i]);
+  }
+
+  //Pokud je uložená MAC adresa proveď následující
+  if(data_from_eeprom[0] != 0xFF) {
+    return new BLEAddress(data_from_eeprom);
+  }
+
+  return nullptr;
+}
