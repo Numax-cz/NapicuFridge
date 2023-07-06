@@ -4,11 +4,6 @@
 // připojení potřebných knihoven
 #include "main.h"
 
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
-#include <BLE2902.h>
-#include <EEPROM.h>
 
 
 // třída pro kontrolu připojení

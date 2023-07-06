@@ -1,6 +1,11 @@
 #pragma once
 // Připojení potřebných knihoven
-
+// Připojení potřebných knihoven
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLE2902.h>
+#include <EEPROM.h>
+#include <DHT.h>
 #include <include/CallBack.h>
 #include <include/fridgeTempDHT.h>
 

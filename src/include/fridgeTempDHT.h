@@ -1,8 +1,6 @@
 #pragma once
 #include "main.h"
-#include <DHT.h>
-#include <BLEDevice.h>
-#include <BLE2902.h>
+
 
 
 class FridgeTempDHT{
