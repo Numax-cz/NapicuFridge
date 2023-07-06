@@ -3,11 +3,9 @@
 #include <Arduino.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
-#include <BLEUtils.h>
 #include <BLE2902.h>
 #include <EEPROM.h>
 #include <DHT.h>
-#include <sstream>
 // Připojení potřebných lokálních knihoven z /src/include
 #include <include/CallBack.h>
 #include <include/main.h>
