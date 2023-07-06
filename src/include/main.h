@@ -35,3 +35,13 @@
 //Proměnná pro kontrolu připojených zařízení
 extern bool devicePaired;
 
+
+//Definice struktury pro nastavení chytré ledničky 
+struct fridge_data
+{
+    //Proměnná pro ukládání spárovaného zařízení
+    BLEAddress paired_device_address;
+};
+
+//Proměnná pro globální nastavení chytré ledničky 
+extern fridge_data FridgeData;

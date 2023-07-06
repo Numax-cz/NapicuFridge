@@ -81,7 +81,6 @@ void setup() {
   pinMode(TEST_LED, OUTPUT);
 
 
-  
 
   // Inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init("NapicuFridge");
@@ -145,6 +144,7 @@ void setup() {
 
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 }
+
 void loop() {
   // Pokud je zařízení připojeno k ESP32
   // Začneme s odesíláním dat
