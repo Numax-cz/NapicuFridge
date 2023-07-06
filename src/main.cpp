@@ -22,7 +22,6 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
           Serial.println("Connected");
           // Získání adresy spárovaného zařízení
           BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
-          
           // Serial.printf(address.toString().c_str());
 
       
@@ -160,8 +159,6 @@ void loop() {
   // Začneme s odesíláním dat
   if (devicePaired == true) {
 
-
-    
     insideTempDHT->sendTemperature();
 
     // vytištění odeslané zprávy po sériové lince
@@ -187,4 +184,8 @@ BLEAddress* read_paired_device_mac_address_from_eeprom() {
   }
 
   return nullptr;
+}
+
+void factory_reset() {
+
 }

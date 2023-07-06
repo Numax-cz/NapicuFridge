@@ -49,3 +49,6 @@ extern fridge_data FridgeData;
 
 //Funkce, která vrátí mac adresu spárované zařízení z EEPROM
 BLEAddress* read_paired_device_mac_address_from_eeprom();
+
+//Funkce, která uvede zařízení do továrního nastavení
+void factory_reset();
