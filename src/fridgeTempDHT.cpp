@@ -24,6 +24,7 @@ void FridgeTempDHT::sendTemperature() {
     //Získání teploty
     float temp = this->dht->readTemperature();
 
+
     //Převedení floatu na string
     std::ostringstream ss;
     ss << temp;

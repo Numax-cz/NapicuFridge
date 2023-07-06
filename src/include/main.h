@@ -1,6 +1,6 @@
 #pragma once
+// Připojení potřebných knihoven
 #include <Arduino.h>
-
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu
 #define readPin 32

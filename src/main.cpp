@@ -172,19 +172,3 @@ void loop() {
 }
 
 
-//Funkce, která zapne white list 
-void set_whitelist() {
-  //Zapnutí white listu (lze připojit pouze zařízení, které se nachází v seznamu povolených zařízení)
-  pServer->getAdvertising()->setScanFilter(false, true);
-  //Vypsání hodnoty do konzole
-
-  Serial.println("WhiteList zapnut.");  
-}
-
-//Funkce, která vymaže white list 
-void del_whitelist() {
-  //Vymazání white listu
-  esp_ble_gap_clear_whitelist();
-  //Vypsání hodnoty do konzole
-  Serial.println("WhiteList byl vymazán.");
-}
