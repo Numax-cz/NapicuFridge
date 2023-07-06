@@ -24,10 +24,10 @@ void FridgeTempDHT::sendTemperature() {
     //Získání teploty
     float temp = this->dht->readTemperature();
 
+    //Převedení floatu na string s jedním desetinným místem
+    String data = String(temp, 1);
 
-    //Převedení floatu na string
-    String data = String(temp);
-
+    //Nastavení hodnoty charakteristiky 
     this->pCharacteristic->setValue(data.c_str());
 
     //Odeslání zprávy skrze BLE do připojeného zařízení
