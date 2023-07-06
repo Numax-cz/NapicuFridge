@@ -26,10 +26,9 @@ void FridgeTempDHT::sendTemperature() {
 
 
     //Převedení floatu na string
-    std::ostringstream ss;
-    ss << temp;
+    String data = String(temp);
 
-    this->pCharacteristic->setValue(ss.str());
+    this->pCharacteristic->setValue(data.c_str());
 
     //Odeslání zprávy skrze BLE do připojeného zařízení
     this->pCharacteristic->notify();

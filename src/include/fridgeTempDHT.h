@@ -1,7 +1,6 @@
 #pragma once
 #include <DHT.h>
 #include "main.h"
-#include <sstream>
 #include <BLEDevice.h>
 #include <BLE2902.h>
 
