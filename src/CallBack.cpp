@@ -1,12 +1,12 @@
 #include <include/CallBack.h>
 // při připojení zařízení nastav proměnnou na log1
 void ServerCallBack::onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param) {
-    // if(FridgeData.paired_device_address != nullptr) {
-    //     if(FridgeData.paired_device_address->toString() != BLEAddress(param->connect.remote_bda).toString()) {
-    //         esp_ble_gap_disconnect(param->connect.remote_bda);
-    //         return;
-    //     }
-    // } 
+    if(FridgeData.paired_device_address != nullptr) {
+        if(FridgeData.paired_device_address->toString() != BLEAddress(param->connect.remote_bda).toString()) {
+            esp_ble_gap_disconnect(param->connect.remote_bda);
+            return;
+        }
+    } 
 
 
     digitalWrite(CONNECTION_LED, HIGH);

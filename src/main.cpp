@@ -4,6 +4,7 @@
 #include <include/main.h>
 bool devicePaired = false;
 
+fridge_data FridgeData;
 
 // Inicializace modulu z knihovny
 
@@ -19,33 +20,25 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
       case ESP_GAP_BLE_AUTH_CMPL_EVT: {
         if(param->ble_security.auth_cmpl.success) {
           // Vypsání zprávy do konzole
-          Serial.println("Connected");
-          // Získání adresy spárovaného zařízení
-          BLEAddress address = BLEAddress(param->ble_security.auth_cmpl.bd_addr);
-          // Serial.printf(address.toString().c_str());
+          Serial.println("Paired");
+          //Pokud zařízení nebylo nikdy spárované s žádným zařízením
+          if(FridgeData.paired_device_address == nullptr){
+            //Získání adresy spárovaného zařízení a vytvoření classy BLEAddress
+            BLEAddress* address = new BLEAddress(param->ble_security.auth_cmpl.bd_addr);
+            //Uložení proměnné spárovaného zařízení do globálního nastavení chytré ledničky
+            FridgeData.paired_device_address = address;
+            //Získání reprezentační MAC adresy.
+            esp_bd_addr_t* address_native = address->getNative();
 
-      
-          //Získání reprezentační MAC adresy.
-          esp_bd_addr_t* address_native = address.getNative();
-
-          for (int i = 0; i < EEPROM_SIZE; ++i) {
-            //Zapsání hodnoty do EEPROM
-            EEPROM.write(MAC_ADDRESS_EEPROM_ADDR + i, (*address_native)[i]);
-          }
-
-          //Potvrzení změn
-          EEPROM.commit();
-
-
+            for (int i = 0; i < EEPROM_SIZE; ++i) {
+              //Zapsání hodnoty do EEPROM
+              EEPROM.write(MAC_ADDRESS_EEPROM_ADDR + i, (*address_native)[i]);
+            }
+            //Potvrzení změn
+            EEPROM.commit();
+          } 
+          //Nastavení proměnné na log1
           devicePaired = true;
-
-
-          // // Přidání adresy do white listu
-          // BLEDevice::whiteListAdd(address);
-          // //Zapnutí white listu
-          // set_whitelist();
-
-         // BLEDevice::startAdvertising();
         } else {
           //Odpojení zařízení v případě neúspěšného ověření
           esp_ble_gap_disconnect(param->ble_security.auth_cmpl.bd_addr);
@@ -80,6 +73,7 @@ void setup() {
     //Vypsání hodnoty do konzole
     Serial.println("MAC adresa je uložená v EEPROM.");
     Serial.println(data_from_eeprom->toString().c_str());  
+    FridgeData.paired_device_address = data_from_eeprom;
   }
 
 
@@ -133,10 +127,10 @@ void setup() {
 
   esp_ble_gap_config_local_privacy(true);
 
-  // BLESecurity *pSecurity = new BLESecurity();
-  // pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
-  // pSecurity->setCapability(ESP_IO_CAP_NONE);
-  // pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+  BLESecurity *pSecurity = new BLESecurity();
+  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
+  pSecurity->setCapability(ESP_IO_CAP_NONE);
+  pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
 
 
