@@ -3,7 +3,7 @@
 
 
 
-class FridgeTempDHT{
+class FridgeTempDHT {
 private:
     // Proměnná pro DHT senzor 
     DHT *dht;

@@ -6,9 +6,13 @@
 #include <BLE2902.h>
 #include <EEPROM.h>
 #include <DHT.h>
+
+#include <Adafruit_SSD1306.h>
+#include <Wire.h>
+
 #include <include/CallBack.h>
 #include <include/fridgeTempDHT.h>
-
+#include <include/fridgeDisplay.h>
 
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu

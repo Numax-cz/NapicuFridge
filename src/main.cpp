@@ -84,6 +84,8 @@ void setup() {
   pinMode(TEST_LED, OUTPUT);
 
 
+  FridgeDisplay::begin();
+
 
   // Inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init("NapicuFridge");
@@ -149,6 +151,9 @@ void setup() {
 }
 
 void loop() {
+
+  FridgeDisplay::loop();
+
   // Pokud je zařízení připojeno k ESP32
   // Začneme s odesíláním dat
   if (devicePaired == true) {
