@@ -51,7 +51,7 @@ void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t 
     FridgeDisplay::display->setTextWrap(false);
 
     //Vypočítání středu osy X v závislosti na textu a velikosti textu
-    if(x == -1) int16_t x = (DISPLAY_W - (text.length() * (font_size * 6))) / 2;
+    if(x == -1) x = (DISPLAY_W - (text.length() * (font_size * 6))) / 2;
     //Vypočítání středu osy Y v závislosti na textu a velikosti textu
     int16_t y = (DISPLAY_H / 2) - (font_size * 8) / 2;
     //Nastavení curzoru podle proměnné x a y
