@@ -40,6 +40,7 @@
 extern bool devicePaired;
 
 
+
 //Definice struktury pro nastavení chytré ledničky 
 struct fridge_data
 {

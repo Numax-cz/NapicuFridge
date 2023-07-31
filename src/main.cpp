@@ -12,7 +12,10 @@ BLEServer* pServer = NULL;
 
 FridgeTempDHT* insideTempDHT = NULL;
 
-
+//Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
+const int data_send_period = 1000;
+//Proměnná aktuální doby
+unsigned long data_send_time_now = 0;
 
 void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t* param) {
   switch(event) {
@@ -37,6 +40,12 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
             //Potvrzení změn
             EEPROM.commit();
           } 
+
+
+          //TODO
+          FridgeDisplay::change_display(FRIDGE_DISPLAY_IN_TEMP_1);
+
+
           //Nastavení proměnné na log1
           devicePaired = true;
         } else {
@@ -56,6 +65,15 @@ void setup() {
   // Rychlostí 9600 baud
   Serial.begin(9600);
 
+
+  // Nastavení LED diody jako výstup
+  pinMode(CONNECTION_LED, OUTPUT);
+  pinMode(TEST_LED, OUTPUT);
+
+
+  FridgeDisplay::begin();
+
+
   //Inicializace paměti EEPROM
   if (!EEPROM.begin(6)) {
     //Vypsání hodnoty do konzole
@@ -67,6 +85,8 @@ void setup() {
   }
 
 
+
+
   BLEAddress* data_from_eeprom = read_paired_device_mac_address_from_eeprom();
 
   if(data_from_eeprom) {
@@ -74,17 +94,15 @@ void setup() {
     Serial.println("MAC adresa je uložená v EEPROM.");
     Serial.println(data_from_eeprom->toString().c_str());  
     FridgeData.paired_device_address = data_from_eeprom;
+    FridgeDisplay::change_display(FRIDGE_DISPLAY_IN_TEMP_1);
+  } else {
+    FridgeDisplay::change_display(FRIDGE_DISPLAY_PAIR_TEXT);
   }
 
 
 
 
-  // Nastavení LED diody jako výstup
-  pinMode(CONNECTION_LED, OUTPUT);
-  pinMode(TEST_LED, OUTPUT);
 
-
-  FridgeDisplay::begin();
 
 
   // Inicializace Bluetooth s nastavením jména zařízení
@@ -151,20 +169,20 @@ void setup() {
 }
 
 void loop() {
-
   FridgeDisplay::loop();
 
-  // Pokud je zařízení připojeno k ESP32
-  // Začneme s odesíláním dat
-  if (devicePaired == true) {
 
-    insideTempDHT->sendTemperature();
-
-    // vytištění odeslané zprávy po sériové lince
-    //Serial.print(temp);
+  //Načasování programu
+  if(millis() >= data_send_time_now + data_send_period) {
+    data_send_time_now += data_send_period;
+    // Pokud je zařízení připojeno k ESP32
+    // Začneme s odesíláním dat
+    if (devicePaired == true) {
+      insideTempDHT->sendTemperature();
+    }
   }
-  // Pauza před novým během smyčky
-  delay(1000);
+
+
 }
 
 
