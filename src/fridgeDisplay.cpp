@@ -47,9 +47,8 @@ void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t 
     FridgeDisplay::display->setTextSize(font_size);
     //Nastavení barvy textu (při našem použitém oledu se zobrazí pouze modrý text)
     FridgeDisplay::display->setTextColor(WHITE);
-
+    //Zakázání formátování textu
     FridgeDisplay::display->setTextWrap(false);
-
     //Vypočítání středu osy X v závislosti na textu a velikosti textu
     if(x == -1) x = (DISPLAY_W - (text.length() * (font_size * 6))) / 2;
     //Vypočítání středu osy Y v závislosti na textu a velikosti textu
