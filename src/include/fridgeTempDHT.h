@@ -9,9 +9,11 @@ private:
     DHT *dht;
     // Proměnná BLE komunikačního kanálu pro odesílání dat
     BLECharacteristic *pCharacteristic;
+    //Proměnná pro ukládání teploty 
+    String& value;
     
 public:
-    FridgeTempDHT(int pin, const char* uuid, BLEService* pService);
+    FridgeTempDHT(int pin, const char* uuid, BLEService* pService, String& value);
     ~FridgeTempDHT();
     void begin();
     void sendTemperature();

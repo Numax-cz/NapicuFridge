@@ -133,7 +133,7 @@ void setup() {
 
 
   // Vytvoření teploměru pro vnitřní zaznamenávání teploty
-  insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_TX, pService);
+  insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_TX, pService, FridgeData.in_temp);
   
   insideTempDHT->begin();
   
