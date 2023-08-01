@@ -29,7 +29,7 @@ void FridgeDisplay::loop() {
         FridgeDisplay::print_pair_text();
     }
     else if (FridgeDisplay::display_state == FRIDGE_DISPLAY_IN_TEMP_1) {
-        String temp = "69.5";
+        String temp = FridgeData.in_temp;
         temp += (char)247;
         temp += "C";
         FridgeDisplay::print_centered_text(temp, 2);

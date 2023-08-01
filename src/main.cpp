@@ -89,13 +89,18 @@ void setup() {
 
   BLEAddress* data_from_eeprom = read_paired_device_mac_address_from_eeprom();
 
+  //Když je adresa uložená v paměti EEPROM provede se následující
   if(data_from_eeprom) {
     //Vypsání hodnoty do konzole
     Serial.println("MAC adresa je uložená v EEPROM.");
+    //Vypsání hodnoty z EEPROM do konzole
     Serial.println(data_from_eeprom->toString().c_str());  
+    //Nastavení proměnné
     FridgeData.paired_device_address = data_from_eeprom;
+    //Změna displeje
     FridgeDisplay::change_display(FRIDGE_DISPLAY_IN_TEMP_1);
   } else {
+    //Změna displeje
     FridgeDisplay::change_display(FRIDGE_DISPLAY_PAIR_TEXT);
   }
 
@@ -175,9 +180,11 @@ void loop() {
   //Načasování programu
   if(millis() >= data_send_time_now + data_send_period) {
     data_send_time_now += data_send_period;
-    // Pokud je zařízení připojeno k ESP32
-    // Začneme s odesíláním dat
+    //Aktualizování hodnot 
+    insideTempDHT->updateTemperature();
+    //Pokud je zařízení připojeno k ESP32
     if (devicePaired == true) {
+    //Začneme s odesíláním dat
       insideTempDHT->sendTemperature();
     }
   }

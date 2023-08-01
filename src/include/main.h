@@ -46,6 +46,9 @@ struct fridge_data
 {
     //Proměnná pro ukládání mac adresy spárovaného zařízení
     BLEAddress* paired_device_address = nullptr;
+
+    //Proměnná pro ukládání vnitřní teploty ledničky ve formátu string 
+    String in_temp = "";
 };
 
 //Proměnná pro globální nastavení chytré ledničky 

@@ -15,6 +15,7 @@ public:
     ~FridgeTempDHT();
     void begin();
     void sendTemperature();
+    void updateTemperature();
 
 };
 

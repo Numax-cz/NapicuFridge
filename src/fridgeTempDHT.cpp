@@ -20,19 +20,20 @@ void FridgeTempDHT::begin() {
     this->dht->begin();
 }
 
-void FridgeTempDHT::sendTemperature() {
+//Funkce pro aktualizování aktuálních hodnot
+void FridgeTempDHT::updateTemperature() {
     //Získání teploty
     float temp = this->dht->readTemperature();
-
     //Převedení floatu na string s jedním desetinným místem
-    String data = String(temp, 1);
+    FridgeData.in_temp = String (temp, 1);
+}
 
+//Funkce, která pošle data skrze BLE do připojeného zařízení
+void FridgeTempDHT::sendTemperature() {
     //Nastavení hodnoty charakteristiky 
-    this->pCharacteristic->setValue(data.c_str());
-
+    this->pCharacteristic->setValue(FridgeData.in_temp.c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
     this->pCharacteristic->notify();
-
     //Vytištění odeslané zprávy po sériové lince
-    Serial.print(temp);
+    Serial.print(FridgeData.in_temp);
 }
