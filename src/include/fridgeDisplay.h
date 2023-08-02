@@ -30,6 +30,7 @@ private:
 public:
     void static begin();
     void static loop();
+    void static sleep();
     void static change_display(fridge_display_state state) {FridgeDisplay::display_state = state;}
 
 

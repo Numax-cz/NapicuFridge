@@ -9,7 +9,7 @@ private:
     DHT *dht;
     // Proměnná BLE komunikačního kanálu pro odesílání dat
     BLECharacteristic *pCharacteristic;
-    //Proměnná pro ukládání teploty 
+    //Reference proměnné pro ukládání teploty 
     String& value;
     
 public:

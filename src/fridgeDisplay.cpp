@@ -35,9 +35,11 @@ void FridgeDisplay::loop() {
         FridgeDisplay::print_centered_text(temp, 2);
 
     }
+}
 
-
-
+void FridgeDisplay::sleep() {
+    FridgeDisplay::display->clearDisplay();
+    FridgeDisplay::display->ssd1306_command(SSD1306_DISPLAYOFF);
 }
 
 void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t x) {
