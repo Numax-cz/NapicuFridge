@@ -20,6 +20,7 @@ $sum: 2;
 
 .settings-container{
   margin-top: 1rem;
+  margin-bottom: 4rem;
   > div {
     margin-bottom: 0.5rem !important;
   }
@@ -54,5 +55,11 @@ $sum: 2;
     width: 1px;
     height: 30px;
     background-color: #0000004a;
+  }
+}
+
+@media screen and (max-width: 657px){
+  .device-logo {
+    padding: 1.5rem 0.75rem !important;
   }
 }

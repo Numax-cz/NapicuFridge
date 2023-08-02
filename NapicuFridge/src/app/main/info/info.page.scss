@@ -1,1 +1,22 @@
+@media screen and (max-width: 377px){
+  .section {
+    padding: 1.5rem 0.75rem !important;
+  }
+  .box {
+    padding: 1rem !important;
+  }
+  .box-table {
+    .is-size-6 {
+      font-size: 0.9rem !important;
+    }
+    .box {
+      font-size: 1.25rem !important;
+    }
+  }
+}
 
+@media screen and (max-width: 336px){
+  .section {
+    padding: 1.5rem 0.75rem !important;
+  }
+}
