@@ -1,20 +1,4 @@
-$sum: 2;
 
-.display{
-  height: calc(32px * $sum);
-  width: calc(128px * $sum);
-  font-size: calc(16px * $sum);
-  margin: auto;
-  background: black;
-  color: aqua;
-
-  >div{
-    height: 100%;
-    display: flex;
-    align-items: center;
-
-  }
-}
 
 
 
