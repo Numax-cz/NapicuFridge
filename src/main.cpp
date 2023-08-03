@@ -140,12 +140,23 @@ void setup() {
 
   
   // Vytvoření BLE komunikačního kanálu pro příjem (RX)
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-                                         CHARACTERISTIC_UUID_RX,
-                                         BLECharacteristic::PROPERTY_WRITE
-                                       );
+  BLECharacteristic *fridgeEnableCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_DISPLAY_ENABLE_UUID,
+    BLECharacteristic::PROPERTY_WRITE | 
+    BLECharacteristic::PROPERTY_READ |
+    BLECharacteristic::PROPERTY_INDICATE |
+    BLECharacteristic::PROPERTY_NOTIFY
+  );
                                        
-  pCharacteristic->setCallbacks(new CharacteristicCallback());
+  fridgeEnableCharacteristic->setCallbacks(new DisplayEnableCharacteristicCallback());
+
+
+
+  
+
+
+
+
   // Zahájení BLE služby
   pService->start();
 

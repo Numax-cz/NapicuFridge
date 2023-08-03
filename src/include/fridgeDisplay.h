@@ -19,6 +19,8 @@ private:
 
     static inline fridge_display_state display_state = FRIDGE_DISPLAY_PAIR_TEXT; 
 
+    static inline bool is_dislay_enable = true;
+
     void static print_centered_text(String text, uint8_t font_size = 1, int16_t x = -1);
 
 
@@ -30,11 +32,19 @@ private:
 public:
     void static begin();
     void static loop();
-    void static sleep();
     void static change_display(fridge_display_state state) {FridgeDisplay::display_state = state;}
-
+    int static get_is_enable() {return FridgeDisplay::is_dislay_enable;}
+    void static disable_display();
+    void static enable_display();
 
 
 };
 
 
+//Třída pro správu displeje chytré ledničky
+class DisplayEnableCharacteristicCallback : public BLECharacteristicCallbacks {
+public: 
+    void onWrite(BLECharacteristic *pCharacteristic);
+    void onRead(BLECharacteristic *pCharacteristic);
+
+};

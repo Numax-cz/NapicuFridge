@@ -18,6 +18,18 @@ void FridgeDisplay::begin() {
 
 }
 
+
+void FridgeDisplay::enable_display() {
+    FridgeDisplay::is_dislay_enable = true;
+    FridgeDisplay::display->ssd1306_command(SSD1306_DISPLAYON);
+}
+
+void FridgeDisplay::disable_display() {
+    FridgeDisplay::is_dislay_enable = false;
+    FridgeDisplay::display->clearDisplay();
+    FridgeDisplay::display->ssd1306_command(SSD1306_DISPLAYOFF);
+}
+
 void FridgeDisplay::loop() {
 
 
@@ -37,10 +49,7 @@ void FridgeDisplay::loop() {
     }
 }
 
-void FridgeDisplay::sleep() {
-    FridgeDisplay::display->clearDisplay();
-    FridgeDisplay::display->ssd1306_command(SSD1306_DISPLAYOFF);
-}
+
 
 void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t x) {
     //Nastavení veškerých pixelů na log0
