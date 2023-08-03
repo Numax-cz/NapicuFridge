@@ -18,3 +18,4 @@ class CharacteristicCallback : public BLECharacteristicCallbacks {
 public:
     void onWrite(BLECharacteristic *pCharacteristic);
 };
+

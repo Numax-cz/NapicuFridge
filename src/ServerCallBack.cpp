@@ -1,4 +1,4 @@
-#include <include/CallBack.h>
+#include <include/ServerCallBack.h>
 // při připojení zařízení nastav proměnnou na log1
 void ServerCallBack::onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param) {
     if(FridgeData.paired_device_address != nullptr) {
@@ -44,3 +44,5 @@ void CharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
         digitalWrite(TEST_LED, LOW);
     }
 };
+
+
