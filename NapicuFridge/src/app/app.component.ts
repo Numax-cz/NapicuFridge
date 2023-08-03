@@ -5,15 +5,16 @@ import {AppVersion} from "@awesome-cordova-plugins/app-version";
 import {App} from "@capacitor/app";
 import {
   AndroidGattTransportMode,
-  BluetoothLE, CommonInfo,
-  CurrConnectionStatus, Device,
-  DeviceInfo, OperationResult
+  BluetoothLE,
+  Device,
+  DeviceInfo,
+  OperationResult
 } from "@awesome-cordova-plugins/bluetooth-le";
 import {FridgeData} from "./interface/FridgeData";
 import {Configuration} from "./config/configuration";
-import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
-import {add, exit} from "ionicons/icons";
 import {app_animation} from "./main/Animation";
+import {FridgeDisplayState} from "./interface/Enums";
+import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
 
 @Component({
   selector: 'app-root',
@@ -43,7 +44,13 @@ export class AppComponent {
   //Statická proměnná pro ukládání informací z ESP32
   public static fridge_data: FridgeData = {
     //Vnitřní teplota ledničky
-    in_temp: ""
+    in_temp: "",
+
+
+    config: {
+      fridge_display_available: true,
+      fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1
+    }
   }
 
   constructor(private platform: Platform, ngZone: NgZone, private animationCtrl: AnimationController) {
@@ -182,5 +189,15 @@ export class AppComponent {
   //Funkce, která vrátí vnitřní teplotu
   public static get_in_temp(): string {
     return this.fridge_data.in_temp;
+  }
+
+  //Funkce, která vrátí zda je displej chytré ledničky povolen
+  public static get_is_display_available(): boolean {
+    return AppComponent.fridge_data.config.fridge_display_available;
+  }
+
+  //Funkce, která vrátí nastavený stav displeje
+  public static get_display_state(): FridgeDisplayState {
+    return AppComponent.fridge_data.config.fridge_display_state;
   }
 }

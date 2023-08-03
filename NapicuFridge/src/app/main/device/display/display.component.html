@@ -5,7 +5,29 @@
 
 
 
-  <section class="mt-5">
+
+  <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
+    <div class="pb-2 pt-2 is-flex is-justify-content-space-between is-align-items-center" >
+      <div class="is-size-6">
+        Display
+      </div>
+      <div class="is-size-6 has-text-weight-light">
+
+        <div class="napicu-switch">
+          <label class="toggle">
+            <input class="toggle-checkbox" type="checkbox"  (change)="display_available_input_change($event)" [checked]="get_is_display_available()">
+            <div class="toggle-switch"></div>
+
+          </label>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <section @ContentAnimation *ngIf="get_is_display_available()" class="mt-5">
 
     <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
       <div class="display">
