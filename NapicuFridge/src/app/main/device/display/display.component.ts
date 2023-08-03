@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {FridgeDisplayState} from "../../../interface/Enums";
 import {AppComponent} from "../../../app.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {BluetoothLE} from "@awesome-cordova-plugins/bluetooth-le";
+import {Configuration} from "../../../config/configuration";
+import CHARACTERISTIC_DISPLAY_ENABLE_UUID = Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID;
 
 @Component({
   selector: 'app-display',
@@ -31,6 +34,19 @@ export class DisplayComponent {
   public display_available_input_change(event: any): void {
     //Nastavení proměnné z configu na novou hodnotu
     AppComponent.fridge_data.config.fridge_display_available = event.currentTarget.checked;
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device)  {
+
+      let bytes: Uint8Array = BluetoothLE.stringToBytes(AppComponent.fridge_data.config.fridge_display_available ? "1" : "0");
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+
+      BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: CHARACTERISTIC_DISPLAY_ENABLE_UUID,
+        value: encodedUnicodeString,
+      })
+    }
   }
 
 
