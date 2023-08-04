@@ -18,30 +18,6 @@
   }
 }
 
-.alert{
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  background: #00000057;
-  left: 0;
-}
-
-.alert-container {
-  position: absolute;
-  transform: translate(-50%, 0%);
-  width: 80%;
-  left: 50%;
-  z-index: 1000;
-  bottom: 0;
-
-  .alert-button-line{
-    width: 1px;
-    height: 30px;
-    background-color: #0000004a;
-  }
-}
-
 @media screen and (max-width: 657px){
   .device-logo {
     padding: 1.5rem 0.75rem !important;

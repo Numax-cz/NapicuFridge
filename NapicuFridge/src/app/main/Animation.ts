@@ -1,4 +1,5 @@
 import {AnimationController} from "@ionic/angular";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 const animationCtrl = new AnimationController();
 
@@ -29,3 +30,27 @@ export const app_animation = ((_: HTMLElement, opts: any) => {
   rootTransition.addAnimation([enterTransition, exitTransition]);
   return rootTransition;
 });
+
+
+export const alert_animations: any[] = [
+  //Programování animací skrze Angular
+  trigger('AlertAnimation', [
+    state('void', style({ opacity: 0, transform: 'translate(-50%, 200%)' })),
+    transition(':enter', [
+      animate(200, style({ opacity: 1, transform: 'translate(-50%, 0%)' }))
+    ]),
+    transition(':leave', [
+      animate(200, style({ opacity: 1, transform: 'translate(-50%, 200%)' }))
+    ]),
+  ]),
+
+  trigger('AlertAnimationBackground', [
+    state('void', style({ opacity: 0 })),
+    transition(':enter', [
+      animate(150, style({ opacity: 1 }))
+    ]),
+    transition(':leave', [
+      animate(150, style({ opacity: 0 }))
+    ]),
+  ]),
+]

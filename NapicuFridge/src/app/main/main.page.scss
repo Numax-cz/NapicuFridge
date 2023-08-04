@@ -7,6 +7,11 @@
   transform: translate(50%, -50%);
 }
 
+.info-icon:active {
+  background-color: rgba(225, 225, 225, 0.4) !important;
+  border-radius: 5px;
+}
+
 .info-box{
   border-radius: 13px !important;
 }

@@ -3,35 +3,14 @@ import {BluetoothLE} from "@awesome-cordova-plugins/bluetooth-le";
 import {AppComponent} from "../../app.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {StatusBar} from "@capacitor/status-bar";
+import {alert_animations} from "../Animation";
 
 
 @Component({
   selector: 'app-device',
   templateUrl: './device.page.html',
   styleUrls: ['./device.page.scss', '../main.page.scss'],
-  animations: [
-
-    //Programování animací skrze Angular
-    trigger('AlertAnimation', [
-      state('void', style({ opacity: 0, transform: 'translate(-50%, 200%)' })),
-      transition(':enter', [
-        animate(200, style({ opacity: 1, transform: 'translate(-50%, 0%)' }))
-      ]),
-      transition(':leave', [
-        animate(200, style({ opacity: 1, transform: 'translate(-50%, 200%)' }))
-      ]),
-    ]),
-
-    trigger('AlertAnimationBackground', [
-      state('void', style({ opacity: 0 })),
-      transition(':enter', [
-        animate(150, style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate(150, style({ opacity: 0 }))
-      ]),
-    ]),
-  ],
+  animations: alert_animations,
 })
 export class DevicePage {
 
