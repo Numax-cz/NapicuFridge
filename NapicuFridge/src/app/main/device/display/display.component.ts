@@ -31,6 +31,8 @@ export class DisplayComponent {
 
 
 
+
+
   //TODO synchronizace
   //Funkce, která se zavolá po změně přepínače pro vypáníní displeje
   public display_available_input_change(event: any): void {
@@ -61,6 +63,11 @@ export class DisplayComponent {
     return AppComponent.get_is_display_available();
   }
 
+
+ //Funkce, která vrátí zda je zařízení připojené
+  public get_is_connected(): boolean {
+    return AppComponent.is_connected();
+  }
 
 
 

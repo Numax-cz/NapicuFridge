@@ -143,9 +143,7 @@ void setup() {
   BLECharacteristic *fridgeEnableCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_DISPLAY_ENABLE_UUID,
     BLECharacteristic::PROPERTY_WRITE | 
-    BLECharacteristic::PROPERTY_READ |
-    BLECharacteristic::PROPERTY_INDICATE |
-    BLECharacteristic::PROPERTY_NOTIFY
+    BLECharacteristic::PROPERTY_READ
   );
                                        
   fridgeEnableCharacteristic->setCallbacks(new DisplayEnableCharacteristicCallback());

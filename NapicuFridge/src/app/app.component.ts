@@ -15,6 +15,9 @@ import {Configuration} from "./config/configuration";
 import {app_animation} from "./main/Animation";
 import {FridgeDisplayState} from "./interface/Enums";
 import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
+import {environment} from "../environments/environment";
+
+
 
 @Component({
   selector: 'app-root',
@@ -22,6 +25,7 @@ import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+
 
   //Funkce pro získání vlastní animace
   public get_animation = () => app_animation;
@@ -35,8 +39,8 @@ export class AppComponent {
   //Statická proměnná pro uložení verze aplikace
   public static application_version_code: string | null = null;
 
-  //Statická proměnná pro uložení základní informací připojeného zařízení
-  public static connected_device: DeviceInfo | null = null;
+  //Statická proměnná pro uložení základní informací připojeného zařízení (Pokud je aplikace spuštěna v testovacím režimu, nastaví se hodnoty pro vývoj aplikace)
+  public static connected_device: DeviceInfo | null = environment.production? null : {name: "TestDevice", address: "TestAddress", status: "connected"};
 
   //Statická proměnná pro uložení NgZone (jedná se o službu pro provádění funkcí uvnitř zóny Anguláru)
   private static ngZone: NgZone;
@@ -95,10 +99,14 @@ export class AppComponent {
           this.set_connected_device(device);
           //Vypsání hodnoty do vývojářské konzole
           console.log("connected");
+
+
           //Tato funkce zjistí, zda byly zjištěny charakteristiky a deskriptory zařízení,
           //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
           BluetoothLE.discover({address: address, clearCache: true})
             .then((d: Device) => {
+              //Synchronizování nastavení na ESP32
+              this.update_config_from_esp();
               //Přihlášení se k odběru charakteristiky vnitřní teploty
               this.subscribe_in_temp();
             }).catch((e) =>{
@@ -113,6 +121,27 @@ export class AppComponent {
           console.log("Disconnected from device: " + device.address, "status");
         }
       });
+    }
+  }
+
+  //Funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
+  public static update_config_from_esp(): void {
+    if(this.connected_device) {
+
+
+
+      BluetoothLE.read({address: this.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID})
+        .then((data: OperationResult) => {
+          //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+          let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+          //Převést bytes na string
+          let value: string = BluetoothLE.bytesToString(bytes);
+
+          this.fridge_data.config.fridge_display_available = (value == "1");
+      }).catch((e) => {
+        console.log("error_discovered" + JSON.stringify(e));
+
+      })
     }
   }
 

@@ -15,7 +15,7 @@
 
         <div class="napicu-switch">
           <label class="toggle">
-            <input class="toggle-checkbox" type="checkbox"  (change)="display_available_input_change($event)" [checked]="get_is_display_available()">
+            <input class="toggle-checkbox" type="checkbox"  (change)="display_available_input_change($event)" [checked]="get_is_display_available() && get_is_connected()" [disabled]="!get_is_connected()" >
             <div class="toggle-switch"></div>
 
           </label>
@@ -27,7 +27,7 @@
 
 
 
-  <section @ContentAnimation *ngIf="get_is_display_available()" class="mt-5">
+  <section @ContentAnimation *ngIf="get_is_display_available() && get_is_connected()" class="mt-5">
 
     <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
       <div class="display">

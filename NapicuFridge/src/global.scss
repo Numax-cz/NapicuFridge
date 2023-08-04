@@ -76,6 +76,11 @@ $color2: #3e8ed0;
     visibility: hidden;
   }
 
+  .toggle-checkbox:disabled + .toggle-switch {
+    opacity: 0.6;
+    background: #ccc !important;
+  }
+
   .toggle-label {
     margin-left: 5px;
     position: relative;
