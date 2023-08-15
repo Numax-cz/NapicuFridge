@@ -7,6 +7,18 @@ void FridgeDisplay::begin() {
     FridgeDisplay::display = new Adafruit_SSD1306(DISPLAY_W, DISPLAY_H, &Wire, -1);
     FridgeDisplay::display->begin(SSD1306_SWITCHCAPVCC, 0x3C);
 
+    uint8_t data = EEPROM.read(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR);
+
+    if(data == 0xFF) {
+        data = DISPLAY_DEFAULT_AVAILABLE;
+    } 
+
+    if(data == 1) {
+        FridgeDisplay::enable_display();
+    } else {
+        FridgeDisplay::disable_display();
+    }
+
 
 
 
@@ -20,14 +32,27 @@ void FridgeDisplay::begin() {
 
 
 void FridgeDisplay::enable_display() {
+    //Zapsání log1 hodnoty do EEPROM
+    EEPROM.write(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR, 1);
+    //Nastavení proměnné na log1
     FridgeDisplay::is_dislay_enable = true;
+    //Zapnutí displeje
     FridgeDisplay::display->ssd1306_command(SSD1306_DISPLAYON);
+    //Potvrzení změn
+    EEPROM.commit();
 }
 
 void FridgeDisplay::disable_display() {
+    //Zapsání log0 hodnoty do EEPROM
+    EEPROM.write(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR, 0);
+    //Nastavení proměnné na log0
     FridgeDisplay::is_dislay_enable = false;
+    //Vyčištění displeje
     FridgeDisplay::display->clearDisplay();
+    //Vypnutí displeje
     FridgeDisplay::display->ssd1306_command(SSD1306_DISPLAYOFF);
+    //Potvrzení změn
+    EEPROM.commit();
 }
 
 void FridgeDisplay::loop() {

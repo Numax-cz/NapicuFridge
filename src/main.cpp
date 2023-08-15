@@ -33,7 +33,7 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
             //Získání reprezentační MAC adresy.
             esp_bd_addr_t* address_native = address->getNative();
 
-            for (int i = 0; i < EEPROM_SIZE; ++i) {
+            for (int i = 0; i < MAC_EEPROM_SIZE; ++i) {
               //Zapsání hodnoty do EEPROM
               EEPROM.write(MAC_ADDRESS_EEPROM_ADDR + i, (*address_native)[i]);
             }
@@ -71,11 +71,11 @@ void setup() {
   pinMode(TEST_LED, OUTPUT);
 
 
-  FridgeDisplay::begin();
+
 
 
   //Inicializace paměti EEPROM
-  if (!EEPROM.begin(6)) {
+  if (!EEPROM.begin(MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE)) {
     //Vypsání hodnoty do konzole
     Serial.println("EEPROM inicializace byla neúspěšná");
     while (true);
@@ -83,6 +83,8 @@ void setup() {
     //Vypsání hodnoty do konzole
     Serial.println("EEPROM je dostupné");
   }
+
+  FridgeDisplay::begin();
 
 
 
@@ -205,7 +207,7 @@ void loop() {
 BLEAddress* read_paired_device_mac_address_from_eeprom() {
   esp_bd_addr_t data_from_eeprom;
   //Přečtení hodnoty MAC adresy z EEPROM
-  for (int i = 0; i < EEPROM_SIZE; ++i) {
+  for (int i = MAC_ADDRESS_EEPROM_ADDR; i < MAC_EEPROM_SIZE; ++i) {
     data_from_eeprom[i] = EEPROM.read(MAC_ADDRESS_EEPROM_ADDR + i);
     //Vypsání hodnoty do konzole
     Serial.println(data_from_eeprom[i]);

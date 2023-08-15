@@ -25,8 +25,12 @@
 #define DHT_INSIDE 17 
 
 //Definice EEPROM pro ukládání MAC adresy 
-#define EEPROM_SIZE 6 //Délka MAC adresy v bajtech
+#define MAC_EEPROM_SIZE 6 //Délka MAC adresy v bajtech
 #define MAC_ADDRESS_EEPROM_ADDR 0 //Adresa v paměti EEPROM, na kterou bude MAC adresa uložena
+//Definice EEPROM pro ukládání stavu displeje log0/log1
+#define DISPLAY_AVAILABLE_EEPROM_SIZE 1 //Délka stavu displeje  -128 až 127
+#define DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR MAC_EEPROM_SIZE //Adresa v paměti EEPROM, na kterou bude stav displeje uložen log0/log1
+
 
 //Definice unikátních ID pro různé služby,
 //pro vlastní UUID využijte generátor
@@ -35,6 +39,9 @@
 #define CHARACTERISTIC_DISPLAY_ENABLE_UUID "5ff8dda8-0914-11ee-be56-0242ac120002"
 #define CHARACTERISTIC_DHT_INSIDE_TX "5ff8e046-0914-11ee-be56-0242ac120002"
 
+
+//Definice, která určuje výchozí dostupnost displeje
+#define DISPLAY_DEFAULT_AVAILABLE 1 //V tomto případě je displej při prvním zapnutí zapnutý
 
 //Proměnná pro kontrolu připojených zařízení
 extern bool devicePaired;
