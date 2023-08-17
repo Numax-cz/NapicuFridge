@@ -80,49 +80,96 @@ export class AppComponent {
 
         //Zamknutí orientace aplikace (na výšku)
         screen.orientation.lock("portrait");
+
+
+
       }
     });
+
   }
 
   //Funkce pro připojení se k zařízení
-  public static connect(address: string): void {
-    //Kontrola, zda je zařízení spárované
-    if(!this.connected_device) {
-      //Připojit se k zařízení
-      BluetoothLE.connect({address: address, transport: AndroidGattTransportMode.TRANSPORT_LE, autoConnect: true}).subscribe((device: DeviceInfo) =>  {
-        if(device.status === "connected") {
-          //Uložení adresy spárovaného zaířzení
-          AppComponent.application_settings.setItem("device", JSON.stringify(device));
+  public static async connect(address: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      //Kontrola, zda je zařízení spárované
+      if(!this.connected_device) {
+        //Připojit se k zařízení
+        BluetoothLE.connect({address: address, transport: AndroidGattTransportMode.TRANSPORT_LE}).subscribe({
+          next: (device: DeviceInfo) => {
+            this.on_next_connect(device)
+            resolve();
+          },
+          error: (e: any) => {
+            reject();
+          }
+        });
+      } else resolve();
+    })
+  }
 
-          //Po úspěšném připojení provést následující
-          //Nastavit proměnnou pro připojené zařízení
-          this.set_connected_device(device);
-          //Vypsání hodnoty do vývojářské konzole
-          console.log("connected");
 
+  public static on_next_connect (device: DeviceInfo): void {
+    if(device.status === "connected") {
+      //Uložení adresy spárovaného zaířzení
+      AppComponent.application_settings.setItem("device", JSON.stringify(device));
 
-          //Tato funkce zjistí, zda byly zjištěny charakteristiky a deskriptory zařízení,
-          //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
-          BluetoothLE.discover({address: address, clearCache: true})
-            .then((d: Device) => {
-              //Synchronizování nastavení na ESP32
-              this.update_config_from_esp();
-              //Přihlášení se k odběru charakteristiky vnitřní teploty
-              this.subscribe_in_temp();
-            }).catch((e) =>{
-            //Vypsání hodnoty do vývojářské konzole
-            console.log("error_discovered" + JSON.stringify(e));
-          });
-        }
-        else if (device.status === "disconnected") {
-          //Po odpojení provést následující
-          //Nastavit proměnnou connected_device na null
-          this.set_connected_device();
-          console.log("Disconnected from device: " + device.address, "status");
-        }
+      //Po úspěšném připojení provést následující
+      //Nastavit proměnnou pro připojené zařízení
+      AppComponent.set_connected_device(device);
+      //Vypsání hodnoty do vývojářské konzole
+      console.log("connected");
+
+      //Tato funkce zjistí, zda byly zjištěny charakteristiky a deskriptory zařízení,
+      //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
+      BluetoothLE.discover({address: device.address, clearCache: true})
+          .then((d: Device) => {
+            //Synchronizování nastavení na ESP32
+            AppComponent.update_config_from_esp();
+            //Přihlášení se k odběru charakteristiky vnitřní teploty
+            AppComponent.subscribe_in_temp();
+          }).catch((e) =>{
+        //Vypsání hodnoty do vývojářské konzole
+        console.error("error_discovered" + JSON.stringify(e));
       });
     }
+    else if (device.status === "disconnected") {
+      //Po odpojení provést následující
+      //Nastavit proměnnou connected_device na null
+      AppComponent.set_connected_device();
+      //Vypsání hodnoty do vývojářské konzole
+      console.log("Disconnected from device: " + device.address, "status");
+
+      //Spuštění funkce pro automatické připojení k zařízení
+      AppComponent.start_auto_connect(device.address);
+    }
   }
+
+
+  //Asynchronní funkce, která se snaží o automatické připojení k zařízení
+  public static async start_auto_connect(address: string): Promise<void> {
+    //Vypsání hodnoty do vývojářské konzole
+    console.log("Auto Connecting...");
+    //Funkce pro zavření/vyřazení zařízení Bluetooth LE
+    await BluetoothLE.close({address: address});
+    //Následující blok se snaží o znovuřipojení se k zařízení
+    try {
+      //Spuštění asynchronní funkce pro znovu se připojení k zařízení
+      await AppComponent.connect(address);
+      //Vypsání hodnoty do vývojářské konzole
+      console.log("Reconnection was successful");
+    } catch (error) {
+      //Pokud se nepodaří o znovupřipojení provede se následující
+      //Vypsání hodnoty do vývojářské konzole
+      console.error("Error when reconnecting");
+    }
+    //Podmínka, pokud je zařízení připojené
+    if(AppComponent.connected_device?.address) return;
+    //Znovu spuštění funkce po 1s (1000ms)
+    setTimeout(() => this.start_auto_connect(address), 1000);
+  }
+
+
+
 
   //Funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
   public static update_config_from_esp(): void {
