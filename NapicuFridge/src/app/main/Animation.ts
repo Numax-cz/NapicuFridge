@@ -44,6 +44,17 @@ export const alert_animations: any[] = [
     ]),
   ]),
 
+  trigger('AlertAnimationTop', [
+    state('void', style({ opacity: 0, width: "0%", transform: 'translate(-50%, -200%)' })),
+    transition(':enter', [
+      animate(200, style({ opacity: 1, transform: 'translate(-50%, 0%)' })),
+      animate('200ms ease-in-out', style({ width: '80%' }))
+    ]),
+    transition(':leave', [
+      animate(200, style({ opacity: 1, transform: 'translate(-50%, -200%)' }))
+    ]),
+  ]),
+
   trigger('AlertAnimationBackground', [
     state('void', style({ opacity: 0 })),
     transition(':enter', [

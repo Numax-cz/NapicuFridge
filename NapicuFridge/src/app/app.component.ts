@@ -12,7 +12,7 @@ import {
 } from "@awesome-cordova-plugins/bluetooth-le";
 import {FridgeData} from "./interface/FridgeData";
 import {Configuration} from "./config/configuration";
-import {app_animation} from "./main/Animation";
+import {alert_animations, app_animation} from "./main/Animation";
 import {FridgeDisplayState} from "./interface/Enums";
 import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
 import {environment} from "../environments/environment";
@@ -23,10 +23,9 @@ import {environment} from "../environments/environment";
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  animations: alert_animations
 })
 export class AppComponent {
-
-
   //Funkce pro získání vlastní animace
   public get_animation = () => app_animation;
 
@@ -45,12 +44,13 @@ export class AppComponent {
   //Statická proměnná pro uložení NgZone (jedná se o službu pro provádění funkcí uvnitř zóny Anguláru)
   private static ngZone: NgZone;
 
+  //Statická proměnná pro uložení hodnoty, zda je alert viditelný
+  public static device_connection_alert_display: boolean = false;
+
   //Statická proměnná pro ukládání informací z ESP32
   public static fridge_data: FridgeData = {
     //Vnitřní teplota ledničky
     in_temp: "",
-
-
     config: {
       fridge_display_available: true,
       fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1
@@ -77,18 +77,21 @@ export class AppComponent {
         AppVersion.getAppName().then((value: string) => AppComponent.application_name = value);
         //Získání verze aplikace
         AppVersion.getVersionNumber().then((value: string) => AppComponent.application_version_code = value);
-
         //Zamknutí orientace aplikace (na výšku)
         screen.orientation.lock("portrait");
-
-
-
       }
     });
-
   }
 
-  //Funkce pro připojení se k zařízení
+  //Funkce, která zobrazí a následně skryje alert pro zobrazování stavu připojení
+  public static show_connection_alert(): void {
+    this.device_connection_alert_display = true;
+    setTimeout(() => {
+        this.device_connection_alert_display = false;
+    }, 3500);
+  }
+
+  //Statická funkce pro připojení se k zařízení
   public static async connect(address: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       //Kontrola, zda je zařízení spárované
@@ -171,7 +174,7 @@ export class AppComponent {
 
 
 
-  //Funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
+  //Statická funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
   public static update_config_from_esp(): void {
     if(this.connected_device) {
 
@@ -192,16 +195,18 @@ export class AppComponent {
     }
   }
 
-  //Funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
+  //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
   private static set_connected_device(value: DeviceInfo | null = null): void {
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       //Nastavení proměnné dle parametru (value výchozí: null)
       this.connected_device = value;
+      //Zobrazení informačního alertu
+      AppComponent.show_connection_alert();
     });
   }
 
-  //Funkce pro přihlášení se k odběru pro získávání dat z vnitřního teploměru
+  //Statická funkce pro přihlášení se k odběru pro získávání dat z vnitřního teploměru
   private static subscribe_in_temp(): void {
     //Kontrola, zda je zařízení spárované
     if(AppComponent.connected_device) {
@@ -235,45 +240,55 @@ export class AppComponent {
     }
   }
 
-  //Funkce, která obnoví tovární nastavení
+  //Statická funkce, která obnoví tovární nastavení
   public static factory_reset(): void {
 
   }
 
-  //Funkce, která vrátí uložená data o spárovaném zařízení
+  //Statická funkce, která vrátí uložená data o spárovaném zařízení
   public static get_paired_device_data_from_storage(): DeviceInfo | null {
     let i: string | null = AppComponent.application_settings.getItem("device");
     if(i) return JSON.parse(i) as DeviceInfo;
     return null;
   }
 
-  //Funkce, která vrátí jméno připojeného zařízení
+  //Statická funkce, která vrátí jméno připojeného zařízení
   public static get_paired_device_name(): string {
     return this.get_paired_device_data_from_storage()?.name || "";
   }
 
-  //Funkce, která vrátí adresu MAC připojeného zařízení
+  //Statická funkce, která vrátí adresu MAC připojeného zařízení
   public static get_paired_device_address(): string {
     return this.get_paired_device_data_from_storage()?.address || "";
   }
 
-  //Funkce, která vrátí zda je zařízení připojené
+  //Statická funkce, která vrátí zda je zařízení připojené
   public static is_connected(): boolean {
     return !!(this.connected_device);
   }
 
-  //Funkce, která vrátí vnitřní teplotu
+  //Statická funkce, která vrátí vnitřní teplotu
   public static get_in_temp(): string {
     return this.fridge_data.in_temp;
   }
 
-  //Funkce, která vrátí zda je displej chytré ledničky povolen
+  //Statická funkce, která vrátí zda je displej chytré ledničky povolen
   public static get_is_display_available(): boolean {
     return AppComponent.fridge_data.config.fridge_display_available;
   }
 
-  //Funkce, která vrátí nastavený stav displeje
+  //Statická funkce, která vrátí nastavený stav displeje
   public static get_display_state(): FridgeDisplayState {
     return AppComponent.fridge_data.config.fridge_display_state;
+  }
+
+  //Funkce, která vrátí zda je zařízení připojené
+  public get_is_connected(): boolean {
+      return AppComponent.is_connected();
+  }
+
+  //Funkce, která vrátí zda je alert zobrazen
+  public get_device_connection_alert_display(): boolean {
+    return AppComponent.device_connection_alert_display;
   }
 }

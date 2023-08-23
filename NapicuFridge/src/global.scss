@@ -53,6 +53,17 @@
   }
 }
 
+.alert-container-top {
+  top: 0 !important;
+  bottom: auto !important;
+  margin-top: 1.5rem;
+}
+
+
+
+.info-box{
+  border-radius: 13px !important;
+}
 
 $color1: #ffffff;
 $color2: #3e8ed0;

@@ -1,3 +1,16 @@
 <ion-app>
   <ion-router-outlet [animation]="get_animation()"></ion-router-outlet>
+  <div *ngIf="get_device_connection_alert_display()" @AlertAnimationTop class="box info-box alert-container alert-container-top" style="overflow: hidden">
+    <!--  <div class="is-size-5 has-text-weight-bold">Informace o teplotě</div>-->
+    <div class="is-flex is-align-items-center is-justify-content-center" style="width: max-content;margin: auto;">
+      <ng-container *ngIf="!get_is_connected()">
+        <ion-icon name="cloud-offline-outline" class="mr-2"></ion-icon>
+        <p class="is-size-6 has-text-weight-medium has-text-centered">Zařízení bylo odpojeno</p>
+      </ng-container>
+      <ng-container *ngIf="get_is_connected()">
+        <ion-icon name="cloud-outline" class="mr-2"></ion-icon>
+        <p class="is-size-6 has-text-weight-medium has-text-centered">Zařízení bylo připojeno</p>
+      </ng-container>
+    </div>
+  </div>
 </ion-app>
