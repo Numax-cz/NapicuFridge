@@ -1,17 +1,5 @@
-import {Component, NgZone} from '@angular/core';
-import {AppComponent} from "../app.component";
-import {Configuration} from "../config/configuration";
-import {
-  AndroidGattTransportMode,
-  BluetoothLE,
-  Device,
-  OperationResult
-} from "@awesome-cordova-plugins/bluetooth-le";
-import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
-import {app_animation} from "./Animation";
-
-
 
 @Component({
   selector: 'app-main',
@@ -20,10 +8,7 @@ import {app_animation} from "./Animation";
 })
 export class MainPage  {
 
-  constructor(public router: Router) {
-
-  }
-
+  constructor(public router: Router) { }
 
   public redirect(url: string): void {
     this.router.navigateByUrl(`/${url}`);

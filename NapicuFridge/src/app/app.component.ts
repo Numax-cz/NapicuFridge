@@ -14,7 +14,6 @@ import {FridgeData} from "./interface/FridgeData";
 import {Configuration} from "./config/configuration";
 import {alert_animations, app_animation} from "./main/Animation";
 import {FridgeDisplayState} from "./interface/Enums";
-import CHARACTERISTIC_UUID_TX = Configuration.CHARACTERISTIC_UUID_TX;
 import {environment} from "../environments/environment";
 
 
@@ -214,7 +213,7 @@ export class AppComponent {
       BluetoothLE.subscribe({
         address: AppComponent.connected_device.address,
         service: Configuration.SERVICE_UUID,
-        characteristic: CHARACTERISTIC_UUID_TX
+        characteristic: Configuration.CHARACTERISTIC_DHT_INSIDE_UUID
       }).subscribe(
         {
           next: (data: OperationResult) => {
