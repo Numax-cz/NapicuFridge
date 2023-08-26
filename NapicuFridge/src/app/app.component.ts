@@ -50,6 +50,7 @@ export class AppComponent {
   public static fridge_data: FridgeData = {
     //Vnitřní teplota ledničky
     in_temp: "",
+    out_temp: "",
     config: {
       fridge_display_available: true,
       fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1
@@ -110,7 +111,7 @@ export class AppComponent {
   }
 
 
-  public static on_next_connect (device: DeviceInfo): void {
+  public static on_next_connect(device: DeviceInfo): void {
     if(device.status === "connected") {
       //Uložení adresy spárovaného zaířzení
       AppComponent.application_settings.setItem("device", JSON.stringify(device));
@@ -129,6 +130,14 @@ export class AppComponent {
             AppComponent.update_config_from_esp();
             //Přihlášení se k odběru charakteristiky vnitřní teploty
             AppComponent.subscribe_in_temp();
+            BluetoothLE.discover({address: device.address, clearCache: true})
+              .then((d: Device) => {
+                //Přihlášení se k odběru charakteristiky venkovní teploty
+                AppComponent.subscribe_out_temp();
+              }).catch((e) => {
+              //Vypsání hodnoty do vývojářské konzole
+              console.error("error_discovered" + JSON.stringify(e));
+            });
           }).catch((e) =>{
         //Vypsání hodnoty do vývojářské konzole
         console.error("error_discovered" + JSON.stringify(e));
@@ -175,11 +184,9 @@ export class AppComponent {
 
   //Statická funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
   public static update_config_from_esp(): void {
-    if(this.connected_device) {
-
-
-
-      BluetoothLE.read({address: this.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID})
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID})
         .then((data: OperationResult) => {
           //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
           let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
@@ -239,6 +246,42 @@ export class AppComponent {
     }
   }
 
+  //Statická funkce pro přihlášení se k odběru pro získávání dat z venkovního teploměru
+  private static subscribe_out_temp(): void {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Přihlášení se k odběru charakteristiky venkovní teploty
+      BluetoothLE.subscribe({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_DHT_OUTSIDE_UUID
+      }).subscribe(
+        {
+          next: (data: OperationResult) => {
+            //Po získání dat z bluetooth charakteristiky provést následující
+            if(data.value) {
+              //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+              let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+              //Převést bytes na string
+              let value: string = BluetoothLE.bytesToString(bytes);
+              //Spuštění funkce uvnitř zóny Angularu
+              this.ngZone.run(() => {
+                //Zapsat převedený bytes na string do proměnné out_temp
+                this.fridge_data.out_temp = value;
+              })
+            }
+          },
+          error: (e) => {
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error" + JSON.stringify(e));
+          }
+        }
+      );
+    }
+  }
+
+
+
   //Statická funkce, která obnoví tovární nastavení
   public static factory_reset(): void {
 
@@ -269,6 +312,11 @@ export class AppComponent {
   //Statická funkce, která vrátí vnitřní teplotu
   public static get_in_temp(): string {
     return this.fridge_data.in_temp;
+  }
+
+  //Statická funkce, která vrátí venkovní teplotu
+  public static get_out_temp(): string {
+    return this.fridge_data.out_temp;
   }
 
   //Statická funkce, která vrátí zda je displej chytré ledničky povolen

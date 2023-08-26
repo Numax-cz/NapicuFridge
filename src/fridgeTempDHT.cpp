@@ -32,9 +32,9 @@ void FridgeTempDHT::updateTemperature() {
 //Funkce, která pošle data skrze BLE do připojeného zařízení
 void FridgeTempDHT::sendTemperature() {
     //Nastavení hodnoty charakteristiky 
-    this->pCharacteristic->setValue(FridgeData.in_temp.c_str());
+    this->pCharacteristic->setValue(this->value.c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
     this->pCharacteristic->notify();
     //Vytištění odeslané zprávy po sériové lince
-    Serial.print(FridgeData.in_temp);
+    Serial.print(this->value);
 }

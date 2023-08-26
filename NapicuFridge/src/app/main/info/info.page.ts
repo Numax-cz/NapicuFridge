@@ -21,4 +21,8 @@ export class InfoPage {
   public get_in_temp(): string {
     return AppComponent.get_in_temp();
   }
+
+  public get_out_temp(): string {
+    return AppComponent.get_out_temp();
+  }
 }

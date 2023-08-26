@@ -12,6 +12,8 @@ BLEServer* pServer = NULL;
 
 FridgeTempDHT* insideTempDHT = NULL;
 
+FridgeTempDHT* outsideTempDHT = NULL;
+
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
 //Proměnná aktuální doby
@@ -135,9 +137,14 @@ void setup() {
 
 
   // Vytvoření teploměru pro vnitřní zaznamenávání teploty
-  insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_TX, pService, FridgeData.in_temp);
-  
+  insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_UUID, pService, FridgeData.in_temp);
+  //Spuštění begin funkce
   insideTempDHT->begin();
+
+  // Vytvoření teploměru pro venkovní zaznamenávání teploty
+  outsideTempDHT = new FridgeTempDHT(DHT_OUTSIDE, CHARACTERISTIC_DHT_OUTSIDE_UUID, pService, FridgeData.out_temp);
+  //Spuštění begin funkce
+  outsideTempDHT->begin();
   
 
   
@@ -193,10 +200,14 @@ void loop() {
     data_send_time_now += data_send_period;
     //Aktualizování hodnot 
     insideTempDHT->updateTemperature();
+    //Aktualizování hodnot 
+    outsideTempDHT->updateTemperature();
     //Pokud je zařízení připojeno k ESP32
     if (devicePaired == true) {
-    //Začneme s odesíláním dat
+      //Začneme s odesíláním dat
       insideTempDHT->sendTemperature();
+      //Začneme s odesíláním dat
+      outsideTempDHT->sendTemperature();
     }
   }
 

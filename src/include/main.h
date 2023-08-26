@@ -23,6 +23,7 @@
 //Definice propojovacích pinů veškerých teploměrů 
 #define DHT_TYPE DHT11  
 #define DHT_INSIDE 17 
+#define DHT_OUTSIDE 4
 
 //Definice EEPROM pro ukládání MAC adresy 
 #define MAC_EEPROM_SIZE 6 //Délka MAC adresy v bajtech
@@ -35,9 +36,11 @@
 //Definice unikátních ID pro různé služby,
 //pro vlastní UUID využijte generátor
 //https://www.uuidgenerator.net/
-#define SERVICE_UUID           "5ff8dace-0914-11ee-be56-0242ac120002" 
-#define CHARACTERISTIC_DISPLAY_ENABLE_UUID "5ff8dda8-0914-11ee-be56-0242ac120002"
-#define CHARACTERISTIC_DHT_INSIDE_TX "5ff8e046-0914-11ee-be56-0242ac120002"
+#define SERVICE_UUID           "cea986c2-4405-11ee-be56-0242ac120002" 
+#define CHARACTERISTIC_DISPLAY_ENABLE_UUID "cea98ac8-4405-11ee-be56-0242ac120002"
+#define CHARACTERISTIC_DHT_INSIDE_UUID "cea98c12-4405-11ee-be56-0242ac120002"
+#define CHARACTERISTIC_DHT_OUTSIDE_UUID "cea99162-4405-11ee-be56-0242ac120002"
+
 
 
 //Definice, která určuje výchozí dostupnost displeje
@@ -56,6 +59,9 @@ struct fridge_data
 
     //Proměnná pro ukládání vnitřní teploty ledničky ve formátu string 
     String in_temp = "";
+
+    //Proměnná pro ukládání venkovní teploty ve formátu string 
+    String out_temp = "";
 };
 
 //Proměnná pro globální nastavení chytré ledničky 
