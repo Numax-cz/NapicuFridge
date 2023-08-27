@@ -92,7 +92,7 @@ export class AppComponent {
   }
 
   //Statická funkce pro připojení se k zařízení
-  public static async connect(address: string): Promise<void> {
+  private static async connect(address: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       //Kontrola, zda je zařízení spárované
       if(!this.connected_device) {
@@ -111,7 +111,7 @@ export class AppComponent {
   }
 
 
-  public static on_next_connect(device: DeviceInfo): void {
+  private static on_next_connect(device: DeviceInfo): void {
     if(device.status === "connected") {
       //Uložení adresy spárovaného zaířzení
       AppComponent.application_settings.setItem("device", JSON.stringify(device));
@@ -161,7 +161,7 @@ export class AppComponent {
     //Vypsání hodnoty do vývojářské konzole
     console.log("Auto Connecting...");
     //Funkce pro zavření/vyřazení zařízení Bluetooth LE
-    await BluetoothLE.close({address: address});
+    await BluetoothLE.close({address: address}).catch(() => {});
     //Následující blok se snaží o znovuřipojení se k zařízení
     try {
       //Spuštění asynchronní funkce pro znovu se připojení k zařízení

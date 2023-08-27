@@ -57,12 +57,15 @@ export class HomePage {
   //Funkce, která se spustí při spuštění aplikace
   public init(): void {
 
+    //Inicializace BluetoothLE
     BluetoothLE.initialize({statusReceiver: true, request: true}).subscribe(async () => {
 
+      //Funkce pro zjištění práv bluetooth skenování
       await BluetoothLE.hasPermissionBtScan().then(async (status: {hasPermission: boolean}) => {
         if(!status.hasPermission) await BluetoothLE.requestPermissionBtScan(); //TODO Při nepovolení => povolte BT
       });
 
+      //Funkce pro zjištění práv o bluetooth připojení
       await BluetoothLE.hasPermissionBtConnect().then(async (status: {hasPermission: boolean}) => {
         if(!status.hasPermission) await BluetoothLE.requestPermissionBtConnect(); //TODO Při nepovolení => povolte BT
       });
@@ -70,6 +73,8 @@ export class HomePage {
 
       //Získání adresy z lokálního uložiště
       let i: DeviceInfo | null = AppComponent.get_paired_device_data_from_storage();
+
+      //Pokud je adresa uložena v lokálním uložišti
       if(i) {
         console.log("Get from storage");
         //Vypsání hodnoty do vývojářské konzole
@@ -80,11 +85,10 @@ export class HomePage {
       else {
         //Spuštění funkce uvnitř zóny Angularu
         this.ngZone.run(() => {
+          //Nastavení proměnné na log0
           this.loading = false;
-        })
+        });
       }
-
-
     });
   }
 
@@ -184,8 +188,8 @@ export class HomePage {
 
   //Přesměrování uživatele na hlavní část aplikace (/main/info)
   public redirect_user(address: string): void {
-    //Připojení se na zařízení
-    AppComponent.connect(address);
+    //Spuštění automatického připojení se na zařízení
+    AppComponent.start_auto_connect(address);
 
     //Přesměrování uživatele na URL /main/info
     this.router.navigateByUrl("main/info");
