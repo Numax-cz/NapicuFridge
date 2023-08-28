@@ -34,7 +34,12 @@ export class DisplayComponent {
     this.selected_item = AppComponent.fridge_data.config.fridge_display_state;
   }
 
+  //Funkce, která vrátí hodnotu, která se má zobrazovat na chytré ledničce
+  public get_display_value(): string {
+    return AppComponent.get_display_value_by_state() || "NULL";
+  }
 
+  //Funkce pro změnu stavu displeje
   public change_input_display_state(value: number): void {
     //Kontrola, zda je zařízení spárované
     if(AppComponent.connected_device) {
@@ -64,7 +69,6 @@ export class DisplayComponent {
     }
   }
 
-  //TODO synchronizace
   //Funkce, která se zavolá po změně přepínače pro vypáníní displeje
   public display_available_input_change(event: any): void {
     //Spuštění funkce uvnitř zóny Angularu

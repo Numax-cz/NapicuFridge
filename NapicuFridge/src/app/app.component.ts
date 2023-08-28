@@ -300,6 +300,18 @@ export class AppComponent {
   }
 
 
+  //Funkce, která vrátí aktuální hodnotu na daném displej statu
+  public static get_display_value_by_state(): string | null {
+    //TODO DOC
+    switch (AppComponent.fridge_data.config.fridge_display_state) {
+      case FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1:
+        return AppComponent.fridge_data.in_temp;
+      case FridgeDisplayState.FRIDGE_DISPLAY_OUT_TEMP_1:
+        return AppComponent.fridge_data.out_temp;
+      default:
+        return null;
+    }
+  }
 
   //Statická funkce, která obnoví tovární nastavení
   public static factory_reset(): void {
