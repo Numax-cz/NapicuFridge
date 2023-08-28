@@ -41,18 +41,18 @@
     <!--Todo checked -->
     <div class="container">
       <div class="radio">
-        <input id="radio-1" name="radio" type="radio">
+        <input id="radio-1" name="radio" type="radio" [checked]="selected_item === 1" (change)="change_input_display_state(1)">
         <label for="radio-1" class="radio-label has-text-weight-medium">Zobrazení vnitřní teploty</label>
       </div>
 
       <div class="radio">
-        <input id="radio-2" name="radio" type="radio">
+        <input id="radio-2" name="radio" type="radio" [checked]="selected_item === 2" (change)="change_input_display_state(2)">
         <label  for="radio-2" class="radio-label has-text-weight-medium">Zobrazení venkovní teploty</label>
       </div>
-      <div class="radio">
-        <input id="radio-3" name="radio" type="radio">
-        <label  for="radio-3" class="radio-label has-text-weight-medium">Zobrazení teploty chladiče</label>
-      </div>
+<!--      <div class="radio">-->
+<!--        <input id="radio-3" name="radio" type="radio">-->
+<!--        <label  for="radio-3" class="radio-label has-text-weight-medium">Zobrazení teploty chladiče</label>-->
+<!--      </div>-->
 
 
     </div>

@@ -44,8 +44,10 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
           } 
 
 
-          //TODO
-          FridgeDisplay::change_display(FRIDGE_DISPLAY_IN_TEMP_1);
+           
+          if(FridgeDisplay::get_display_state() == FRIDGE_DISPLAY_PAIR_TEXT) {
+            FridgeDisplay::change_display_state(FRIDGE_DISPLAY_IN_TEMP_1);
+          }
 
 
           //Nastavení proměnné na log1
@@ -102,10 +104,10 @@ void setup() {
     //Nastavení proměnné
     FridgeData.paired_device_address = data_from_eeprom;
     //Změna displeje
-    FridgeDisplay::change_display(FRIDGE_DISPLAY_IN_TEMP_1);
+    FridgeDisplay::change_display_state(FRIDGE_DISPLAY_IN_TEMP_1);
   } else {
     //Změna displeje
-    FridgeDisplay::change_display(FRIDGE_DISPLAY_PAIR_TEXT);
+    FridgeDisplay::change_display_state(FRIDGE_DISPLAY_PAIR_TEXT);
   }
 
 
@@ -148,7 +150,7 @@ void setup() {
   
 
   
-  // Vytvoření BLE komunikačního kanálu pro příjem (RX)
+  // Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *fridgeEnableCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_DISPLAY_ENABLE_UUID,
     BLECharacteristic::PROPERTY_WRITE | 
@@ -157,6 +159,15 @@ void setup() {
                                        
   fridgeEnableCharacteristic->setCallbacks(new DisplayEnableCharacteristicCallback());
 
+
+  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *fridgeStateCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_DISPLAY_STATE_UUID,
+    BLECharacteristic::PROPERTY_WRITE | 
+    BLECharacteristic::PROPERTY_READ
+  );
+                                       
+  fridgeStateCharacteristic->setCallbacks(new DisplayStateCharacteristicCallback());
 
 
   

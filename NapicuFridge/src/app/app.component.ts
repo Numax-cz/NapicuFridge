@@ -186,18 +186,37 @@ export class AppComponent {
   public static update_config_from_esp(): void {
     //Kontrola, zda je zařízení spárované
     if(AppComponent.connected_device) {
+      //Získání zda je displej povolen
       BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID})
         .then((data: OperationResult) => {
           //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
           let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
           //Převést bytes na string
           let value: string = BluetoothLE.bytesToString(bytes);
-
+          //Nastavení proměnné na hodnotu podle získaných dat
           this.fridge_data.config.fridge_display_available = (value == "1");
       }).catch((e) => {
-        console.log("error_discovered" + JSON.stringify(e));
+        //Vypsání hodnoty do vývojářské konzole
+        console.error("error_discovered" + JSON.stringify(e));
+      });
 
-      })
+      //Získání stavu displeje
+      BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_DISPLAY_STATE_UUID})
+        .then((data: OperationResult) => {
+          //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+          let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+          //Převést bytes na string
+          let value: string = BluetoothLE.bytesToString(bytes);
+          //Převedení string na number a následné nastavení proměnné na hodnotu získaných dat
+          this.fridge_data.config.fridge_display_state = Number(value);
+        }).catch((e) => {
+        //Vypsání hodnoty do vývojářské konzole
+        console.error("error_discovered" + JSON.stringify(e));
+      });
+
+
+
+
     }
   }
 

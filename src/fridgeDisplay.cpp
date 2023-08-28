@@ -70,7 +70,12 @@ void FridgeDisplay::loop() {
         temp += (char)247;
         temp += "C";
         FridgeDisplay::print_centered_text(temp, 2);
-
+    }
+    else if (FridgeDisplay::display_state == FRIDGE_DISPLAY_OUT_TEMP_1) {
+        String temp = FridgeData.out_temp;
+        temp += (char)247;
+        temp += "C";
+        FridgeDisplay::print_centered_text(temp, 2);
     }
 }
 
@@ -107,3 +112,6 @@ void FridgeDisplay::print_pair_text() {
    x=x-1; 
    if(x < minX) x= FridgeDisplay::display->width();
 }
+
+
+

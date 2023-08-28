@@ -4,7 +4,7 @@ import {AppComponent} from "../../../app.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {BluetoothLE} from "@awesome-cordova-plugins/bluetooth-le";
 import {Configuration} from "../../../config/configuration";
-import CHARACTERISTIC_DISPLAY_ENABLE_UUID = Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID;
+
 
 @Component({
   selector: 'app-display',
@@ -27,17 +27,48 @@ import CHARACTERISTIC_DISPLAY_ENABLE_UUID = Configuration.CHARACTERISTIC_DISPLAY
 })
 export class DisplayComponent {
 
-  constructor(public ngZone: NgZone) { }
+
+  public declare selected_item: number;
+
+  constructor(public ngZone: NgZone) {
+    this.selected_item = AppComponent.fridge_data.config.fridge_display_state;
+  }
 
 
-
-
+  public change_input_display_state(value: number): void {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Převedení stringu do bytes
+      let bytes: Uint8Array = BluetoothLE.stringToBytes(value.toString());
+      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+      //Zapsání charakteristiky
+      BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_DISPLAY_STATE_UUID,
+        value: encodedUnicodeString,
+      }).then(() => {
+        //Až se úspěšně provede zápis charakteristiky provede se následující
+        //Spuštění funkce uvnitř zóny Angularu
+        this.ngZone.run(() => {
+          //Přepsání proměnné
+          this.selected_item = value;
+          //Přepsání proměnné v nastavení
+          AppComponent.fridge_data.config.fridge_display_state = value;
+        });
+      }).catch((e) => {
+        //Vypsání hodnoty do vývojářské konzole
+        console.error("error_write" + JSON.stringify(e));
+      });
+    }
+  }
 
   //TODO synchronizace
   //Funkce, která se zavolá po změně přepínače pro vypáníní displeje
   public display_available_input_change(event: any): void {
     //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => {
+    this.ngZone.run(() => { //TODO možná dát do then funkce při funkci write :thinking:
       //Nastavení proměnné z configu na novou hodnotu
       AppComponent.fridge_data.config.fridge_display_available = event.currentTarget.checked;
     });
@@ -47,12 +78,15 @@ export class DisplayComponent {
       let bytes: Uint8Array = BluetoothLE.stringToBytes(AppComponent.fridge_data.config.fridge_display_available ? "1" : "0");
       //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
       let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
-      //Napsání charakteristiky
+      //Zapsání charakteristiky
       BluetoothLE.write({
         address: AppComponent.connected_device.address,
         service: Configuration.SERVICE_UUID,
-        characteristic: CHARACTERISTIC_DISPLAY_ENABLE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID,
         value: encodedUnicodeString,
+      }).catch((e) =>{
+        //Vypsání hodnoty do vývojářské konzole
+        console.error("error_write" + JSON.stringify(e));
       });
     }
   }
