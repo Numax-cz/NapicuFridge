@@ -16,10 +16,8 @@
 
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu
-#define readPin 32
 #define CONNECTION_LED 19
 #define TEST_LED 18
-
 //Definice propojovacích pinů veškerých teploměrů 
 #define DHT_TYPE DHT11  
 #define DHT_INSIDE 17 
