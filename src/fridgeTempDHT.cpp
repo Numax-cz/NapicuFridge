@@ -1,6 +1,7 @@
 #include <include/fridgeTempDHT.h>
 
 FridgeTempDHT::FridgeTempDHT(int pin, const char* uuid, BLEService* pService, String& value ) : value(value) {
+    //Vytvoření nové DHT třídy
     this->dht = new DHT(pin, DHT_TYPE);
     // vytvoření BLE komunikačního kanálu pro odesílání (TX)
     this->pCharacteristic = pService->createCharacteristic(
@@ -9,15 +10,18 @@ FridgeTempDHT::FridgeTempDHT(int pin, const char* uuid, BLEService* pService, St
         BLECharacteristic::PROPERTY_NOTIFY |
         BLECharacteristic::PROPERTY_READ
     );
+    //Přiřazení deskriptoru k této charakteristice.
     pCharacteristic->addDescriptor(new BLE2902());
 
 }
 
 FridgeTempDHT::~FridgeTempDHT() {
+    //Smazání dht 
     delete this->dht;
 }
 
 void FridgeTempDHT::begin() {
+    //Spuštění begin funkce v DHT třídy
     this->dht->begin();
 }
 
@@ -25,6 +29,12 @@ void FridgeTempDHT::begin() {
 void FridgeTempDHT::updateTemperature() {
     //Získání teploty
     float temp = this->dht->readTemperature();
+    
+    //Kontrola, zda je temp nan
+    if(isnan(temp)) {
+    
+    }
+
     //Převedení floatu na string s jedním desetinným místem
     this->value = String(temp, 1);
 }
@@ -36,5 +46,5 @@ void FridgeTempDHT::sendTemperature() {
     //Odeslání zprávy skrze BLE do připojeného zařízení
     this->pCharacteristic->notify();
     //Vytištění odeslané zprávy po sériové lince
-    Serial.print(this->value);
+    Serial.println(this->value);
 }
