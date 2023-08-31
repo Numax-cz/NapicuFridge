@@ -58,10 +58,6 @@ void FridgeDisplay::disable_display() {
 void FridgeDisplay::loop() {
 
 
-
-
-
-
     if(FridgeDisplay::display_state == FRIDGE_DISPLAY_PAIR_TEXT) {
         FridgeDisplay::print_pair_text();
     }

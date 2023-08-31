@@ -10,7 +10,7 @@ import {
   DeviceInfo,
   OperationResult
 } from "@awesome-cordova-plugins/bluetooth-le";
-import {FridgeData} from "./interface/FridgeData";
+import {FridgeData, FridgeErrors} from "./interface/FridgeData";
 import {Configuration} from "./config/configuration";
 import {alert_animations, app_animation} from "./main/Animation";
 import {FridgeDisplayState} from "./interface/Enums";
