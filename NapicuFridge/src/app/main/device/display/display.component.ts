@@ -73,21 +73,13 @@ export class DisplayComponent {
     });
   }
 
-
   //Funkce, která vrátí zda je displej chytré ledničky povolen
   public get_is_display_available(): boolean {
     return AppComponent.get_is_display_available();
   }
 
-
  //Funkce, která vrátí zda je zařízení připojené
   public get_is_connected(): boolean {
     return AppComponent.is_connected();
   }
-
-
-
-
-
-
 }
