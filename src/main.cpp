@@ -77,7 +77,6 @@ void setup() {
 
 
 
-
   //Inicializace paměti EEPROM
   if (!EEPROM.begin(MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE)) {
     //Vypsání hodnoty do konzole
@@ -206,8 +205,11 @@ void loop() {
   FridgeDisplay::loop();
 
 
+
   //Načasování programu
   if(millis() >= data_send_time_now + data_send_period) {
+
+
     data_send_time_now += data_send_period;
     //Aktualizování hodnot 
     insideTempDHT->updateTemperature();

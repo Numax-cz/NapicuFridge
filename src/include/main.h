@@ -13,6 +13,7 @@
 #include <include/serverCallBack.h>
 #include <include/fridgeTempDHT.h>
 #include <include/fridgeDisplay.h>
+#include <include/relayModule.h>
 
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu
