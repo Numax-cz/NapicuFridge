@@ -14,16 +14,18 @@
 #include <include/fridgeTempDHT.h>
 #include <include/fridgeDisplay.h>
 #include <include/relayModule.h>
-
+#include <include/buttonManager.h>
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu
 #define CONNECTION_LED 19
-#define TEST_LED 18
+//Pro analogový vstup a LED diodu
+#define RESET_LED 18
 //Definice propojovacích pinů veškerých teploměrů 
 #define DHT_TYPE DHT11  
 #define DHT_INSIDE 17 
 #define DHT_OUTSIDE 4
 
+#define RESET_BUTTON 5
 //Definice EEPROM pro ukládání MAC adresy 
 #define MAC_EEPROM_SIZE 6 //Délka MAC adresy v bajtech
 #define MAC_ADDRESS_EEPROM_ADDR 0 //Adresa v paměti EEPROM, na kterou bude MAC adresa uložena
@@ -46,7 +48,7 @@
 //Definice, která určuje výchozí dostupnost displeje
 #define DISPLAY_DEFAULT_AVAILABLE 1 //V tomto případě je displej při prvním zapnutí zapnutý
 
-//Proměnná pro kontrolu připojených zařízení
+//Proměnná pro ukládání zda je zařízení připojené
 extern bool devicePaired;
 
 

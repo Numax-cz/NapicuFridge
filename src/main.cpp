@@ -1,8 +1,36 @@
-// Arduino ESP32 a Bluetooth Low Energy
+
+/**
+ * @file main.cpp
+ * @author Marcel Mikoláš
+ * @version 0.1
+ * @date 2023-27-05
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ * 
+*/
+
+
 
 // Připojení potřebných lokálních knihoven z /src/include
 #include <include/main.h>
+//Proměnná pro ukládání zda je zařízení připojené
 bool devicePaired = false;
+
+
+//Proměnná pro ukládání zda je resetovací dioda aktivní
+bool resetLEDOn = false;
+//Proměnná aktuální doby u 
+unsigned long reset_led_time_now = 0;
+
+
+
+
+
+
+
+
+int resetLEDBlinkCount = 0;
 
 fridge_data FridgeData;
 
@@ -14,9 +42,11 @@ FridgeTempDHT* insideTempDHT = NULL;
 
 FridgeTempDHT* outsideTempDHT = NULL;
 
+ButtonManager* resetButton = NULL;
+
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
-//Proměnná aktuální doby
+//Proměnná aktuální doby v komunikací s bluetooth
 unsigned long data_send_time_now = 0;
 
 void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t* param) {
@@ -70,11 +100,14 @@ void setup() {
   Serial.begin(9600);
 
 
-  // Nastavení LED diody jako výstup
+  //Nastavení LED diod jako výstup
   pinMode(CONNECTION_LED, OUTPUT);
-  pinMode(TEST_LED, OUTPUT);
+  pinMode(RESET_LED, OUTPUT);
 
 
+
+  resetButton = new ButtonManager(RESET_BUTTON);
+  resetButton->begin();
 
 
   //Inicializace paměti EEPROM
@@ -202,13 +235,24 @@ void setup() {
 }
 
 void loop() {
+  const unsigned long time = millis();
+
+
+  //Spuštění loop funkce displeje
   FridgeDisplay::loop();
 
 
+  //Spuštění loop funkce tlačítka
+  resetButton->loop();
+  //Spuštění funkce pro správu držení tlačítka
+  resetButton->button_hold_time(5000, [](){
+    //Po podržení tlačítka po dobu 5000ms se provede následující
+    //Spuštění funkce pro uvedení zařízení do továního nastavení
+    factory_reset();
+  });
 
   //Načasování programu
-  if(millis() >= data_send_time_now + data_send_period) {
-
+  if(time >= data_send_time_now + data_send_period) {
 
     data_send_time_now += data_send_period;
     //Aktualizování hodnot 
@@ -223,6 +267,25 @@ void loop() {
       outsideTempDHT->sendTemperature();
     }
   }
+
+
+
+
+  if(resetLEDOn && resetLEDBlinkCount <= 3) {
+    if(time >= reset_led_time_now + 250) {
+      reset_led_time_now += 250;
+      resetLEDBlinkCount++;
+      int pin_value = digitalRead(RESET_LED);
+      digitalWrite(RESET_LED, !pin_value ? 1 : 0);
+    }
+  } else {
+    resetLEDOn = false;
+    resetLEDBlinkCount = 0;
+    reset_led_time_now = time;
+  }
+
+  
+
 
 
 }
@@ -245,6 +308,11 @@ BLEAddress* read_paired_device_mac_address_from_eeprom() {
   return nullptr;
 }
 
-void factory_reset() {
 
+//Funkce, která uvede zařízení do továrního nastavení
+void factory_reset() {
+  //Vypsání hodnoty do konzole
+  Serial.println("Tovární nastavení...");
+  //Nastavení proměnné na log1
+  resetLEDOn = true;
 }

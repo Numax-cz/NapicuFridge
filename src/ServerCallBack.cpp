@@ -32,17 +32,6 @@ void CharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     Serial.print(prijataZprava);
     Serial.println();
 
-    //kontrola přijaté zprávy
-    //pokud obsahuje znak 1, rozsviť LED diodu
-    if (prijataZprava == 1) {
-        Serial.println("Zapnutí LED!");
-        digitalWrite(TEST_LED, HIGH);
-    }
-    // pokud obsahuje znak 0, zhasni LED diodu
-    else if (prijataZprava == 0) {
-        Serial.println("Vypnutí LED!");
-        digitalWrite(TEST_LED, LOW);
-    }
 };
 
 
