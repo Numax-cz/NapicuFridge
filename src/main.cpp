@@ -111,7 +111,7 @@ void setup() {
 
 
   //Inicializace paměti EEPROM
-  if (!EEPROM.begin(MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE)) {
+  if (!EEPROM.begin(EEPROM_MAX_SIZE)) {
     //Vypsání hodnoty do konzole
     Serial.println("EEPROM inicializace byla neúspěšná");
     while (true);
@@ -268,28 +268,30 @@ void loop() {
     }
   }
 
-
-
-
+  //Blok kódu pro správu resetovacího tlačítka a diody
+  //Pookud je proměnná resetLEDOn log1 a zároveň resetLEDBlinkCount menší, nebo rovno 3 provede se následující
   if(resetLEDOn && resetLEDBlinkCount <= 3) {
+    //Načasování programu, každých 250ms se provede následující
     if(time >= reset_led_time_now + 250) {
+      //Přičte se 250 k proměnné určující aktuální dobu
       reset_led_time_now += 250;
+      //Přičte se 1 k proměnné resetLEDBlinkCount
       resetLEDBlinkCount++;
+      //Deklarace a uložení hodnoty z reset led pinu
       int pin_value = digitalRead(RESET_LED);
+      //Zapsání log1, nebo log0 dle následující podmínky do reset led pinu
       digitalWrite(RESET_LED, !pin_value ? 1 : 0);
+      //Pokud je po přičtení 1 resetLEDBlinkCount větší než 4 provede se následující
+      if(resetLEDBlinkCount > 3) {
+        //Restartování ESP32
+        ESP.restart();
+      }
     }
   } else {
-    resetLEDOn = false;
-    resetLEDBlinkCount = 0;
+    //Nastavení proměnné určující aktuální období
     reset_led_time_now = time;
   }
-
-  
-
-
-
 }
-
 
 BLEAddress* read_paired_device_mac_address_from_eeprom() {
   esp_bd_addr_t data_from_eeprom;
@@ -305,6 +307,7 @@ BLEAddress* read_paired_device_mac_address_from_eeprom() {
     return new BLEAddress(data_from_eeprom);
   }
 
+  //Vrácení null ukazatele
   return nullptr;
 }
 
@@ -313,6 +316,15 @@ BLEAddress* read_paired_device_mac_address_from_eeprom() {
 void factory_reset() {
   //Vypsání hodnoty do konzole
   Serial.println("Tovární nastavení...");
+  //Následně vymaževe veškeré data z EEPROM (nastavíme veškeré adresy, které využíváme na 0xFF - 255)
+  for(int i = 0; i < EEPROM_MAX_SIZE; i++) {
+    //Zapsání hodnoty do EEPROM
+    EEPROM.write(i, 0xFF);
+  }
+  //Potvrzení změn
+  EEPROM.commit();
   //Nastavení proměnné na log1
   resetLEDOn = true;
 }
+
+
