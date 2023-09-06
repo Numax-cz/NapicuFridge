@@ -9,6 +9,8 @@
 
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
+#include <Thermistor.h>
+#include <NTC_Thermistor.h>
 
 #include <include/serverCallBack.h>
 #include <include/fridgeTempDHT.h>

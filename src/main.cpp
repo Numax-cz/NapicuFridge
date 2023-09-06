@@ -23,11 +23,12 @@ bool resetLEDOn = false;
 //Proměnná aktuální doby u 
 unsigned long reset_led_time_now = 0;
 
-
-
-
-
-
+#define SENSOR_PIN             0
+#define REFERENCE_RESISTANCE    9830
+#define NOMINAL_RESISTANCE     10000
+#define NOMINAL_TEMPERATURE    27
+#define B_VALUE                3950
+#define STM32_ANALOG_RESOLUTION 4095
 
 
 int resetLEDBlinkCount = 0;
@@ -43,6 +44,10 @@ FridgeTempDHT* insideTempDHT = NULL;
 FridgeTempDHT* outsideTempDHT = NULL;
 
 ButtonManager* resetButton = NULL;
+
+RelayModule* test_relay_1 = NULL;
+
+Thermistor* thermistor;
 
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
@@ -104,11 +109,21 @@ void setup() {
   pinMode(CONNECTION_LED, OUTPUT);
   pinMode(RESET_LED, OUTPUT);
 
-
-
   resetButton = new ButtonManager(RESET_BUTTON);
   resetButton->begin();
 
+  test_relay_1 = new RelayModule(25);
+  test_relay_1->begin();
+
+
+  thermistor = new NTC_Thermistor(
+    SENSOR_PIN,
+    REFERENCE_RESISTANCE,
+    NOMINAL_RESISTANCE,
+    NOMINAL_TEMPERATURE,
+    B_VALUE,
+    STM32_ANALOG_RESOLUTION // <- for a thermistor calibration
+  );
 
   //Inicializace paměti EEPROM
   if (!EEPROM.begin(EEPROM_MAX_SIZE)) {
@@ -238,6 +253,7 @@ void loop() {
   const unsigned long time = millis();
 
 
+
   //Spuštění loop funkce displeje
   FridgeDisplay::loop();
 
@@ -253,6 +269,10 @@ void loop() {
 
   //Načasování programu
   if(time >= data_send_time_now + data_send_period) {
+    const double celsius = thermistor->readCelsius();
+
+    Serial.print(celsius);
+    Serial.print(" C, ");
 
     data_send_time_now += data_send_period;
     //Aktualizování hodnot 

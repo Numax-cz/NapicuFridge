@@ -18,6 +18,6 @@ void RelayModule::open() {
 
 //Funkce pro zavření relátka
 void RelayModule::close() {
-    pinMode(this->pin, LOW);
+    digitalWrite(this->pin, LOW);
     this->is_open = false;
 }
