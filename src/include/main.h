@@ -28,6 +28,15 @@
 #define DHT_OUTSIDE 16
 
 #define RESET_BUTTON 5
+
+//Definice termistoru
+#define SENSOR_PIN             4
+#define REFERENCE_RESISTANCE    9830
+#define NOMINAL_RESISTANCE     7400
+#define NOMINAL_TEMPERATURE    26
+#define B_VALUE                3950
+#define STM32_ANALOG_RESOLUTION 4095
+
 //Definice EEPROM pro ukládání MAC adresy 
 #define MAC_EEPROM_SIZE 6 //Délka MAC adresy v bajtech
 #define MAC_ADDRESS_EEPROM_ADDR 0 //Adresa v paměti EEPROM, na kterou bude MAC adresa uložena

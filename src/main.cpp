@@ -23,14 +23,6 @@ bool resetLEDOn = false;
 //Proměnná aktuální doby u 
 unsigned long reset_led_time_now = 0;
 
-#define SENSOR_PIN             4
-#define REFERENCE_RESISTANCE    9830
-#define NOMINAL_RESISTANCE     7400
-#define NOMINAL_TEMPERATURE    26
-#define B_VALUE                3950
-#define STM32_ANALOG_RESOLUTION 4095
-
-
 int resetLEDBlinkCount = 0;
 
 fridge_data FridgeData;
