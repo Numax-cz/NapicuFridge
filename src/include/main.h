@@ -25,7 +25,7 @@
 //Definice propojovacích pinů veškerých teploměrů 
 #define DHT_TYPE DHT11  
 #define DHT_INSIDE 17 
-#define DHT_OUTSIDE 4
+#define DHT_OUTSIDE 16
 
 #define RESET_BUTTON 5
 //Definice EEPROM pro ukládání MAC adresy 
