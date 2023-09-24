@@ -7,6 +7,8 @@
 #include <EEPROM.h>
 #include <DHT.h>
 
+#include <DigiPotX9Cxxx.h>
+
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 #include <Thermistor.h>
@@ -28,6 +30,11 @@
 #define DHT_OUTSIDE 16
 
 #define RESET_BUTTON 5
+
+//Definice digitálního potenciometru
+#define X9_CS  14
+#define X9_INC 27
+#define X9_UD  26
 
 //Definice termistoru
 #define SENSOR_PIN             4

@@ -41,6 +41,9 @@ RelayModule* test_relay_1 = NULL;
 
 Thermistor* thermistor;
 
+
+DigiPot pot(X9_INC, X9_UD, X9_CS);
+
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
 //Proměnná aktuální doby v komunikací s bluetooth
@@ -100,6 +103,8 @@ void setup() {
   //Nastavení LED diod jako výstup
   pinMode(CONNECTION_LED, OUTPUT);
   pinMode(RESET_LED, OUTPUT);
+
+
 
   resetButton = new ButtonManager(RESET_BUTTON);
   resetButton->begin();
