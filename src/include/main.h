@@ -1,19 +1,17 @@
 #pragma once
 // Připojení potřebných knihoven
-// Připojení potřebných knihoven
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLE2902.h>
 #include <EEPROM.h>
 #include <DHT.h>
-
 #include <DigiPotX9Cxxx.h>
-
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 #include <Thermistor.h>
 #include <NTC_Thermistor.h>
 
+//Připojení potřebných knihoven z include
 #include <include/serverCallBack.h>
 #include <include/fridgeTempDHT.h>
 #include <include/fridgeDisplay.h>
@@ -29,6 +27,7 @@
 #define DHT_INSIDE 17 
 #define DHT_OUTSIDE 16
 
+//Definice pinu tlačítka pro reset zařízení
 #define RESET_BUTTON 5
 
 //Definice pinů digitálního potenciometru
@@ -36,7 +35,7 @@
 #define X9_INC 27
 #define X9_UD  26
 
-//Definice termistoru
+//Definice pinů termistoru
 #define SENSOR_PIN             4
 #define REFERENCE_RESISTANCE    9830
 #define NOMINAL_RESISTANCE     7400
