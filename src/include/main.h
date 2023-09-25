@@ -31,7 +31,7 @@
 
 #define RESET_BUTTON 5
 
-//Definice digitálního potenciometru
+//Definice pinů digitálního potenciometru
 #define X9_CS  14
 #define X9_INC 27
 #define X9_UD  26

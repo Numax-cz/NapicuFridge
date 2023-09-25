@@ -41,8 +41,7 @@ RelayModule* test_relay_1 = NULL;
 
 Thermistor* thermistor;
 
-
-DigiPot pot(X9_INC, X9_UD, X9_CS);
+DigiPot* digitalPotentiometer = NULL;
 
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
@@ -106,11 +105,18 @@ void setup() {
 
 
 
+  //Vytvoření třídy pro tlačítko 
   resetButton = new ButtonManager(RESET_BUTTON);
+  //Spuštění funkce begin
   resetButton->begin();
 
+  //Vytvoření třídy pro relé modul s pinem 25
   test_relay_1 = new RelayModule(25);
+  //Spuštění funkce begin
   test_relay_1->begin();
+
+  //Vytvoření třídy pro digitální potenciometr
+  digitalPotentiometer = new DigiPot(X9_INC, X9_UD, X9_CS);
 
 
   thermistor = new NTC_Thermistor(
