@@ -43,6 +43,8 @@ public:
         pinMode(pwm_pin, OUTPUT);
         //Připojíme statickou funkci (counter) k požadovanému pinu - funkce se vyvolá na vzestupné hraně signálu  (když se pin stane HIGH)
         attachInterrupt(digitalPinToInterrupt(tach_pin), counter, RISING);
+        //Nastavení výchozí hodnoty na 100%
+        analogWrite(pwm_pin, 255);
     }
     //Statická funkce, která se spouští při každém loopu
     void static loop() {

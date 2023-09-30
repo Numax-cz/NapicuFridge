@@ -36,7 +36,7 @@ FridgeTempDHT* outsideTempDHT = NULL;
 
 ButtonManager* resetButton = NULL;
 
-RelayModule* test_relay_1 = NULL;
+RelayModule* fan_relay_1 = NULL;
 
 Thermistor* thermistor;
 
@@ -106,6 +106,7 @@ void setup() {
   pinMode(RESET_LED, OUTPUT);
 
 
+  
 
 
   //Vytvoření třídy pro tlačítko 
@@ -114,9 +115,9 @@ void setup() {
   resetButton->begin();
 
   //Vytvoření třídy pro relé modul s pinem 25
-  test_relay_1 = new RelayModule(25);
+  fan_relay_1 = new RelayModule(25);
   //Spuštění funkce begin
-  test_relay_1->begin();
+  fan_relay_1->begin();
 
   //Vytvoření třídy pro digitální potenciometr
   digitalPotentiometer = new DigiPot(X9_INC, X9_UD, X9_CS);
@@ -256,7 +257,13 @@ void setup() {
 
 
   Serial.println("BLE nastaveno, ceka na pripojeni..");
+
+
+  fan_relay_1->open();
+
 }
+
+int per = 0;
 
 void loop() {
   //Uložíme aktuální čas běhu do konstantní proměnné time 
@@ -268,7 +275,6 @@ void loop() {
   FridgeDisplay::loop();
 
 
-  analogWrite(FAN1_PWM, 255);
 
 
   //Spuštění loop funkce ventilátoru
@@ -305,8 +311,7 @@ void loop() {
     }
 
 
-    bool d = fan_1.get_is_fan_running();
-    Serial.println(d);
+
 
   }
 

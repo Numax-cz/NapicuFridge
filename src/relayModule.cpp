@@ -8,16 +8,17 @@ RelayModule::RelayModule(int pin) {
 //Funkce pro inicializaci relátek
 void RelayModule::begin() {
     pinMode(this->pin, OUTPUT);
+    this->open();
 }
 
 //Funkce pro otevření relátka
 void RelayModule::open() {
-    digitalWrite(this->pin, HIGH);
-    this->is_open = true;
+    digitalWrite(this->pin, LOW);
+    this->is_open = false;
 }
 
 //Funkce pro zavření relátka
 void RelayModule::close() {
-    digitalWrite(this->pin, LOW);
-    this->is_open = false;
+    digitalWrite(this->pin, HIGH);
+    this->is_open = true;
 }
