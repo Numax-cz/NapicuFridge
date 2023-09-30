@@ -17,6 +17,8 @@
 #include <include/fridgeDisplay.h>
 #include <include/relayModule.h>
 #include <include/buttonManager.h>
+#include <include/fanController.h>
+
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu
 #define CONNECTION_LED 19
@@ -61,6 +63,11 @@
 #define CHARACTERISTIC_DHT_OUTSIDE_UUID "cea99162-4405-11ee-be56-0242ac120002"
 #define CHARACTERISTIC_DISPLAY_STATE_UUID "52a25b48-4596-11ee-be56-0242ac120002"
 
+#define FAN1_PWM 15
+#define FAN1_TACH 0
+
+#define DEBOUNCE 0 //0 is fine for most fans, crappy fans may require 10 or 20 to filter out noise
+#define FANSTUCK_THRESHOLD 500 //if no interrupts were received for 500ms, consider the fan as stuck and report 0 RPM
 
 
 //Definice, která určuje výchozí dostupnost displeje

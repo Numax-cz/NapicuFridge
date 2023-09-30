@@ -10,10 +10,9 @@
  * 
 */
 
-
-
 // Připojení potřebných lokálních knihoven z /src/include
 #include <include/main.h>
+
 //Proměnná pro ukládání zda je zařízení připojené
 bool devicePaired = false;
 
@@ -42,6 +41,9 @@ RelayModule* test_relay_1 = NULL;
 Thermistor* thermistor;
 
 DigiPot* digitalPotentiometer = NULL;
+
+FanController<FAN1_PWM, FAN1_TACH> fan_1;
+
 
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
@@ -105,6 +107,7 @@ void setup() {
 
 
 
+
   //Vytvoření třídy pro tlačítko 
   resetButton = new ButtonManager(RESET_BUTTON);
   //Spuštění funkce begin
@@ -118,6 +121,9 @@ void setup() {
   //Vytvoření třídy pro digitální potenciometr
   digitalPotentiometer = new DigiPot(X9_INC, X9_UD, X9_CS);
 
+
+  //Spuštění funkce begin
+  fan_1.begin();
 
   thermistor = new NTC_Thermistor(
     SENSOR_PIN,
@@ -253,6 +259,7 @@ void setup() {
 }
 
 void loop() {
+  //Uložíme aktuální čas běhu do konstantní proměnné time 
   const unsigned long time = millis();
 
 
@@ -260,6 +267,13 @@ void loop() {
   //Spuštění loop funkce displeje
   FridgeDisplay::loop();
 
+
+  analogWrite(FAN1_PWM, 255);
+
+
+  //Spuštění loop funkce ventilátoru
+  fan_1.loop();  
+  
 
   //Spuštění loop funkce tlačítka
   resetButton->loop();
@@ -289,6 +303,11 @@ void loop() {
       //Začneme s odesíláním dat
       outsideTempDHT->sendTemperature();
     }
+
+
+    bool d = fan_1.get_is_fan_running();
+    Serial.println(d);
+
   }
 
   //Blok kódu pro správu resetovacího tlačítka a diody
@@ -314,6 +333,7 @@ void loop() {
     //Nastavení proměnné určující aktuální období
     reset_led_time_now = time;
   }
+
 }
 
 BLEAddress* read_paired_device_mac_address_from_eeprom() {
