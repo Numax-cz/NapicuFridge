@@ -186,6 +186,7 @@ export class AppComponent {
 
   //Statická funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
   public static update_config_from_esp(): void {
+      //TODO Await
 
       //Získání zda je displej povolen
       CharacteristicController.readIsDisplayAvailable()
