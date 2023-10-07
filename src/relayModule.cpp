@@ -14,11 +14,11 @@ void RelayModule::begin() {
 //Funkce pro otevření relátka
 void RelayModule::open() {
     digitalWrite(this->pin, LOW);
-    this->is_open = false;
+    this->is_open = true;
 }
 
 //Funkce pro zavření relátka
 void RelayModule::close() {
     digitalWrite(this->pin, HIGH);
-    this->is_open = true;
+    this->is_open = false;
 }
