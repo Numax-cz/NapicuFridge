@@ -9,7 +9,7 @@ import {CharacteristicController} from "../../../CharacteristicController";
 })
 export class SettingsComponent {
 
-  public selected_item: number = 1;
+  public selected_item: number = 2;
 
 
 
@@ -20,7 +20,7 @@ export class SettingsComponent {
 
 
   public change_system_power(value: number): void {
-
+    this.selected_item = value;
   }
 
   public change_in_fans(event: any): void {

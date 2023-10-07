@@ -79,7 +79,7 @@
 
 //Definice pinů relátek
 #define RELAY_PELTIER_PIN 32
-#define RELAY_PELTIER_POWER_MODE_PIN 35
+#define RELAY_PELTIER_POWER_MODE_PIN 23
 #define RELAY_PWM_FANS_MODULE_PIN 25
 #define RELAY_IN_FANS_MODULE_PIN 33
 
@@ -89,6 +89,9 @@
 //Definice, ktera určuje výchozí stav vnitřních ventilátorů
 #define IN_FANS_DEFAULT_AVAILABLE 1 //V tomto případě jsou vnitřní ventilátory při prvním zapnutí zapnutý
 
+//Definice výchozího režimu napájení
+#define DEFAULT_POWER_MODE 0 //V tomto případě je lednička vypnutá podle struktury fridge_power_mode
+
 //Proměnná pro ukládání zda je zařízení připojené
 extern bool devicePaired;
 
@@ -96,6 +99,7 @@ typedef enum {
 
     FRIDGE_OFF_POWER = 0,
     FRIDGE_MAX_POWER,
+    FRIDGE_NORMAL_POWER,
     FRIDGE_ECO_POWER,
 
 

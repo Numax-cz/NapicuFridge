@@ -32,6 +32,10 @@ void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
 
             //Otevření relátka pro hlavní napájení peltiera
             relay_peltier->open();
+        } else if (number == FRIDGE_NORMAL_POWER) {
+
+            //Otevření relátka pro hlavní napájení peltiera
+            relay_peltier->open();
         } else if (number == FRIDGE_ECO_POWER) {
 
             //Otevření relátka pro hlavní napájení peltiera
@@ -97,12 +101,26 @@ void InFansCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
 
 //Begin funkce pro PowerManager
 void PowerManager::begin() {
-
+    //Proměnná pro uložení dat z EEPROM
+    uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
     //Spuštění begin funkce pro inicializaci chladících ventilátorů 
     cooling_fans_pwm.begin();
 
+    //Pokud není uložená hodnota v EEPROM proveď následující 
+    if(data == 0xFF) {
+        data = DEFAULT_POWER_MODE;
+    }
+
+    if(data == FRIDGE_OFF_POWER) {
+        PowerManager::power_off();
+        return;
+    }
+        
     //Spuštění funkce pro inicializaci vnitřních ventilátorů
     PowerManager::begin_in_fans();
+
+
+
 }
 
 //Funkce pro inicializaci vnitřních ventilátorů
@@ -132,6 +150,16 @@ void PowerManager::loop() {
 
 //Funkce pro vypnutí celého chladícího systému
 void PowerManager::power_off() {
+    //Zavření relátka pro hlavní napájení peltierů
+    relay_peltier->close();
+    //Spuštění funkce pro vypnutí vnitřních ventilátorů
+    PowerManager::turn_off_in_fans();
+    //Spuštění funkce pro vypnutí chladících ventilátorů
+    PowerManager::turn_off_cooling_fans();
+    //Zapsání hodnoty do EEPROM
+    EEPROM.write(POWER_MODE_EEPROM_ADDR, FRIDGE_OFF_POWER);
+    //Potvrezní zmeň
+    EEPROM.commit();
 
 }
 

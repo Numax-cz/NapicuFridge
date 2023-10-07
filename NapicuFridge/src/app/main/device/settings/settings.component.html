@@ -1,46 +1,39 @@
 <section class="section">
   <app-napicu-settings-template>Nastavení zařízení</app-napicu-settings-template>
-
-
-
-
-
-
   <section class="mt-5">
-
     <!--Todo checked -->
-    <div class="container">
-
-      <div class="is-flex is-justify-content-space-between is-align-items-center box info-box  is-size-4 has-text-weight-bold has-text-centered">
-        <div class="is-size-6">
-          Vnitřní ventilátory
+      <div class="container">
+        <div class="box info-box">
+          <div class="is-size-5 has-text-weight-bold">Nastavení výkonu</div>
+          <div class="is-flex is-flex-direction-column">
+            <div class="is-flex is-align-items-center mt-2 p-3 info-box"
+                 [ngClass]="{'has-background-info has-text-white': selected_item === 1}" (click)="change_system_power(1)">
+              <ion-icon name="speedometer-outline" class="mr-2" style="font-size: 30px;"></ion-icon>
+              <div class="has-text-weight-bold">Maximální režim</div>
+            </div>
+            <div class="is-flex is-align-items-center mt-2 p-3 info-box"
+                 [ngClass]="{'has-background-info has-text-white': selected_item === 2}" (click)="change_system_power(2)">
+              <ion-icon name="flash-outline" class="mr-2" style="font-size: 30px">></ion-icon>
+              <div class="has-text-weight-bold">Vyvážený režim</div>
+            </div>
+            <div class="is-flex is-align-items-center mt-2 p-3 info-box"
+                 [ngClass]="{'has-background-info has-text-white': selected_item === 3}" (click)="change_system_power(3)">
+              <ion-icon name="leaf-outline" class="mr-2" style="font-size: 30px"></ion-icon>
+              <div class="has-text-weight-bold">Úsporný režim</div>
+            </div>
         </div>
-
-        <div class="napicu-switch">
-          <label class="toggle">
-            <input class="toggle-checkbox" type="checkbox"  (change)="change_in_fans($event)" [checked]="get_is_in_fans_enabled() && get_is_connected()">
-            <div class="toggle-switch"></div>
-
-          </label>
+      </div>
+        <div class="is-flex is-justify-content-space-between is-align-items-center box info-box  is-size-4 has-text-weight-bold has-text-centered">
+          <div class="is-size-6">
+            Vnitřní ventilátory
+          </div>
+          <div class="napicu-switch">
+            <label class="toggle">
+              <input class="toggle-checkbox" type="checkbox"  (change)="change_in_fans($event)" [checked]="get_is_in_fans_enabled() && get_is_connected()">
+              <div class="toggle-switch"></div>
+            </label>
+          </div>
         </div>
-
-      </div>
-
-
-      <div class="radio">
-        <input id="radio-1" name="radio" type="radio" [checked]="selected_item === 1" (change)="change_system_power(1)">
-        <label for="radio-1" class="radio-label has-text-weight-medium">Maximální režim</label>
-      </div>
-
-      <div class="radio">
-        <input id="radio-2" name="radio" type="radio" [checked]="selected_item === 2" (change)="change_system_power(2)">
-        <label  for="radio-2" class="radio-label has-text-weight-medium">Úsporný režim</label>
-      </div>
-
-
-
     </div>
-
   </section>
-
 </section>

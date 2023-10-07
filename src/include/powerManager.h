@@ -23,6 +23,10 @@ class PowerManager {
 protected: 
     //Statická funkce pro inicializaci vnitřních ventilátorů
     static void begin_in_fans();
+    //Statická funkce pro vypnutí chladících ventilátorů
+    static void turn_off_cooling_fans();
+    //Statická funkce pro zapnutí chladících ventilátorů
+    static void turn_on_cooling_fans();
 
 public: 
 
@@ -34,10 +38,6 @@ public:
     static void power_off();
     //Statická funkce pro zapnutí celého chladícího systému
     static void power_on();
-    //Statická funkce pro vypnutí chladících ventilátorů
-    static void turn_off_cooling_fans();
-    //Statická funkce pro zapnutí chladících ventilátorů
-    static void turn_on_cooling_fans();
     //Statická funkce pro vypnutí vnitřních ventilátorů
     static void turn_off_in_fans();
     //Statická funkce pro zapnutí vnitřních ventilátorů
