@@ -20,6 +20,10 @@ class FanController;
 
 class PowerManager {
 
+protected: 
+    //Statická funkce pro inicializaci vnitřních ventilátorů
+    static void begin_in_fans();
+
 public: 
 
     //Begin funkce pro PowerManager

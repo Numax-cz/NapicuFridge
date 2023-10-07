@@ -57,8 +57,11 @@
 //Definice EEPROM pro ukládání stavu napájení ledničky
 #define POWER_MODE_EEPROM_SIZE 1 //Stav napájení -128 až 127
 #define POWER_MODE_EEPROM_ADDR DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR + 1 //Adresa v paměti EEPROM, na kterou bude mód napájení uložen podle enumerace fridge_power_mode
+//Definice EEPROM pro ukládání stavu vnitřních ventilátorů log0/log1
+#define IN_FANS_EEPROM_SIZE 1
+#define IN_FANS_EEPROM_ADDR POWER_MODE_EEPROM_ADDR + 1 //Adresa v paměti EEPROM na kterou bude stav vnitřních ventilátorů uložen log0/log1
 //Definice celkové délky 
-#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE
+#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE
 
 //Definice unikátních ID pro různé služby,
 //pro vlastní UUID využijte generátor
@@ -82,6 +85,9 @@
 
 //Definice, která určuje výchozí dostupnost displeje
 #define DISPLAY_DEFAULT_AVAILABLE 1 //V tomto případě je displej při prvním zapnutí zapnutý
+
+//Definice, ktera určuje výchozí stav vnitřních ventilátorů
+#define IN_FANS_DEFAULT_AVAILABLE 1 //V tomto případě jsou vnitřní ventilátory při prvním zapnutí zapnutý
 
 //Proměnná pro ukládání zda je zařízení připojené
 extern bool devicePaired;

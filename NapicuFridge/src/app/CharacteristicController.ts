@@ -117,4 +117,17 @@ export class CharacteristicController {
     //Vrácení null, pokud není připojené zařízení
     return null;
   }
+
+  //Funkce pro čtení stavu vnitřních ventilátorů z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  public static readInFansAvailable(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Získání stavu displeje
+      return BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_IN_FANS_UUID})
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
+
+
 }

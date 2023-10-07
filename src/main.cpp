@@ -111,7 +111,15 @@ void setup() {
   pinMode(RESET_LED, OUTPUT);
 
 
-  
+    //Inicializace paměti EEPROM
+  if (!EEPROM.begin(EEPROM_MAX_SIZE)) {
+    //Vypsání hodnoty do konzole
+    Serial.println("EEPROM inicializace byla neúspěšná");
+    while (true);
+  } else {
+    //Vypsání hodnoty do konzole
+    Serial.println("EEPROM je dostupné");
+  }
 
 
   //Vytvoření třídy pro tlačítko 
@@ -155,15 +163,7 @@ void setup() {
     STM32_ANALOG_RESOLUTION // <- for a thermistor calibration
   );
 
-  //Inicializace paměti EEPROM
-  if (!EEPROM.begin(EEPROM_MAX_SIZE)) {
-    //Vypsání hodnoty do konzole
-    Serial.println("EEPROM inicializace byla neúspěšná");
-    while (true);
-  } else {
-    //Vypsání hodnoty do konzole
-    Serial.println("EEPROM je dostupné");
-  }
+
 
   FridgeDisplay::begin();
 

@@ -214,6 +214,20 @@ export class AppComponent {
         //Vypsání hodnoty do vývojářské konzole
         console.error("error_discovered" + JSON.stringify(e));
       });
+
+    //Získání zda jsou vnitřní ventilátory povolené
+    CharacteristicController.readInFansAvailable()
+      ?.then((data: OperationResult) => {
+        //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+        let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+        //Převést bytes na string
+        let value: string = BluetoothLE.bytesToString(bytes);
+        //Nastavení proměnné na hodnotu podle získaných dat
+        this.fridge_data.config.fridge_in_fans = (value == "1");
+      }).catch((e) => {
+      //Vypsání hodnoty do vývojářské konzole
+      console.error("error_discovered" + JSON.stringify(e));
+    });
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené

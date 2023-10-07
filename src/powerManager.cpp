@@ -56,7 +56,7 @@ void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
 
 void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
-    Serial.print("Odeslání informací o stavu relátka vnitřních ventilátorů");
+    Serial.println("Odeslání informací o stavu relátka vnitřních ventilátorů");
 
     int value = relay_in_fans->get_is_open() ? 1 : 0;
 
@@ -71,7 +71,7 @@ void InFansCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     std::string msg = pCharacteristic->getValue();
 
     //Vypsání následujících hodnot do konzole
-    Serial.print("Prijata zprava: ");
+    Serial.println("Prijata zprava: ");
     Serial.print(msg.c_str());
     Serial.println();
 
@@ -100,6 +100,29 @@ void PowerManager::begin() {
 
     //Spuštění begin funkce pro inicializaci chladících ventilátorů 
     cooling_fans_pwm.begin();
+
+    //Spuštění funkce pro inicializaci vnitřních ventilátorů
+    PowerManager::begin_in_fans();
+}
+
+//Funkce pro inicializaci vnitřních ventilátorů
+void PowerManager::begin_in_fans() {
+    //Proměnná pro uložení dat z EEPROM
+    uint8_t data = EEPROM.read(IN_FANS_EEPROM_ADDR);
+
+    //Pokud není uložená hodnota v EEPROM proveď následující 
+    if(data == 0xFF) {
+        //Nastaví se výchozí hodnota
+        data = IN_FANS_DEFAULT_AVAILABLE;
+    } 
+    //Pokud je data rovno log1
+    if(data == 1) {
+        //Spuštění funkce pro zapnutí vnitřních ventilátorů
+        PowerManager::turn_on_in_fans();
+    } else {
+        //Spuštění funkce pro vypnutí vnitřních ventilátorů
+        PowerManager::turn_off_in_fans();
+    }
 }
 
 //Statická loop funkce pro PowerManager
@@ -131,13 +154,21 @@ void PowerManager::turn_on_cooling_fans() {
 
 //Funkce pro vypnutí vnitřních ventilátorů
 void PowerManager::turn_off_in_fans() {
+    //Zapsání log0 hodnoty do EEPROM
+    EEPROM.write(IN_FANS_EEPROM_ADDR, 0);
     //Spuštění funkce pro zavření relátka vnitřních ventilátorů
     relay_in_fans->close();
+    //Potvrzení změn
+    EEPROM.commit();
 }
 
 //Funkce pro zapnutí vnitřních ventilátorů
 void PowerManager::turn_on_in_fans() {
+    //Zapsání log1 hodnoty do EEPROM
+    EEPROM.write(IN_FANS_EEPROM_ADDR, 1);
     //Spuštění funkce pro otevření relátka vnitřních ventilátorů
     relay_in_fans->open();
+    //Potvrzení změn
+    EEPROM.commit();
 }
 

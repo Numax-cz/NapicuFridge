@@ -9,11 +9,12 @@ import {CharacteristicController} from "../../../CharacteristicController";
 })
 export class SettingsComponent {
 
-  public declare selected_item: number;
+  public selected_item: number = 1;
+
+
 
   constructor(public ngZone: NgZone) {
-    //TODO get value from ESP32
-    this.selected_item = 1;
+
   }
 
 
