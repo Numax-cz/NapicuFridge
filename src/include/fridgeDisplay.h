@@ -43,6 +43,7 @@ public:
 };
 
 
+
 //Třída pro správu displeje chytré ledničky
 class DisplayEnableCharacteristicCallback : public BLECharacteristicCallbacks {
 public: 

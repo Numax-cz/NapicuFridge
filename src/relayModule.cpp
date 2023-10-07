@@ -8,7 +8,7 @@ RelayModule::RelayModule(int pin) {
 //Funkce pro inicializaci relátek
 void RelayModule::begin() {
     pinMode(this->pin, OUTPUT);
-    this->open();
+    this->close();
 }
 
 //Funkce pro otevření relátka

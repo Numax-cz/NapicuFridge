@@ -20,7 +20,7 @@
  * @tparam tach_pin Ve většině případů zelený vodič u ventilátoru řízené PWM
  */
 template <uint8_t pwm_pin, uint8_t tach_pin>
-class FanController
+class   FanController
 {
 private:
     //Statická proměnná pro ukládání počtů záznamů 

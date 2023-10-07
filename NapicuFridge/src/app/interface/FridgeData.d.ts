@@ -7,6 +7,8 @@ export declare interface FridgeData {
 
   config: {
     fridge_display_available: boolean,
-    fridge_display_state: FridgeDisplayState
+    fridge_display_state: FridgeDisplayState,
+
+    fridge_in_fans: boolean
   }
 }

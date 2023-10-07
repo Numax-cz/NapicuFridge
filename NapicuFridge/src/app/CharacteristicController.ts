@@ -96,4 +96,25 @@ export class CharacteristicController {
     //Vrácení null, pokud není připojené zařízení
     return null;
   }
+
+
+  //Funkce pro zápis vypnutí, nebo zapnutí vnitřních ventilátoru (Pokud se vrátí null, zařízení není připojené)
+  public static writeInFansAvailable(value: boolean): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device)  {
+      //Převedení stringu do bytes
+      let bytes: Uint8Array = BluetoothLE.stringToBytes(value ? "1" : "0");
+      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+      //Zapsání charakteristiky
+      return BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_IN_FANS_UUID,
+        value: encodedUnicodeString,
+      });
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
 }

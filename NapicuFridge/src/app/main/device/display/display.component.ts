@@ -61,7 +61,7 @@ export class DisplayComponent {
   //Funkce, která se zavolá po změně přepínače pro vypáníní displeje
   public display_available_input_change(event: any): void {
     //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => {
+    this.ngZone.run(() => { //TODO tohle dát asi na řádek 70
       //Nastavení proměnné z configu na novou hodnotu
       AppComponent.fridge_data.config.fridge_display_available = event.currentTarget.checked;
     });

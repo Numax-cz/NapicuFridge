@@ -18,6 +18,9 @@
 #include <include/relayModule.h>
 #include <include/buttonManager.h>
 #include <include/fanController.h>
+#include <include/powerManager.h>
+
+
 
 //Definice propojovacích pinů
 //pro analogový vstup a LED diodu
@@ -51,8 +54,11 @@
 //Definice EEPROM pro ukládání stavu displeje log0/log1
 #define DISPLAY_AVAILABLE_EEPROM_SIZE 1 //Délka stavu displeje  -128 až 127
 #define DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR MAC_EEPROM_SIZE //Adresa v paměti EEPROM, na kterou bude stav displeje uložen log0/log1
-
-#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE
+//Definice EEPROM pro ukládání stavu napájení ledničky
+#define POWER_MODE_EEPROM_SIZE 1 //Stav napájení -128 až 127
+#define POWER_MODE_EEPROM_ADDR DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR + 1 //Adresa v paměti EEPROM, na kterou bude mód napájení uložen podle enumerace fridge_power_mode
+//Definice celkové délky 
+#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE
 
 //Definice unikátních ID pro různé služby,
 //pro vlastní UUID využijte generátor
@@ -62,13 +68,17 @@
 #define CHARACTERISTIC_DHT_INSIDE_UUID "cea98c12-4405-11ee-be56-0242ac120002"
 #define CHARACTERISTIC_DHT_OUTSIDE_UUID "cea99162-4405-11ee-be56-0242ac120002"
 #define CHARACTERISTIC_DISPLAY_STATE_UUID "52a25b48-4596-11ee-be56-0242ac120002"
+#define CHARACTERISTIC_IN_FANS_UUID "615f0ef8-651a-11ee-8c99-0242ac120002"
 
-#define FAN1_PWM 15
-#define FAN1_TACH 0
+#define COOLING_FAN_PWM 15
+#define COOLING_FAN_TACH 0
 
-#define DEBOUNCE 0 //0 is fine for most fans, crappy fans may require 10 or 20 to filter out noise
-#define FANSTUCK_THRESHOLD 500 //if no interrupts were received for 500ms, consider the fan as stuck and report 0 RPM
 
+//Definice pinů relátek
+#define RELAY_PELTIER_PIN 32
+#define RELAY_PELTIER_POWER_MODE_PIN 35
+#define RELAY_PWM_FANS_MODULE_PIN 25
+#define RELAY_IN_FANS_MODULE_PIN 33
 
 //Definice, která určuje výchozí dostupnost displeje
 #define DISPLAY_DEFAULT_AVAILABLE 1 //V tomto případě je displej při prvním zapnutí zapnutý
@@ -76,7 +86,14 @@
 //Proměnná pro ukládání zda je zařízení připojené
 extern bool devicePaired;
 
+typedef enum {
 
+    FRIDGE_OFF_POWER = 0,
+    FRIDGE_MAX_POWER,
+    FRIDGE_ECO_POWER,
+
+
+} fridge_power_mode;
 
 //Definice struktury pro nastavení chytré ledničky 
 struct fridge_data
@@ -93,6 +110,35 @@ struct fridge_data
 
 //Proměnná pro globální nastavení chytré ledničky 
 extern fridge_data FridgeData;
+
+//Předávací deklarace tříd
+class FridgeTempDHT;
+class ButtonManager;
+class PowerManager;
+//Proměnná pro uložení BLE serveru
+extern BLEServer* pServer;
+//Proměnná pro uložení DHT senzoru vnitřní teploty
+extern FridgeTempDHT* insideTempDHT;
+//Proměnná pro uložení DHT senzoru venkovní teploty
+extern FridgeTempDHT* outsideTempDHT;
+//Proměnná pro uložení třídy resetovacího tlačítka
+extern ButtonManager* resetButton;
+//Proměnná pro uložení třídy relé chladících ventilátorů
+extern RelayModule* relay_cooling_fans;
+//Proměnná pro uložení třídy relé vnitřních ventilátorů
+extern RelayModule* relay_in_fans;
+//Proměnná pro uložení třídy relé hlavního napájení peltierů
+extern RelayModule* relay_peltier;
+//Proměnná pro uložení třídy relé ovládací režim napájení peltierů
+extern RelayModule* relay_peltier_power_mode;
+//Proměnná pro uložení třídy termistoru pro zaznamenávaní teploty teplé strany chladiče
+extern Thermistor* out_thermistor;
+//Proměnná pro uložení třídy digitálního potenciometru
+extern DigiPot* digitalPotentiometer;
+//Proměnná pro uložení venkovních chladících PWM ventilátorů
+extern FanController<COOLING_FAN_PWM, COOLING_FAN_TACH> cooling_fans_pwm;
+ //Proměnná pro uložení třídy správce napájení
+extern PowerManager* fridge_power_manager;
 
 
 //Funkce, která vrátí mac adresu spárované zařízení z EEPROM

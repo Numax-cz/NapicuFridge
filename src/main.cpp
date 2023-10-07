@@ -10,40 +10,45 @@
  * 
 */
 
-// Připojení potřebných lokálních knihoven z /src/include
+//Připojení hlavní knohovny 
 #include <include/main.h>
-
 //Proměnná pro ukládání zda je zařízení připojené
 bool devicePaired = false;
-
-
 //Proměnná pro ukládání zda je resetovací dioda aktivní
 bool resetLEDOn = false;
-//Proměnná aktuální doby u 
+//Proměnná aktuální doby 
 unsigned long reset_led_time_now = 0;
-
+//Proměnná pro uložení počtu zablikání resetovací led diody 
 int resetLEDBlinkCount = 0;
 
 fridge_data FridgeData;
 
 // Inicializace modulu z knihovny
 
+//Proměnná pro uložení BLE serveru
 BLEServer* pServer = NULL;
-
+//Proměnná pro uložení DHT senzoru vnitřní teploty
 FridgeTempDHT* insideTempDHT = NULL;
-
+//Proměnná pro uložení DHT senzoru venkovní teploty
 FridgeTempDHT* outsideTempDHT = NULL;
-
+//Proměnná pro uložení třídy resetovacího tlačítka
 ButtonManager* resetButton = NULL;
-
-RelayModule* fan_relay_1 = NULL;
-
-Thermistor* thermistor;
-
+//Proměnná pro uložení třídy relé chladících ventilátorů
+RelayModule* relay_cooling_fans = NULL;
+//Proměnná pro uložení třídy relé vnitřních ventilátorů
+RelayModule* relay_in_fans = NULL;
+//Proměnná pro uložení třídy relé hlavního napájení peltierů
+RelayModule* relay_peltier = NULL;
+//Proměnná pro uložení třídy relé ovládací režim napájení peltierů
+RelayModule* relay_peltier_power_mode = NULL;
+//Proměnná pro uložení třídy termistoru pro zaznamenávaní teploty teplé strany chladiče
+Thermistor* out_thermistor;
+//Proměnná pro uložení třídy digitálního potenciometru
 DigiPot* digitalPotentiometer = NULL;
-
-FanController<FAN1_PWM, FAN1_TACH> fan_1;
-
+//Proměnná pro uložení venkovních chladících PWM ventilátorů
+FanController<COOLING_FAN_PWM, COOLING_FAN_TACH> cooling_fans_pwm;
+//Proměnná pro uložení třídy správce napájení
+PowerManager* fridge_power_manager = NULL;
 
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
@@ -94,7 +99,7 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
 }
 
 
-
+//Setup funkce, která se spustí po zapnutí
 void setup() {
   // Zahájení komunikace po sériové lince
   // Rychlostí 9600 baud
@@ -114,19 +119,34 @@ void setup() {
   //Spuštění funkce begin
   resetButton->begin();
 
-  //Vytvoření třídy pro relé modul s pinem 25
-  fan_relay_1 = new RelayModule(25);
+  //Vytvoření třídy pro relé ovládací chladících PWM ventilátorů
+  relay_cooling_fans = new RelayModule(RELAY_PWM_FANS_MODULE_PIN);
   //Spuštění funkce begin
-  fan_relay_1->begin();
+  relay_cooling_fans->begin();
+
+  //Vytvoření třídy pro relé ovládací vnitřních ventilátorů
+  relay_in_fans = new RelayModule(RELAY_IN_FANS_MODULE_PIN);
+  //Spuštění funkce begin
+  relay_in_fans->begin();
+
+  //Vytvoření třídy pro relé ovládací hlavní napájení peltierů 
+  relay_peltier = new RelayModule(RELAY_PELTIER_PIN);
+  //Spuštění funkce begin
+  relay_peltier->begin();
+
+  //Vytvoření třídy pro relé ovládací napájecí režim peltierů
+  relay_peltier_power_mode = new RelayModule(RELAY_PELTIER_POWER_MODE_PIN);
+  //Spuštění funkce begin
+  relay_peltier_power_mode->begin();
+
 
   //Vytvoření třídy pro digitální potenciometr
   digitalPotentiometer = new DigiPot(X9_INC, X9_UD, X9_CS);
 
 
-  //Spuštění funkce begin
-  fan_1.begin();
 
-  thermistor = new NTC_Thermistor(
+  //Vytvoření třídy pro ntc termistor 
+  out_thermistor = new NTC_Thermistor(
     SENSOR_PIN,
     REFERENCE_RESISTANCE,
     NOMINAL_RESISTANCE,
@@ -226,9 +246,19 @@ void setup() {
                                        
   fridgeStateCharacteristic->setCallbacks(new DisplayStateCharacteristicCallback());
 
+  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *fridgeInFansCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_IN_FANS_UUID,
+    BLECharacteristic::PROPERTY_WRITE | 
+    BLECharacteristic::PROPERTY_READ
+  );
+                                       
+  fridgeInFansCharacteristic->setCallbacks(new InFansCharacteristicCallback());
+
+
 
   
-
+  PowerManager::begin();
 
 
 
@@ -259,7 +289,7 @@ void setup() {
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 
 
-  fan_relay_1->open();
+
 
 }
 
@@ -278,7 +308,7 @@ void loop() {
 
 
   //Spuštění loop funkce ventilátoru
-  fan_1.loop();  
+  // cooling_fans_pwm.loop();  
   
 
   //Spuštění loop funkce tlačítka
@@ -292,7 +322,9 @@ void loop() {
 
   //Načasování programu
   if(time >= data_send_time_now + data_send_period) {
-    const double celsius = thermistor->readCelsius();
+    const double celsius = out_thermistor->readCelsius();
+
+    //TODO píčo -273.15
 
     Serial.print(celsius);
     Serial.print(" C, ");

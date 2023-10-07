@@ -54,7 +54,8 @@ export class AppComponent {
     out_temp: "",
     config: {
       fridge_display_available: true,
-      fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1
+      fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1,
+      fridge_in_fans: false
     }
   }
 
@@ -349,5 +350,10 @@ export class AppComponent {
   //Funkce, která vrátí zda je alert zobrazen
   public get_device_connection_alert_display(): boolean {
     return AppComponent.device_connection_alert_display;
+  }
+
+  //Staitcká funkce, která vrátí zda jsou vnitřní ventilátory zapnuté
+  public static get_is_in_fans_enabled(): boolean {
+    return AppComponent.fridge_data.config.fridge_in_fans;
   }
 }

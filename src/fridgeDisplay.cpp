@@ -2,7 +2,6 @@
 #include <Fonts/FreeMonoBold9pt7b.h>
 
 
-
 void FridgeDisplay::begin() {
     FridgeDisplay::display = new Adafruit_SSD1306(DISPLAY_W, DISPLAY_H, &Wire, -1);
     FridgeDisplay::display->begin(SSD1306_SWITCHCAPVCC, 0x3C);
