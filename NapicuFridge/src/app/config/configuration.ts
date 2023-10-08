@@ -13,6 +13,7 @@ export namespace Configuration {
 
 }
 
-
 //Definice proměnné, která ukládá výchozí režim do kterého lednička přejde po prvním zapnutí
 export const DEFAULT_POWER_MODE_ON_SWITCH: FridgePowerMode = FridgePowerMode.FRIDGE_NORMAL_POWER;
+
+export const DEFAULT_IN_FANS_ON_SWITCH: boolean = false;

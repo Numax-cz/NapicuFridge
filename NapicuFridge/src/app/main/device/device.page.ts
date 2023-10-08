@@ -3,7 +3,7 @@ import {AppComponent} from "../../app.component";
 import {alert_animations} from "../Animation";
 import {FridgePowerMode} from "../../interface/Enums";
 import {CharacteristicController} from "../../CharacteristicController";
-import {DEFAULT_POWER_MODE_ON_SWITCH} from "../../config/configuration";
+import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "../../config/configuration";
 
 
 @Component({
@@ -35,7 +35,18 @@ export class DevicePage {
         //Až se úspěšně provede zápis charakteristiky provede se následující
         //Spuštění funkce uvnitř zóny Angularu
         this.ngZone.run(() => {
+          //Zapíšeme aktuální režim napájení
           AppComponent.fridge_data.config.fridge_power_mode = AppComponent.get_previous_power_mode();
+        });
+      });
+
+      //Zavolání funkce pro zapsání stavu vnitřních ventilátorů
+      CharacteristicController.writeInFansAvailable(AppComponent.get_is_previous_in_fans_enabled())?.then(() => {
+        //Až se úspěšně provede zápis charakteristiky provede se následující
+        //Spuštění funkce uvnitř zóny Angularu
+        this.ngZone.run(() => {
+          //Přepsání proměnné v nastavení
+          AppComponent.fridge_data.config.fridge_in_fans = AppComponent.get_is_previous_in_fans_enabled();
         });
       });
       return;
@@ -48,13 +59,12 @@ export class DevicePage {
       this.ngZone.run(() => {
         //Zapíšeme aktuální napájecí režim do proměnné ukládající předchozí napájecí režim
         AppComponent.fridge_data.config.fridge_previous_power_mode = AppComponent.get_power_mode();
+        //Zapíšeme aktuální hodnotu vnitřních ventilátorů do předchozí hodnoty vnitřních ventilátorů
+        AppComponent.set_previous_in_fans(AppComponent.get_is_in_fans_enabled());
         //Zapíšeme vypnutý režim do proměnné
         AppComponent.fridge_data.config.fridge_power_mode = FridgePowerMode.FRIDGE_OFF_POWER;
       });
     });
-
-    //Spuštění funkce pro synchronizaci nastavení z ESP
-    AppComponent.update_config_from_esp();
   }
 
   //Funkce, která se spustí po kliknutí na tlačítko "Obnovit tovární nastavení"

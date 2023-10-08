@@ -15,6 +15,7 @@ import {alert_animations, app_animation} from "./main/Animation";
 import {FridgeDisplayState, FridgePowerMode} from "./interface/Enums";
 import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
+import {DEFAULT_IN_FANS_ON_SWITCH} from "./config/configuration";
 
 @Component({
   selector: 'app-root',
@@ -395,6 +396,24 @@ export class AppComponent {
   //Statická funkce, která vrátí zda jsou vnitřní ventilátory zapnuté
   public static get_is_in_fans_enabled(): boolean {
     return AppComponent.fridge_data.config.fridge_in_fans;
+  }
+
+  //Statická funkce, která nastaví předchozí nastavení vnitřních ventilátorů
+  public static set_previous_in_fans(value: boolean): void {
+    //Uložení nastavení
+    AppComponent.application_settings.setItem("previous_in_fans", JSON.stringify(value));
+  }
+
+  //Statická funkce, která vrátí zda jsou vnitřní ventilátory zapnuté
+  public static get_is_previous_in_fans_enabled(): boolean {
+    //Získání uložených dat
+    let i: string | null = AppComponent.application_settings.getItem("previous_in_fans");
+    //Pokud existuje uložená hodnota provede se následující
+    if(i) return JSON.parse(i) as boolean;
+    //Nastavení výchozí hodnoty
+    this.set_previous_in_fans(DEFAULT_IN_FANS_ON_SWITCH);
+    //Vrácení výchozí hodnoty
+    return DEFAULT_IN_FANS_ON_SWITCH;
   }
 
   //Statická funkce, která vrátí režim napájení ledničky
