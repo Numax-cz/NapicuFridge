@@ -126,7 +126,7 @@ export class AppComponent {
 
       //Tato funkce zjistí, zda byly zjištěny charakteristiky a deskriptory zařízení,
       //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
-      BluetoothLE.discover({address: device.address, clearCache: true})
+      BluetoothLE.discover({address: device.address, clearCache: true}) //TODO wtf???????
           .then((d: Device) => {
             BluetoothLE.discover({address: device.address, clearCache: true})
               .then((d: Device) => {

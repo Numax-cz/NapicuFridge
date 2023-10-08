@@ -27,6 +27,8 @@ protected:
     static void turn_off_cooling_fans();
     //Statická funkce pro zapnutí chladících ventilátorů
     static void turn_on_cooling_fans();
+    //Statická funkce pro vypnutí celého chladícího systému
+    static void power_off();
 
 public: 
 
@@ -34,10 +36,10 @@ public:
     static void begin();
     //Statická loop funkce pro PowerManager
     static void loop();
-    //Statická funkce pro vypnutí celého chladícího systému
-    static void power_off();
     //Statická funkce pro zapnutí celého chladícího systému
     static void power_on();
+    //Statická funkce pro změnu napájecího režimu
+    static void change_power_mode(int mode);
     //Statická funkce pro vypnutí vnitřních ventilátorů
     static void turn_off_in_fans();
     //Statická funkce pro zapnutí vnitřních ventilátorů

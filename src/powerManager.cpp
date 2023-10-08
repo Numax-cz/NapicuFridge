@@ -5,7 +5,14 @@
 
 
 void PowerManagerCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
-
+    //Vypsání hodnoty do konzole
+    Serial.println("Odeslání informací o režimu napájení");
+    //Získání dat o režimu napájení z EEPROM 
+    uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
+    //Nastavení hodnoty charakteristiky 
+    pCharacteristic->setValue(String(data).c_str());
+    //Odeslání zprávy skrze BLE do připojeného zařízení
+    pCharacteristic->notify();
 }
 
 void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
@@ -23,26 +30,9 @@ void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
         //Převod řetězce na celé číslo
         int number = std::stoi(msg); 
 
-        //Zkontroluje, zda převedené číslo odpovídá některé hodnotě enumerace
-        if (number == FRIDGE_OFF_POWER) {
-            //Zavření relátka pro hlavní napájení peltiera
-            
-            relay_peltier->close();
-        } else if (number == FRIDGE_MAX_POWER) {
+        PowerManager::change_power_mode(number);
 
-            //Otevření relátka pro hlavní napájení peltiera
-            relay_peltier->open();
-        } else if (number == FRIDGE_NORMAL_POWER) {
 
-            //Otevření relátka pro hlavní napájení peltiera
-            relay_peltier->open();
-        } else if (number == FRIDGE_ECO_POWER) {
-
-            //Otevření relátka pro hlavní napájení peltiera
-            relay_peltier->open();
-        } else {
-
-        }
     } catch (std::invalid_argument const &e) {
         //Vypsání chybné hlášky do konzole
         Serial.print("Nelze převést řetězec na číslo: ");
@@ -109,18 +99,48 @@ void PowerManager::begin() {
     //Pokud není uložená hodnota v EEPROM proveď následující 
     if(data == 0xFF) {
         data = DEFAULT_POWER_MODE;
+        //TODO IDK jestli to tu bude 
+        EEPROM.write(POWER_MODE_EEPROM_ADDR, data);
+        EEPROM.commit();
     }
 
-    if(data == FRIDGE_OFF_POWER) {
+    //Spuštění funkce pro nastavení režimu výkonu
+    PowerManager::change_power_mode(data);
+
+    //Pokud lednička není nastavená na režim vypnuto provede se následující
+    if(data != FRIDGE_OFF_POWER) {
+        //Spuštění funkce pro inicializaci vnitřních ventilátorů
+        PowerManager::begin_in_fans();
+    }    
+}
+
+//Statická funkce pro změnu napájecího režimu
+void PowerManager::change_power_mode(int mode) {
+    
+    //Zkontroluje, zda převedené číslo odpovídá některé hodnotě enumerace
+    if (mode == FRIDGE_OFF_POWER) {
         PowerManager::power_off();
-        return;
+    } else if (mode == FRIDGE_MAX_POWER) {
+        relay_peltier_power_mode->close();
+        //Zavolání funkce pro zapnutí chladícího systému
+        PowerManager::power_on();
+    } else if (mode == FRIDGE_NORMAL_POWER) {
+        relay_peltier_power_mode->open();
+        //Zavolání funkce pro zapnutí chladícího systému
+        PowerManager::power_on();
+    } else if (mode == FRIDGE_ECO_POWER) {
+        relay_peltier_power_mode->open();
+        //Zavolání funkce pro zapnutí chladícího systému
+        PowerManager::power_on();
+    } else {
+
     }
-        
-    //Spuštění funkce pro inicializaci vnitřních ventilátorů
-    PowerManager::begin_in_fans();
 
-
-
+    //TODO IF 
+    //Zapsání režimu do EEPROM
+    EEPROM.write(POWER_MODE_EEPROM_ADDR, mode);
+    //Potvrezní zmeň
+    EEPROM.commit();
 }
 
 //Funkce pro inicializaci vnitřních ventilátorů
@@ -150,22 +170,24 @@ void PowerManager::loop() {
 
 //Funkce pro vypnutí celého chladícího systému
 void PowerManager::power_off() {
+    //Zavření relátka pro režim napájení
+    relay_peltier_power_mode->close();
     //Zavření relátka pro hlavní napájení peltierů
     relay_peltier->close();
     //Spuštění funkce pro vypnutí vnitřních ventilátorů
     PowerManager::turn_off_in_fans();
     //Spuštění funkce pro vypnutí chladících ventilátorů
     PowerManager::turn_off_cooling_fans();
-    //Zapsání hodnoty do EEPROM
-    EEPROM.write(POWER_MODE_EEPROM_ADDR, FRIDGE_OFF_POWER);
-    //Potvrezní zmeň
-    EEPROM.commit();
-
+    // //Zapsání hodnoty do EEPROM
+    // EEPROM.write(POWER_MODE_EEPROM_ADDR, FRIDGE_OFF_POWER);
+    // //Potvrezní zmeň
+    // EEPROM.commit();
 }
 
 //Funkce pro zapnutí celého chladícího systému
 void PowerManager::power_on() {
-
+    relay_peltier->open();
+    relay_cooling_fans->open();
 }
 
 //Funkce pro vypnutí chladících ventilátorů

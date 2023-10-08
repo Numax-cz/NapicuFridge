@@ -10,7 +10,7 @@ import {CharacteristicController} from "../../../CharacteristicController";
 export class SettingsComponent {
 
   //Proměnná ukládající nastavený režim
-  public selected_item: number = 2;
+  public declare selected_item: number;
 
   constructor(public ngZone: NgZone) {
     //Nastavíme proměnnou na stav napájení
@@ -36,13 +36,15 @@ export class SettingsComponent {
 
   //Funkce pro změnu stavu vnitřních ventilátorů
   public change_in_fans(event: any): void {
+    //Uložení event hodnoty do konstantní proměnné
+    const value = event.currentTarget.checked;
     //Zavolání funkce pro zapsání stavu vnitřních ventilátorů
-    CharacteristicController.writeInFansAvailable(event.currentTarget.checked)?.then(() => {
+    CharacteristicController.writeInFansAvailable(value)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
         //Přepsání proměnné v nastavení
-        AppComponent.fridge_data.config.fridge_in_fans = event.currentTarget.checked;
+        AppComponent.fridge_data.config.fridge_in_fans = value;
       });
     });
   }

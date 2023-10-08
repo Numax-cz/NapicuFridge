@@ -255,6 +255,14 @@ void setup() {
                                        
   fridgeInFansCharacteristic->setCallbacks(new InFansCharacteristicCallback());
 
+  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *powerModeCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_POWER_MODE_UUID,
+    BLECharacteristic::PROPERTY_WRITE | 
+    BLECharacteristic::PROPERTY_READ
+  );
+                                       
+  powerModeCharacteristic->setCallbacks(new PowerManagerCharacteristicCallback());
 
 
   
