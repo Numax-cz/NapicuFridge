@@ -16,7 +16,6 @@ import {FridgeDisplayState, FridgePowerMode} from "./interface/Enums";
 import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
 
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -116,7 +115,6 @@ export class AppComponent {
     })
   }
 
-
   private static async on_next_connect(device: DeviceInfo): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if(device.status === "connected") {
@@ -162,7 +160,6 @@ export class AppComponent {
     })
   }
 
-
   //Asynchronní funkce, která se snaží o automatické připojení k zařízení
   public static async start_auto_connect(address: string): Promise<void> {
     //Vypsání hodnoty do vývojářské konzole
@@ -185,9 +182,6 @@ export class AppComponent {
     //Znovu spuštění funkce po 1s (1000ms)
     setTimeout(() => this.start_auto_connect(address), 1000);
   }
-
-
-
 
   //Statická funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
   public static async update_config_from_esp(): Promise<void> {
