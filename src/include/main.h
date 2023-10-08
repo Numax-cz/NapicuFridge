@@ -20,33 +20,48 @@
 #include <include/fanController.h>
 #include <include/powerManager.h>
 
-
-
+/////////////////////////////////////////////////////////////////////
 //Definice propojovacích pinů
+
 //pro analogový vstup a LED diodu
 #define CONNECTION_LED 19
 //Pro analogový vstup a LED diodu
 #define RESET_LED 18
 //Definice propojovacích pinů veškerých teploměrů 
-#define DHT_TYPE DHT11  
-#define DHT_INSIDE 17 
-#define DHT_OUTSIDE 16
+#define DHT_TYPE DHT11 //Typ DHT senzoru
+#define DHT_INSIDE 17  // Pin vnitřního DHT senzoru
+#define DHT_OUTSIDE 16 //Pin venkovního DHT senzoru
 
 //Definice pinu tlačítka pro reset zařízení
 #define RESET_BUTTON 5
 
 //Definice pinů digitálního potenciometru
-#define X9_CS  14
-#define X9_INC 27
-#define X9_UD  26
+#define X9_CS  14 //Pin CS pinu potenciometru
+#define X9_INC 27 //Pin INC pinu potenciometru
+#define X9_UD  26 //Pin UD pinu potenciometru 
 
 //Definice pinů termistoru
-#define SENSOR_PIN             4
-#define REFERENCE_RESISTANCE    9830
-#define NOMINAL_RESISTANCE     7400
-#define NOMINAL_TEMPERATURE    26
-#define B_VALUE                3950
-#define STM32_ANALOG_RESOLUTION 4095
+#define SENSOR_PIN             4 //Pin pro příjem dat
+#define REFERENCE_RESISTANCE    9830 // Referenční hodnota rezistoru 
+#define NOMINAL_RESISTANCE     7400 // Nominální odpor
+#define NOMINAL_TEMPERATURE    26 //Nominální teplota 
+#define B_VALUE                3950 //beta hodnota 
+#define STM32_ANALOG_RESOLUTION 4095 //Analogové Rozlišení 
+
+//Definicie pinů chladících ventilátorů
+#define COOLING_FAN_PWM 15 //Pin pro řízení PWM  
+#define COOLING_FAN_TACH 0 //Pin pro zaznamenávání otáček
+
+//Definice pinů relátek
+#define RELAY_PELTIER_PIN 32 //Pin relátka pro hlavní napájení peltierů   
+#define RELAY_PELTIER_POWER_MODE_PIN 23 //Pin relátka pro řízení režimu napájení 
+#define RELAY_PWM_FANS_MODULE_PIN 25 //Pin relátka pro napájení chladících ventilátorů 
+#define RELAY_IN_FANS_MODULE_PIN 33 //Pin relátka vnitřních ventilátorů
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+//Definice EEPROM adres 
 
 //Definice EEPROM pro ukládání MAC adresy 
 #define MAC_EEPROM_SIZE 6 //Délka MAC adresy v bajtech
@@ -63,7 +78,12 @@
 //Definice celkové délky 
 #define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE
 
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
 //Definice unikátních ID pro různé služby,
+
 //pro vlastní UUID využijte generátor
 //https://www.uuidgenerator.net/
 #define SERVICE_UUID           "cea986c2-4405-11ee-be56-0242ac120002" 
@@ -73,15 +93,10 @@
 #define CHARACTERISTIC_DISPLAY_STATE_UUID "52a25b48-4596-11ee-be56-0242ac120002"
 #define CHARACTERISTIC_IN_FANS_UUID "615f0ef8-651a-11ee-8c99-0242ac120002"
 
-#define COOLING_FAN_PWM 15
-#define COOLING_FAN_TACH 0
+/////////////////////////////////////////////////////////////////////
 
-
-//Definice pinů relátek
-#define RELAY_PELTIER_PIN 32
-#define RELAY_PELTIER_POWER_MODE_PIN 23
-#define RELAY_PWM_FANS_MODULE_PIN 25
-#define RELAY_IN_FANS_MODULE_PIN 33
+/////////////////////////////////////////////////////////////////////
+//Definice výchozích nastavení chytré ledničky 
 
 //Definice, která určuje výchozí dostupnost displeje
 #define DISPLAY_DEFAULT_AVAILABLE 1 //V tomto případě je displej při prvním zapnutí zapnutý
@@ -91,6 +106,13 @@
 
 //Definice výchozího režimu napájení
 #define DEFAULT_POWER_MODE 0 //V tomto případě je lednička vypnutá podle struktury fridge_power_mode
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+//Definice proměnných
+
+
 
 //Proměnná pro ukládání zda je zařízení připojené
 extern bool devicePaired;
@@ -150,9 +172,15 @@ extern FanController<COOLING_FAN_PWM, COOLING_FAN_TACH> cooling_fans_pwm;
  //Proměnná pro uložení třídy správce napájení
 extern PowerManager* fridge_power_manager;
 
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+//Definice funkcí 
 
 //Funkce, která vrátí mac adresu spárované zařízení z EEPROM
 BLEAddress* read_paired_device_mac_address_from_eeprom();
 
 //Funkce, která uvede zařízení do továrního nastavení
 void factory_reset();
+
+/////////////////////////////////////////////////////////////////////
