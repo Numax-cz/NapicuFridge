@@ -9,27 +9,20 @@ import {CharacteristicController} from "../../../CharacteristicController";
 })
 export class SettingsComponent {
 
-  //Proměnná ukládající nastavený režim
-  public declare selected_item: number;
-
-  constructor(public ngZone: NgZone) {
-    //Nastavíme proměnnou na stav napájení
-    this.selected_item = AppComponent.fridge_data.config.fridge_power_mode;
-  }
+  constructor(public ngZone: NgZone) { }
 
   //Funkce pro změnu režimu napájení
   public change_power_mode(value: number): void {
+    if(!this.get_is_connected() || this.get_power_mode() === 0) return;
     //Zavolání funkce pro zapsání režimu napájení
     CharacteristicController.writePowerMode(value)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
-        //Přepsání proměnné
-        this.selected_item = value;
         //Zapíšeme stav napájení do proměnné ukládající aktuální stav napájení
         AppComponent.fridge_data.config.fridge_power_mode = value;
         //Zapíšeme stav napájení do proměnné ukládající předchozí stav napájení
-        AppComponent.fridge_data.config.fridge_previous_power_mode = value;
+        AppComponent.set_previous_power_mode(value);
       });
     });
   }
@@ -56,6 +49,18 @@ export class SettingsComponent {
 
   //Funkce, která vrátí zda jsou vnitřní ventilátory zapnuté
   public get_is_in_fans_enabled(): boolean {
-    return AppComponent.get_is_in_fans_enabled();
+    //Podmínka pokud není zařízení připojené nastaví se předchozí hodnota, pokud je, nastaví se aktuální nastavená hodnota
+    return (!this.get_is_connected()) ? AppComponent.get_is_previous_in_fans_enabled() : AppComponent.get_is_in_fans_enabled();
+  }
+
+  //Funkce, která vrátí který napájecí režim je zapnutý
+  public get_selected_power_mode(): number {
+    //Podmínka pokud není zařízení připojené nastaví se předchozí hodnota, pokud je, nastaví se aktuální nastavená hodnota
+    return (!this.get_is_connected() || AppComponent.get_power_mode() == 0) ? AppComponent.get_previous_power_mode() : AppComponent.get_power_mode();
+  }
+
+  //Funkce, která vrátí režim napájení ledničky
+  public get_power_mode(): number {
+    return AppComponent.get_power_mode();
   }
 }

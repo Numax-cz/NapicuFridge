@@ -22,14 +22,6 @@ export class DevicePage {
   public change_power_mode(event: any) {
     //Pokud je spínač zapnutý provede se následující
     if(event.currentTarget.checked) {
-      //Pokud je předchozí hodnota nastavena na vypnuto provede se následující
-      if(AppComponent.get_previous_power_mode() == FridgePowerMode.FRIDGE_OFF_POWER) {
-        //Spuštění funkce uvnitř zóny Angularu
-        this.ngZone.run(() => {
-          //Zapíšeme výchozí hodnotu
-          AppComponent.fridge_data.config.fridge_previous_power_mode = DEFAULT_POWER_MODE_ON_SWITCH;
-        });
-      }
       //Spustíme funkci pro zápis charakteristiky na předchozí nastavený napájecí režim
       CharacteristicController.writePowerMode(AppComponent.get_previous_power_mode())?.then(() => {
         //Až se úspěšně provede zápis charakteristiky provede se následující
@@ -57,9 +49,9 @@ export class DevicePage {
       //Až se úspěšně provede zápis charakteristiky provede se následující
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
-        //Zapíšeme aktuální napájecí režim do proměnné ukládající předchozí napájecí režim
-        AppComponent.fridge_data.config.fridge_previous_power_mode = AppComponent.get_power_mode();
-        //Zapíšeme aktuální hodnotu vnitřních ventilátorů do předchozí hodnoty vnitřních ventilátorů
+        //Spuštění funkce pro uložení aktuálního napájecího režimu
+        AppComponent.set_previous_power_mode(AppComponent.get_power_mode());
+        //Spuštění funkce pro uložení nastavení vnitřních ventilátorů
         AppComponent.set_previous_in_fans(AppComponent.get_is_in_fans_enabled());
         //Zapíšeme vypnutý režim do proměnné
         AppComponent.fridge_data.config.fridge_power_mode = FridgePowerMode.FRIDGE_OFF_POWER;

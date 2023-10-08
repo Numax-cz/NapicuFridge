@@ -15,7 +15,7 @@ import {alert_animations, app_animation} from "./main/Animation";
 import {FridgeDisplayState, FridgePowerMode} from "./interface/Enums";
 import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
-import {DEFAULT_IN_FANS_ON_SWITCH} from "./config/configuration";
+import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "./config/configuration";
 
 @Component({
   selector: 'app-root',
@@ -55,7 +55,6 @@ export class AppComponent {
       fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1,
       fridge_in_fans: false,
       fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
-      fridge_previous_power_mode: FridgePowerMode.FRIDGE_OFF_POWER
     }
   }
 
@@ -240,8 +239,8 @@ export class AppComponent {
 
         //Pokud není výchozí hodnota na stav vypnuto provede se následující
         if (this.fridge_data.config.fridge_power_mode != FridgePowerMode.FRIDGE_OFF_POWER) {
-          //Zapíše se do proměnné ukládající předchozí režim aktuální režim ledničky
-          this.fridge_data.config.fridge_previous_power_mode = this.fridge_data.config.fridge_power_mode;
+          //Spuštění funkce pro uložení předchozího režimu  ledničky
+          this.set_previous_power_mode(this.fridge_data.config.fridge_power_mode);
         }
       }).catch((e) => {
       //Vypsání hodnoty do vývojářské konzole
@@ -420,9 +419,21 @@ export class AppComponent {
   public static get_power_mode(): FridgePowerMode {
     return AppComponent.fridge_data.config.fridge_power_mode;
   }
+  //Statická funkce, která nastaví předchozí napájecí režim ledničky
+  public static set_previous_power_mode(value: FridgePowerMode): void {
+    //Uložení nastavení
+    AppComponent.application_settings.setItem("previous_power_mode", JSON.stringify(value));
+  }
 
   //Statická funkce, která vrátí předchozí režim napájení ledničky
   public static get_previous_power_mode(): FridgePowerMode {
-    return AppComponent.fridge_data.config.fridge_previous_power_mode;
+    //Získání uložených dat
+    let i: string | null = AppComponent.application_settings.getItem("previous_power_mode");
+    //Pokud existuje uložená hodnota provede se následující
+    if(i) return JSON.parse(i) as FridgePowerMode;
+    //Nastavení výchozí hodnoty
+    this.set_previous_power_mode(DEFAULT_POWER_MODE_ON_SWITCH);
+    //Vrácení výchozí hodnoty
+    return DEFAULT_POWER_MODE_ON_SWITCH;
   }
 }

@@ -16,6 +16,5 @@ export declare interface FridgeData {
 
 
     fridge_power_mode: FridgePowerMode,
-    fridge_previous_power_mode: FridgePowerMode
   }
 }
