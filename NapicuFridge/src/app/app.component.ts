@@ -87,9 +87,12 @@ export class AppComponent {
 
   //Funkce, která zobrazí a následně skryje alert pro zobrazování stavu připojení
   public static show_connection_alert(): void {
+    //Nastavení proměnné na log1
     this.device_connection_alert_display = true;
+    //Spuštění funkce pro vykonaní funkce po 3500ms
     setTimeout(() => {
-        this.device_connection_alert_display = false;
+      //Nastavení proměnné na log0
+      this.device_connection_alert_display = false;
     }, 3500);
   }
 
@@ -100,8 +103,9 @@ export class AppComponent {
       if(!this.connected_device) {
         //Připojit se k zařízení
         BluetoothLE.connect({address: address, transport: AndroidGattTransportMode.TRANSPORT_LE}).subscribe({
-          next: (device: DeviceInfo) => {
-            this.on_next_connect(device)
+          next: async (device: DeviceInfo) => {
+            //Spuštění funkce po připojení zařízení
+            await this.on_next_connect(device);
             resolve();
           },
           error: (e: any) => {
@@ -113,48 +117,49 @@ export class AppComponent {
   }
 
 
-  private static on_next_connect(device: DeviceInfo): void {
-    if(device.status === "connected") {
-      //Uložení adresy spárovaného zaířzení
-      AppComponent.application_settings.setItem("device", JSON.stringify(device));
+  private static async on_next_connect(device: DeviceInfo): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if(device.status === "connected") {
+        //Uložení adresy spárovaného zaířzení
+        AppComponent.application_settings.setItem("device", JSON.stringify(device));
 
-      //Po úspěšném připojení provést následující
-      //Nastavit proměnnou pro připojené zařízení
-      AppComponent.set_connected_device(device);
-      //Vypsání hodnoty do vývojářské konzole
-      console.log("connected");
-
-      //Tato funkce zjistí, zda byly zjištěny charakteristiky a deskriptory zařízení,
-      //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
-      BluetoothLE.discover({address: device.address, clearCache: true}) //TODO wtf???????
-          .then((d: Device) => {
-            BluetoothLE.discover({address: device.address, clearCache: true})
-              .then((d: Device) => {
-            //Synchronizování nastavení na ESP32
-            AppComponent.update_config_from_esp();
-            //Přihlášení se k odběru charakteristiky vnitřní teploty
-            AppComponent.subscribe_in_temp();
-                //Přihlášení se k odběru charakteristiky venkovní teploty
-                AppComponent.subscribe_out_temp();
-              }).catch((e) => {
-              //Vypsání hodnoty do vývojářské konzole
-              console.error("error_discovered" + JSON.stringify(e));
-            });
-          }).catch((e) =>{
+        //Po úspěšném připojení provést následující
+        //Nastavit proměnnou pro připojené zařízení
+        AppComponent.set_connected_device(device);
         //Vypsání hodnoty do vývojářské konzole
-        console.error("error_discovered" + JSON.stringify(e));
-      });
-    }
-    else if (device.status === "disconnected") {
-      //Po odpojení provést následující
-      //Nastavit proměnnou connected_device na null
-      AppComponent.set_connected_device();
-      //Vypsání hodnoty do vývojářské konzole
-      console.log("Disconnected from device: " + device.address, "status");
+        console.log("connected");
 
-      //Spuštění funkce pro automatické připojení k zařízení
-      AppComponent.start_auto_connect(device.address);
-    }
+        //Tato funkce zjistí, zda byly zjištěny charakteristiky a deskriptory zařízení,
+        //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
+        BluetoothLE.discover({address: device.address, clearCache: true})
+          .then(async (d: Device) => {
+            //Synchronizování nastavení na ESP32
+            await AppComponent.update_config_from_esp();
+            //Přihlášení se k odběru charakteristiky vnitřní teploty
+            await AppComponent.subscribe_in_temp();
+            //Přihlášení se k odběru charakteristiky venkovní teploty
+            await AppComponent.subscribe_out_temp();
+
+            resolve();
+          }).catch((e) => {
+          //Vypsání hodnoty do vývojářské konzole
+          console.error("error_discovered" + JSON.stringify(e));
+          reject();
+        });
+      }
+      else if (device.status === "disconnected") {
+        //Po odpojení provést následující
+        //Nastavit proměnnou connected_device na null
+        AppComponent.set_connected_device();
+        //Vypsání hodnoty do vývojářské konzole
+        console.log("Disconnected from device: " + device.address, "status");
+
+        //Spuštění funkce pro automatické připojení k zařízení
+        AppComponent.start_auto_connect(device.address);
+
+        resolve();
+      }
+    })
   }
 
 
@@ -185,39 +190,37 @@ export class AppComponent {
 
 
   //Statická funkce, která synchronizuje nastavení, které je aktuálně nastavené na ESP32
-  public static update_config_from_esp(): void {
-      //TODO Await
-
-      //Získání zda je displej povolen
-      CharacteristicController.readIsDisplayAvailable()
-        ?.then((data: OperationResult) => {
-          //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
-          let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
-          //Převést bytes na string
-          let value: string = BluetoothLE.bytesToString(bytes);
-          //Nastavení proměnné na hodnotu podle získaných dat
-          this.fridge_data.config.fridge_display_available = (value == "1");
+  public static async update_config_from_esp(): Promise<void> {
+    //Získání zda je displej povolen
+    await CharacteristicController.readIsDisplayAvailable()
+      ?.then((data: OperationResult) => {
+        //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+        let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+        //Převést bytes na string
+        let value: string = BluetoothLE.bytesToString(bytes);
+        //Nastavení proměnné na hodnotu podle získaných dat
+        this.fridge_data.config.fridge_display_available = (value == "1");
       }).catch((e) => {
         //Vypsání hodnoty do vývojářské konzole
         console.error("error_discovered" + JSON.stringify(e));
       });
 
-      //Získání stavu displeje
-      CharacteristicController.readDisplayState()
-        ?.then((data: OperationResult) => {
-          //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
-          let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
-          //Převést bytes na string
-          let value: string = BluetoothLE.bytesToString(bytes);
-          //Převedení string na number a následné nastavení proměnné na hodnotu získaných dat
-          this.fridge_data.config.fridge_display_state = Number(value);
-        }).catch((e) => {
-        //Vypsání hodnoty do vývojářské konzole
-        console.error("error_discovered" + JSON.stringify(e));
-      });
+    //Získání stavu displeje
+    await CharacteristicController.readDisplayState()
+      ?.then((data: OperationResult) => {
+        //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+        let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+        //Převést bytes na string
+        let value: string = BluetoothLE.bytesToString(bytes);
+        //Převedení string na number a následné nastavení proměnné na hodnotu získaných dat
+        this.fridge_data.config.fridge_display_state = Number(value);
+      }).catch((e) => {
+      //Vypsání hodnoty do vývojářské konzole
+      console.error("error_discovered" + JSON.stringify(e));
+    });
 
     //Získání zda jsou vnitřní ventilátory povolené
-    CharacteristicController.readInFansAvailable()
+    await CharacteristicController.readInFansAvailable()
       ?.then((data: OperationResult) => {
         //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
         let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
@@ -231,7 +234,7 @@ export class AppComponent {
     });
 
     //Získání režim napájení
-    CharacteristicController.readPowerMode()
+    await CharacteristicController.readPowerMode()
       ?.then((data: OperationResult) => {
         //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
         let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
@@ -241,19 +244,14 @@ export class AppComponent {
         this.fridge_data.config.fridge_power_mode = Number(value);
 
         //Pokud není výchozí hodnota na stav vypnuto provede se následující
-        if(this.fridge_data.config.fridge_power_mode != FridgePowerMode.FRIDGE_OFF_POWER) {
+        if (this.fridge_data.config.fridge_power_mode != FridgePowerMode.FRIDGE_OFF_POWER) {
           //Zapíše se do proměnné ukládající předchozí režim aktuální režim ledničky
           this.fridge_data.config.fridge_previous_power_mode = this.fridge_data.config.fridge_power_mode;
         }
-
       }).catch((e) => {
       //Vypsání hodnoty do vývojářské konzole
       console.error("error_discovered" + JSON.stringify(e));
     });
-
-
-
-
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
@@ -268,57 +266,65 @@ export class AppComponent {
   }
 
   //Statická funkce pro přihlášení se k odběru pro získávání dat z vnitřního teploměru
-  private static subscribe_in_temp(): void {
-    //Spuštění funkce pro přihlášení se k odběru charakteristiky vnitřní teploty
-    CharacteristicController.subscribeInTemp()?.subscribe(
-      {
-        next: (data: OperationResult) => {
-          //Po získání dat z bluetooth charakteristiky provést následující
-          if(data.value) {
-            //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
-            let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
-            //Převést bytes na string
-            let value: string = BluetoothLE.bytesToString(bytes);
-            //Spuštění funkce uvnitř zóny Angularu
-            this.ngZone.run(() => {
-              //Zapsat převedený bytes na string do proměnné in_temp
-              this.fridge_data.in_temp = value;
-            })
+  private static subscribe_in_temp(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      //Spuštění funkce pro přihlášení se k odběru charakteristiky vnitřní teploty
+      CharacteristicController.subscribeInTemp()?.subscribe(
+        {
+          next: (data: OperationResult) => {
+            //Po získání dat z bluetooth charakteristiky provést následující
+            if(data.value) {
+              //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+              let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+              //Převést bytes na string
+              let value: string = BluetoothLE.bytesToString(bytes);
+              //Spuštění funkce uvnitř zóny Angularu
+              this.ngZone.run(() => {
+                //Zapsat převedený bytes na string do proměnné in_temp
+                this.fridge_data.in_temp = value;
+              })
+              resolve();
+            }
+          },
+          error: (e) => {
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error" + JSON.stringify(e));
+            reject();
           }
-        },
-        error: (e) => {
-          //Vypsání hodnoty do vývojářské konzole
-          console.log("error" + JSON.stringify(e));
         }
-      }
-    );
+      );
+    })
   }
 
   //Statická funkce pro přihlášení se k odběru pro získávání dat z venkovního teploměru
-  private static subscribe_out_temp(): void {
-    //Přihlášení se k odběru charakteristiky venkovní teploty
-    CharacteristicController.subscribeOutTemp()?.subscribe(
-      {
-        next: (data: OperationResult) => {
-          //Po získání dat z bluetooth charakteristiky provést následující
-          if(data.value) {
-            //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
-            let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
-            //Převést bytes na string
-            let value: string = BluetoothLE.bytesToString(bytes);
-            //Spuštění funkce uvnitř zóny Angularu
-            this.ngZone.run(() => {
-              //Zapsat převedený bytes na string do proměnné out_temp
-              this.fridge_data.out_temp = value;
-            })
+  private static subscribe_out_temp(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      //Přihlášení se k odběru charakteristiky venkovní teploty
+      CharacteristicController.subscribeOutTemp()?.subscribe(
+        {
+          next: (data: OperationResult) => {
+            //Po získání dat z bluetooth charakteristiky provést následující
+            if(data.value) {
+              //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+              let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+              //Převést bytes na string
+              let value: string = BluetoothLE.bytesToString(bytes);
+              //Spuštění funkce uvnitř zóny Angularu
+              this.ngZone.run(() => {
+                //Zapsat převedený bytes na string do proměnné out_temp
+                this.fridge_data.out_temp = value;
+              })
+              resolve();
+            }
+          },
+          error: (e) => {
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error" + JSON.stringify(e));
+            reject();
           }
-        },
-        error: (e) => {
-          //Vypsání hodnoty do vývojářské konzole
-          console.log("error" + JSON.stringify(e));
         }
-      }
-    );
+      );
+    })
   }
 
 

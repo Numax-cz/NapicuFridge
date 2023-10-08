@@ -187,12 +187,12 @@ export class HomePage {
   }
 
   //Přesměrování uživatele na hlavní část aplikace (/main/info)
-  public redirect_user(address: string): void {
+  public async redirect_user(address: string): Promise<void> {
     //Spuštění automatického připojení se na zařízení
-    AppComponent.start_auto_connect(address);
-
-    //Přesměrování uživatele na URL /main/info
-    this.router.navigateByUrl("main/info");
+    await AppComponent.start_auto_connect(address).then(() => {
+      //Přesměrování uživatele na URL /main/info
+      this.router.navigateByUrl("main/info");
+    });
   }
 
   //Funkce, která vrací verzi aplikace v požadovaném formátu
