@@ -24,8 +24,11 @@ export class DevicePage {
     if(event.currentTarget.checked) {
       //Pokud je předchozí hodnota nastavena na vypnuto provede se následující
       if(AppComponent.get_previous_power_mode() == FridgePowerMode.FRIDGE_OFF_POWER) {
-        //Zapíšeme výchozí hodnotu
-        AppComponent.fridge_data.config.fridge_previous_power_mode = DEFAULT_POWER_MODE_ON_SWITCH;
+        //Spuštění funkce uvnitř zóny Angularu
+        this.ngZone.run(() => {
+          //Zapíšeme výchozí hodnotu
+          AppComponent.fridge_data.config.fridge_previous_power_mode = DEFAULT_POWER_MODE_ON_SWITCH;
+        });
       }
       //Spustíme funkci pro zápis charakteristiky na předchozí nastavený napájecí režim
       CharacteristicController.writePowerMode(AppComponent.get_previous_power_mode())?.then(() => {
@@ -34,10 +37,9 @@ export class DevicePage {
         this.ngZone.run(() => {
           AppComponent.fridge_data.config.fridge_power_mode = AppComponent.get_previous_power_mode();
         });
-      })
+      });
       return;
     }
-
 
     //Přepneme napájecí režim
     CharacteristicController.writePowerMode(FridgePowerMode.FRIDGE_OFF_POWER)?.then(() => {
@@ -49,7 +51,10 @@ export class DevicePage {
         //Zapíšeme vypnutý režim do proměnné
         AppComponent.fridge_data.config.fridge_power_mode = FridgePowerMode.FRIDGE_OFF_POWER;
       });
-    })
+    });
+
+    //Spuštění funkce pro synchronizaci nastavení z ESP
+    AppComponent.update_config_from_esp();
   }
 
   //Funkce, která se spustí po kliknutí na tlačítko "Obnovit tovární nastavení"
@@ -84,5 +89,5 @@ export class DevicePage {
   //Funkce, která vrátí hodnotu vypnutého režimu
   public get_fridge_off_mode(): number {
     return FridgePowerMode.FRIDGE_OFF_POWER;
-}
+  }
 }
