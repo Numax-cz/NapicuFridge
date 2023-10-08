@@ -7,17 +7,17 @@
           <div class="is-size-5 has-text-weight-bold">Nastavení výkonu</div>
           <div class="is-flex is-flex-direction-column">
             <div class="is-flex is-align-items-center mt-2 p-3 info-box"
-                 [ngClass]="{'has-background-info has-text-white': selected_item === 1}" (click)="change_system_power(1)">
+                 [ngClass]="{'has-background-info has-text-white': selected_item === 1}" (click)="change_power_mode(1)">
               <ion-icon name="speedometer-outline" class="mr-2" style="font-size: 30px;"></ion-icon>
               <div class="has-text-weight-bold">Maximální režim</div>
             </div>
             <div class="is-flex is-align-items-center mt-2 p-3 info-box"
-                 [ngClass]="{'has-background-info has-text-white': selected_item === 2}" (click)="change_system_power(2)">
+                 [ngClass]="{'has-background-info has-text-white': selected_item === 2}" (click)="change_power_mode(2)">
               <ion-icon name="flash-outline" class="mr-2" style="font-size: 30px">></ion-icon>
               <div class="has-text-weight-bold">Vyvážený režim</div>
             </div>
             <div class="is-flex is-align-items-center mt-2 p-3 info-box"
-                 [ngClass]="{'has-background-info has-text-white': selected_item === 3}" (click)="change_system_power(3)">
+                 [ngClass]="{'has-background-info has-text-white': selected_item === 3}" (click)="change_power_mode(3)">
               <ion-icon name="leaf-outline" class="mr-2" style="font-size: 30px"></ion-icon>
               <div class="has-text-weight-bold">Úsporný režim</div>
             </div>

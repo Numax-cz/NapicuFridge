@@ -9,31 +9,43 @@ import {CharacteristicController} from "../../../CharacteristicController";
 })
 export class SettingsComponent {
 
+  //Proměnná ukládající nastavený režim
   public selected_item: number = 2;
 
-
-
   constructor(public ngZone: NgZone) {
-
+    //Nastavíme proměnnou na stav napájení
+    this.selected_item = AppComponent.fridge_data.config.fridge_power_mode;
   }
 
-
-
-  public change_system_power(value: number): void {
-    this.selected_item = value;
+  //Funkce pro změnu režimu napájení
+  public change_power_mode(value: number): void {
+    //Zavolání funkce pro zapsání režimu napájení
+    CharacteristicController.writePowerMode(value)?.then(() => {
+      //Až se úspěšně provede zápis charakteristiky provede se následující
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        //Přepsání proměnné
+        this.selected_item = value;
+        //Zapíšeme stav napájení do proměnné ukládající aktuální stav napájení
+        AppComponent.fridge_data.config.fridge_power_mode = value;
+        //Zapíšeme stav napájení do proměnné ukládající předchozí stav napájení
+        AppComponent.fridge_data.config.fridge_previous_power_mode = value;
+      });
+    });
   }
 
+  //Funkce pro změnu stavu vnitřních ventilátorů
   public change_in_fans(event: any): void {
+    //Zavolání funkce pro zapsání stavu vnitřních ventilátorů
     CharacteristicController.writeInFansAvailable(event.currentTarget.checked)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
         //Přepsání proměnné v nastavení
         AppComponent.fridge_data.config.fridge_in_fans = event.currentTarget.checked;
-      })
-    })
+      });
+    });
   }
-
 
   //Funkce, která vrátí zda je zařízení připojené
   public get_is_connected(): boolean {

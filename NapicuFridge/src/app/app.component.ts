@@ -11,12 +11,10 @@ import {
   OperationResult
 } from "@awesome-cordova-plugins/bluetooth-le";
 import {FridgeData} from "./interface/FridgeData";
-import {Configuration} from "./config/configuration";
 import {alert_animations, app_animation} from "./main/Animation";
-import {FridgeDisplayState} from "./interface/Enums";
+import {FridgeDisplayState, FridgePowerMode} from "./interface/Enums";
 import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
-
 
 
 @Component({
@@ -55,7 +53,9 @@ export class AppComponent {
     config: {
       fridge_display_available: true,
       fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1,
-      fridge_in_fans: false
+      fridge_in_fans: false,
+      fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
+      fridge_previous_power_mode: FridgePowerMode.FRIDGE_OFF_POWER
     }
   }
 
@@ -128,12 +128,12 @@ export class AppComponent {
       //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
       BluetoothLE.discover({address: device.address, clearCache: true})
           .then((d: Device) => {
+            BluetoothLE.discover({address: device.address, clearCache: true})
+              .then((d: Device) => {
             //Synchronizování nastavení na ESP32
             AppComponent.update_config_from_esp();
             //Přihlášení se k odběru charakteristiky vnitřní teploty
             AppComponent.subscribe_in_temp();
-            BluetoothLE.discover({address: device.address, clearCache: true})
-              .then((d: Device) => {
                 //Přihlášení se k odběru charakteristiky venkovní teploty
                 AppComponent.subscribe_out_temp();
               }).catch((e) => {
@@ -229,6 +229,31 @@ export class AppComponent {
       //Vypsání hodnoty do vývojářské konzole
       console.error("error_discovered" + JSON.stringify(e));
     });
+
+    //Získání režim napájení
+    CharacteristicController.readPowerMode()
+      ?.then((data: OperationResult) => {
+        //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+        let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+        //Převést bytes na string
+        let value: string = BluetoothLE.bytesToString(bytes);
+        //Převedení string na number a následné nastavení proměnné na hodnotu získaných dat
+        this.fridge_data.config.fridge_power_mode = Number(value);
+
+        //Pokud není výchozí hodnota na stav vypnuto provede se následující
+        if(this.fridge_data.config.fridge_power_mode != FridgePowerMode.FRIDGE_OFF_POWER) {
+          //Zapíše se do proměnné ukládající předchozí režim aktuální režim ledničky
+          this.fridge_data.config.fridge_previous_power_mode = this.fridge_data.config.fridge_power_mode;
+        }
+
+      }).catch((e) => {
+      //Vypsání hodnoty do vývojářské konzole
+      console.error("error_discovered" + JSON.stringify(e));
+    });
+
+
+
+
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
@@ -367,8 +392,18 @@ export class AppComponent {
     return AppComponent.device_connection_alert_display;
   }
 
-  //Staitcká funkce, která vrátí zda jsou vnitřní ventilátory zapnuté
+  //Statická funkce, která vrátí zda jsou vnitřní ventilátory zapnuté
   public static get_is_in_fans_enabled(): boolean {
     return AppComponent.fridge_data.config.fridge_in_fans;
+  }
+
+  //Statická funkce, která vrátí režim napájení ledničky
+  public static get_power_mode(): FridgePowerMode {
+    return AppComponent.fridge_data.config.fridge_power_mode;
+  }
+
+  //Statická funkce, která vrátí předchozí režim napájení ledničky
+  public static get_previous_power_mode(): FridgePowerMode {
+    return AppComponent.fridge_data.config.fridge_previous_power_mode;
   }
 }
