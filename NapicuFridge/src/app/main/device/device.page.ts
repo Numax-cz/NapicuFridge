@@ -68,6 +68,16 @@ export class DevicePage {
     });
   }
 
+  //Funkce, která vrátí zda došlo v ledničce k problému
+  public get_is_fridge_on_error(): boolean {
+    return AppComponent.get_is_fridge_on_error();
+  }
+
+  //Funkce, která vrátí zda došlo v ledničce k vážné poruše
+  public get_is_fridge_on_fatal_error(): boolean {
+    return AppComponent.get_is_fridge_on_fatal_error();
+  }
+
   //Tato funkce obnoví tovární nastavení. Funkce se spustí po kliknutí na tlačítko
   public factory_reset(): void {
     AppComponent.factory_reset();

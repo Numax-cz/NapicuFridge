@@ -5,19 +5,25 @@
     <ion-img src="/assets/fridge.png" ></ion-img>
   </div>
 
-  <div class="is-flex is-justify-content-space-between is-align-items-center box info-box has-background-info is-size-4 has-text-weight-bold has-text-centered has-text-white">
+  <div class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered has-text-white"
+       [ngClass]=" is_connected() && get_is_fridge_on_error() ? 'error-red-background' : 'has-background-info'">
     <div class="is-size-6">
       {{is_connected() ? "Připojeno" : "Odpojeno"}}
     </div>
-    <ng-container *ngIf="is_connected()">
+    <ng-container *ngIf="is_connected() && !get_is_fridge_on_error()">
       <div>
         Ok
+      </div>
+    </ng-container>
+    <ng-container *ngIf="is_connected() && get_is_fridge_on_error()">
+      <div class="is-size-5">
+        Porucha
       </div>
     </ng-container>
   </div>
 
   <div class="is-flex is-justify-content-space-between is-align-items-center box info-box  is-size-4 has-text-weight-bold has-text-centered"
-       [ngStyle]="!is_connected()? {'opacity': '0.5'} : null">
+       [ngStyle]="!is_connected() || get_is_fridge_on_fatal_error()? {'opacity': '0.5'} : null">
     <div class="is-size-6">
       Chlazení
     </div>
@@ -25,7 +31,7 @@
       <div class="napicu-switch">
         <label class="toggle">
           <input class="toggle-checkbox" type="checkbox" (change)="change_power_mode($event)"
-                 [checked]="is_connected() && get_power_mode() !== get_fridge_off_mode()" [disabled]="!is_connected()">
+                 [checked]="is_connected() && !get_is_fridge_on_fatal_error() && get_power_mode() !== get_fridge_off_mode()" [disabled]="!is_connected() || get_is_fridge_on_fatal_error()">
           <div class="toggle-switch"></div>
 
         </label>

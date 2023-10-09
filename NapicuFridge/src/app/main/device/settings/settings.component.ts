@@ -47,6 +47,11 @@ export class SettingsComponent {
     return AppComponent.is_connected();
   }
 
+  //Funkce, která vrátí zda došlo v ledničce k vážné poruše
+  public get_is_fridge_on_fatal_error(): boolean {
+    return AppComponent.get_is_fridge_on_fatal_error();
+  }
+
   //Funkce, která vrátí zda jsou vnitřní ventilátory zapnuté
   public get_is_in_fans_enabled(): boolean {
     //Podmínka pokud není zařízení připojené nastaví se předchozí hodnota, pokud je, nastaví se aktuální nastavená hodnota

@@ -6,12 +6,15 @@
 
 <footer style="position: fixed; bottom: 0; width: 100%;  background-color: #fafafa;">
   <div class="is-flex is-justify-content-space-around settings-footer">
-    <div [ngClass]="{'has-text-info': router.url === '/main/info'}" (click)="redirect('main/info')">
+    <div [ngClass]="{'has-text-info': router.url === '/main/info'}" (click)="redirect('main/info')" style="position: relative">
       <ion-icon name="apps"></ion-icon>
       <div class="settings-icon-info">Přehled</div>
     </div>
 
-    <div [ngClass]="{'has-text-info': router.url === '/main/device'}" (click)="redirect('main/device')">
+    <div [ngClass]="{'has-text-info': router.url === '/main/device'}" (click)="redirect('main/device')" style="position: relative">
+      <ng-container *ngIf="get_is_fridge_on_error()">
+        <ion-icon name="alert-circle" class="error-red-color" style="position: absolute; top: -10%; left: 50%; z-index: 10;"></ion-icon>
+      </ng-container>
       <ion-icon name="tv"></ion-icon>
       <div class="settings-icon-info">Zařízení</div>
     </div>

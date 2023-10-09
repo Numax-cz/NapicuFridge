@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
+import {AppComponent} from "../app.component";
 
 @Component({
   selector: 'app-main',
@@ -12,5 +13,10 @@ export class MainPage  {
 
   public redirect(url: string): void {
     this.router.navigateByUrl(`/${url}`);
+  }
+
+  //Funkce, která vrátí zda došlo v ledničce k problému
+  public get_is_fridge_on_error(): boolean {
+    return AppComponent.get_is_fridge_on_error();
   }
 }

@@ -58,6 +58,13 @@ export class AppComponent {
     }
   }
 
+  //Statická proměnná, která určuje zda došlo v ledničce k problému
+  public static fridge_error: boolean = false;
+
+  //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
+  public static fridge_fatal_error: boolean = false;
+
+
   constructor(private platform: Platform, ngZone: NgZone, private animationCtrl: AnimationController) {
     AppComponent.ngZone = ngZone;
 
@@ -435,5 +442,15 @@ export class AppComponent {
     this.set_previous_power_mode(DEFAULT_POWER_MODE_ON_SWITCH);
     //Vrácení výchozí hodnoty
     return DEFAULT_POWER_MODE_ON_SWITCH;
+  }
+
+  //Statická funkce, která vrátí zda došlo v ledničce k problému
+  public static get_is_fridge_on_error(): boolean {
+    return this.fridge_error;
+  }
+
+  //Statická funkce, která vrátí zda došlo v ledničce k vážné poruše
+  public static get_is_fridge_on_fatal_error(): boolean {
+    return this.fridge_fatal_error;
   }
 }

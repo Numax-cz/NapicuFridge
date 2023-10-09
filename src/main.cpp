@@ -108,7 +108,8 @@ void setup() {
 
   //Nastavení LED diod jako výstup
   pinMode(CONNECTION_LED, OUTPUT);
-  pinMode(RESET_LED, OUTPUT);
+  //Nastavení piezo pinu jako výstup
+  pinMode(PIEZO_PIN, OUTPUT);
 
 
     //Inicializace paměti EEPROM
@@ -330,12 +331,15 @@ void loop() {
 
   //Načasování programu
   if(time >= data_send_time_now + data_send_period) {
+    //Získání dat od venkovního termistoru ve stupních celsia
     const double celsius = out_thermistor->readCelsius();
 
-    //TODO píčo -273.15
+    //Pokud se proměnná celsius rovná -273.15 (nesmyslná hodnota při nezískání dat např. vadný senzor) provede se následující
+    if(celsius == -273.15) {
+      
+    }
 
-    Serial.print(celsius);
-    Serial.print(" C, ");
+ 
 
     data_send_time_now += data_send_period;
     //Aktualizování hodnot 
@@ -349,10 +353,6 @@ void loop() {
       //Začneme s odesíláním dat
       outsideTempDHT->sendTemperature();
     }
-
-
-
-
   }
 
   //Blok kódu pro správu resetovacího tlačítka a diody
@@ -364,10 +364,10 @@ void loop() {
       reset_led_time_now += 250;
       //Přičte se 1 k proměnné resetLEDBlinkCount
       resetLEDBlinkCount++;
-      //Deklarace a uložení hodnoty z reset led pinu
-      int pin_value = digitalRead(RESET_LED);
-      //Zapsání log1, nebo log0 dle následující podmínky do reset led pinu
-      digitalWrite(RESET_LED, !pin_value ? 1 : 0);
+      //Deklarace a uložení hodnoty z reset piezo pinu
+      int pin_value = digitalRead(PIEZO_PIN);
+      //Zapsání log1, nebo log0 dle následující podmínky do reset piezo pinu
+      digitalWrite(PIEZO_PIN, !pin_value ? 1 : 0);
       //Pokud je po přičtení 1 resetLEDBlinkCount větší než 4 provede se následující
       if(resetLEDBlinkCount > 3) {
         //Restartování ESP32

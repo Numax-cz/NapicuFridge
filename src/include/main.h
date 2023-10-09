@@ -25,8 +25,8 @@
 
 //pro analogový vstup a LED diodu
 #define CONNECTION_LED 19
-//Pro analogový vstup a LED diodu
-#define RESET_LED 18
+//Definice pinu pro PIEZO
+#define PIEZO_PIN 18
 //Definice propojovacích pinů veškerých teploměrů 
 #define DHT_TYPE DHT11 //Typ DHT senzoru
 #define DHT_INSIDE 17  // Pin vnitřního DHT senzoru
