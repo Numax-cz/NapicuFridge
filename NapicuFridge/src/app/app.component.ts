@@ -435,6 +435,7 @@ export class AppComponent {
   public static get_power_mode(): FridgePowerMode {
     return AppComponent.fridge_data.config.fridge_power_mode;
   }
+  
   //Statická funkce, která nastaví předchozí napájecí režim ledničky
   public static set_previous_power_mode(value: FridgePowerMode): void {
     //Uložení nastavení
