@@ -64,8 +64,8 @@ export class AppComponent {
   //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
   public static fridge_fatal_error: boolean = false;
 
-
   constructor(private platform: Platform, ngZone: NgZone, private animationCtrl: AnimationController) {
+    //Nastavení ngZone na statickou proměnnou
     AppComponent.ngZone = ngZone;
 
     //Tento blok kódu nastaví, aby zpětné tlačítko vždy ukončilo aplikaci
@@ -74,6 +74,7 @@ export class AppComponent {
       App.exitApp();
     });
 
+    //Deklarace funkce, která se spustí po přípravě platformy
     platform.ready().then(() => {
       //Kontrola zda je zařízení typu android
       if (platform.is('android')) {
@@ -112,9 +113,11 @@ export class AppComponent {
           next: async (device: DeviceInfo) => {
             //Spuštění funkce po připojení zařízení
             await this.on_next_connect(device);
+            //Spuštění resolve funkce Promisu
             resolve();
           },
           error: (e: any) => {
+            //Spuštění reject funkce Promisu
             reject();
           }
         });
@@ -122,6 +125,7 @@ export class AppComponent {
     })
   }
 
+  //Statická funkce po připojení zařízení
   private static async on_next_connect(device: DeviceInfo): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if(device.status === "connected") {
@@ -149,6 +153,7 @@ export class AppComponent {
           }).catch((e) => {
           //Vypsání hodnoty do vývojářské konzole
           console.error("error_discovered" + JSON.stringify(e));
+          //Spuštění reject funkce Promisu
           reject();
         });
       }
@@ -158,13 +163,12 @@ export class AppComponent {
         AppComponent.set_connected_device();
         //Vypsání hodnoty do vývojářské konzole
         console.log("Disconnected from device: " + device.address, "status");
-
         //Spuštění funkce pro automatické připojení k zařízení
         AppComponent.start_auto_connect(device.address);
-
+        //Spuštění resolve funkce Promisu
         resolve();
       }
-    })
+    });
   }
 
   //Asynchronní funkce, která se snaží o automatické připojení k zařízení
@@ -243,7 +247,6 @@ export class AppComponent {
         let value: string = BluetoothLE.bytesToString(bytes);
         //Převedení string na number a následné nastavení proměnné na hodnotu získaných dat
         this.fridge_data.config.fridge_power_mode = Number(value);
-
         //Pokud není výchozí hodnota na stav vypnuto provede se následující
         if (this.fridge_data.config.fridge_power_mode != FridgePowerMode.FRIDGE_OFF_POWER) {
           //Spuštění funkce pro uložení předchozího režimu  ledničky
@@ -283,13 +286,15 @@ export class AppComponent {
               this.ngZone.run(() => {
                 //Zapsat převedený bytes na string do proměnné in_temp
                 this.fridge_data.in_temp = value;
-              })
+              });
+              //Spuštění resolve funkce Promisu
               resolve();
             }
           },
           error: (e) => {
             //Vypsání hodnoty do vývojářské konzole
             console.log("error" + JSON.stringify(e));
+            //Spuštění reject funkce Promisu
             reject();
           }
         }
@@ -315,20 +320,21 @@ export class AppComponent {
                 //Zapsat převedený bytes na string do proměnné out_temp
                 this.fridge_data.out_temp = value;
               })
+              //Spuštění resolve funkce Promisu
               resolve();
             }
           },
           error: (e) => {
             //Vypsání hodnoty do vývojářské konzole
             console.log("error" + JSON.stringify(e));
+            //Spuštění reject funkce Promisu
             reject();
           }
         }
       );
-    })
+    });
   }
-
-
+  
   //Funkce, která vrátí aktuální hodnotu na daném displej statu
   public static get_display_value_by_state(): string | null {
     //TODO DOC
