@@ -334,7 +334,7 @@ export class AppComponent {
       );
     });
   }
-  
+
   //Funkce, která vrátí aktuální hodnotu na daném displej statu
   public static get_display_value_by_state(): string | null {
     //TODO DOC
@@ -355,8 +355,11 @@ export class AppComponent {
 
   //Statická funkce, která vrátí uložená data o spárovaném zařízení
   public static get_paired_device_data_from_storage(): DeviceInfo | null {
+    //Získání uložených dat
     let i: string | null = AppComponent.application_settings.getItem("device");
+    //Pokud existuje uložená hodnota provede se následující
     if(i) return JSON.parse(i) as DeviceInfo;
+    //Vrácení null pokud uložená data neexistují
     return null;
   }
 
