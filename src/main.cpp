@@ -17,7 +17,7 @@ bool devicePaired = false;
 //Proměnná pro ukládání zda je resetovací dioda aktivní
 bool resetLEDOn = false;
 //Proměnná aktuální doby 
-unsigned long reset_led_time_now = 0;
+unsigned long reset_piezo_time_now = 0;
 //Proměnná pro uložení počtu zablikání resetovací led diody 
 int resetLEDBlinkCount = 0;
 
@@ -359,9 +359,9 @@ void loop() {
   //Pookud je proměnná resetLEDOn log1 a zároveň resetLEDBlinkCount menší, nebo rovno 3 provede se následující
   if(resetLEDOn && resetLEDBlinkCount <= 3) {
     //Načasování programu, každých 250ms se provede následující
-    if(time >= reset_led_time_now + 250) {
+    if(time >= reset_piezo_time_now + 250) {
       //Přičte se 250 k proměnné určující aktuální dobu
-      reset_led_time_now += 250;
+      reset_piezo_time_now += 250;
       //Přičte se 1 k proměnné resetLEDBlinkCount
       resetLEDBlinkCount++;
       //Deklarace a uložení hodnoty z reset piezo pinu
@@ -376,7 +376,7 @@ void loop() {
     }
   } else {
     //Nastavení proměnné určující aktuální období
-    reset_led_time_now = time;
+    reset_piezo_time_now = time;
   }
 
 }
