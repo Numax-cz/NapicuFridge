@@ -14,12 +14,7 @@
 #include <include/main.h>
 //Proměnná pro ukládání zda je zařízení připojené
 bool devicePaired = false;
-//Proměnná pro ukládání zda je resetovací dioda aktivní
-bool resetLEDOn = false;
-//Proměnná aktuální doby 
-unsigned long reset_piezo_time_now = 0;
-//Proměnná pro uložení počtu zablikání resetovací led diody 
-int resetLEDBlinkCount = 0;
+
 
 fridge_data FridgeData;
 
@@ -297,9 +292,10 @@ void setup() {
 
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 
+  
 
 
-
+ 
 }
 
 int per = 0;
@@ -313,6 +309,9 @@ void loop() {
   //Spuštění loop funkce displeje
   FridgeDisplay::loop();
 
+
+  //Spuštění loop funkce piezo manageru 
+  PiezoManager::loop();
 
 
 
@@ -354,31 +353,6 @@ void loop() {
       outsideTempDHT->sendTemperature();
     }
   }
-
-  //Blok kódu pro správu resetovacího tlačítka a diody
-  //Pookud je proměnná resetLEDOn log1 a zároveň resetLEDBlinkCount menší, nebo rovno 3 provede se následující
-  if(resetLEDOn && resetLEDBlinkCount <= 3) {
-    //Načasování programu, každých 250ms se provede následující
-    if(time >= reset_piezo_time_now + 250) {
-      //Přičte se 250 k proměnné určující aktuální dobu
-      reset_piezo_time_now += 250;
-      //Přičte se 1 k proměnné resetLEDBlinkCount
-      resetLEDBlinkCount++;
-      //Deklarace a uložení hodnoty z reset piezo pinu
-      int pin_value = digitalRead(PIEZO_PIN);
-      //Zapsání log1, nebo log0 dle následující podmínky do reset piezo pinu
-      digitalWrite(PIEZO_PIN, !pin_value ? 1 : 0);
-      //Pokud je po přičtení 1 resetLEDBlinkCount větší než 4 provede se následující
-      if(resetLEDBlinkCount > 3) {
-        //Restartování ESP32
-        ESP.restart();
-      }
-    }
-  } else {
-    //Nastavení proměnné určující aktuální období
-    reset_piezo_time_now = time;
-  }
-
 }
 
 BLEAddress* read_paired_device_mac_address_from_eeprom() {
@@ -399,7 +373,6 @@ BLEAddress* read_paired_device_mac_address_from_eeprom() {
   return nullptr;
 }
 
-
 //Funkce, která uvede zařízení do továrního nastavení
 void factory_reset() {
   //Vypsání hodnoty do konzole
@@ -411,8 +384,13 @@ void factory_reset() {
   }
   //Potvrzení změn
   EEPROM.commit();
-  //Nastavení proměnné na log1
-  resetLEDOn = true;
+
+  //Spuštění funkce pro pípnutí piezo
+  PiezoManager::tone_beep(2, []() {
+    //Po ukončení pípání piezo se provede následující
+    //Restartování ESP32
+    ESP.restart();
+  });
 }
 
 

@@ -19,7 +19,7 @@
 #include <include/buttonManager.h>
 #include <include/fanController.h>
 #include <include/powerManager.h>
-
+#include <include/piezoManager.h>
 /////////////////////////////////////////////////////////////////////
 //Definice propojovacích pinů
 
@@ -139,6 +139,12 @@ struct fridge_data
 
     //Proměnná pro ukládání venkovní teploty ve formátu string 
     String out_temp = "";
+
+    //Proměnná pro uložení zda ve vnitřním teploměru došlo k chybě
+    bool in_temp_error = false;
+
+    //Proměnná pro uložení zda ve venkovním teploměru došlo k chybě
+    bool out_temp_error = false;
 };
 
 //Proměnná pro globální nastavení chytré ledničky 
