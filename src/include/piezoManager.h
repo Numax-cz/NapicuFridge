@@ -38,6 +38,9 @@ public:
     //Statická loop funkce pro PiezoManager
     static void loop();
 
+    //Statická funkce, která zastaví pípání piezo
+    static void stop_beep();
+
     /**
      * Statická funkce, která spustí bzučení piezo a zopakuje se tolikrát, kolik je definované v count parametru
      * @param count Počet opakování  

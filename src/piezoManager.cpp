@@ -23,20 +23,26 @@ void PiezoManager::loop() {
             if(PiezoManager::piezo_tone_count_now >= PiezoManager::piezo_tone_count) {
                 //Pokud je deklarované zpětné volání, spustí se funkce
                 if(PiezoManager::callback != NULL) PiezoManager::callback();
-                //Vynulování statické proměnné pro počítání (nastavíme proměnnou na log0)
-                PiezoManager::piezo_tone_count_now = 0;
-                //Nastavení statické proměnné na log0
-                PiezoManager::piezo_buzzing = false;
-                //Nastavení statické proměnné zpětného volání na NULL
-                PiezoManager::callback = NULL;
-
-
+                //Spuštění funkce pro vynulování a zastavení piezo
+                PiezoManager::stop_beep();
             }
         }
     } else {
         //Nastavení statické proměnné určující aktuální období
         PiezoManager::time_now = time;
     }
+}
+
+//Statická funkce, která zastaví pípání piezo
+void PiezoManager::stop_beep() {
+        //Vynulování statické proměnné pro počítání (nastavíme proměnnou na log0)
+    PiezoManager::piezo_tone_count_now = 0;
+    //Nastavení statické proměnné na log0
+    PiezoManager::piezo_buzzing = false;
+    //Nastavení statické proměnné zpětného volání na NULL
+    PiezoManager::callback = NULL;
+    //Zapsání log0 na piezo pin
+    digitalWrite(PIEZO_PIN, LOW);
 }
 
 /**

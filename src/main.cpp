@@ -309,6 +309,8 @@ void loop() {
   //Spuštění loop funkce displeje
   FridgeDisplay::loop();
 
+  //Spuštění loop funkce error kontroly
+  ErrorChecker::loop();
 
   //Spuštění loop funkce piezo manageru 
   PiezoManager::loop();

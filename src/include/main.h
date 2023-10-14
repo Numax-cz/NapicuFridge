@@ -20,6 +20,7 @@
 #include <include/fanController.h>
 #include <include/powerManager.h>
 #include <include/piezoManager.h>
+#include <include/errorChecker.h>
 /////////////////////////////////////////////////////////////////////
 //Definice propojovacích pinů
 
