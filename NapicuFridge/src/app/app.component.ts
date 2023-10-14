@@ -304,8 +304,12 @@ export class AppComponent {
                 //Zapíšeme do proměnné o vnitřní chybě log1
                 if(value === "nan") this.fridge_data.errors.fridge_in_temp = true;
                 //Pokud získaná hodnota není rovna "nan" provede se následující
-                //Zapsat převedený bytes na string do proměnné in_temp
-                else this.fridge_data.in_temp = value;
+                else {
+                  //Zapsat převedený bytes na string do proměnné in_temp
+                  this.fridge_data.in_temp = value;
+                  //Zapíšeme do proměnné o vnitřní chybě teploměru log0
+                  this.fridge_data.errors.fridge_in_temp = false;
+                }
               });
               //Spuštění resolve funkce Promisu
               resolve();
@@ -341,8 +345,12 @@ export class AppComponent {
                 //Zapíšeme do proměnné o vnitřní chybě log1
                 if(value === "nan") this.fridge_data.errors.fridge_out_temp = true;
                 //Pokud získaná hodnota není rovna "nan" provede se následující
-                //Zapsat převedený bytes na string do proměnné out_temp
-                else this.fridge_data.out_temp = value;
+                else {
+                  //Zapsat převedený bytes na string do proměnné out_temp
+                  this.fridge_data.out_temp = value;
+                  //Zapíšeme do proměnné o venkovní chybě teploměru log0
+                  this.fridge_data.errors.fridge_in_temp = false;
+                }
               });
               //Spuštění resolve funkce Promisu
               resolve();
