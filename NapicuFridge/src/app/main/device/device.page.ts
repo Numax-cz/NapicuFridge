@@ -1,6 +1,6 @@
 import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../app.component";
-import {alert_animations} from "../Animation";
+import {alert_animations, show_box_animations} from "../Animation";
 import {FridgePowerMode} from "../../interface/Enums";
 import {CharacteristicController} from "../../CharacteristicController";
 import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "../../config/configuration";
@@ -10,9 +10,11 @@ import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "../../con
   selector: 'app-device',
   templateUrl: './device.page.html',
   styleUrls: ['./device.page.scss', '../main.page.scss'],
-  animations: alert_animations,
+  animations: [alert_animations, show_box_animations],
 })
 export class DevicePage {
+
+  public active_error_info_in_temp: boolean = false;
 
   //Proměnná pro uložení stavu alertu
   public active_alert: boolean = false;

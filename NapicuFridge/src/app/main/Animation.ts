@@ -65,3 +65,22 @@ export const alert_animations: any[] = [
     ]),
   ]),
 ]
+
+export const show_box_animations: any[] = [
+  // trigger('ShowBoxAnimation', [
+  //   state('void', style({ height: "0" })),
+  //   transition(':enter', [
+  //     animate(150, style({ height: "0" }))
+  //   ]),
+  //   transition(':leave', [
+  //     animate(150, style({ height: "100%" }))
+  //   ]),
+  // ]),
+
+  trigger('InfoBoxRotatedState', [
+    state('false', style({ transform: 'rotate(0)' })),
+    state('true', style({ transform: 'rotate(90deg)' })),
+    transition('true => false', animate('150ms ease-out')),
+    transition('false => true', animate('150ms ease-in'))
+  ])
+]
