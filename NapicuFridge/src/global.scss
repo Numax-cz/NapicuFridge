@@ -72,6 +72,14 @@
   border-radius: 13px !important;
 }
 
+.settings-container{
+  margin-top: 1rem;
+  margin-bottom: 4rem;
+  > div {
+    margin-bottom: 0.5rem !important;
+  }
+}
+
 $color1: #ffffff;
 $color2: #3e8ed0;
 

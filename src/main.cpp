@@ -207,7 +207,7 @@ void setup() {
 
   pServer->setCallbacks(new ServerCallBack());
   // Vytvoření BLE služby
-  BLEService *pService = pServer->createService(SERVICE_UUID);
+  BLEService *pService = pServer->createService(BLEUUID(SERVICE_UUID), 30, 0);
 
 
 
@@ -231,7 +231,6 @@ void setup() {
   );
                                        
   fridgeEnableCharacteristic->setCallbacks(new DisplayEnableCharacteristicCallback());
-
 
   // Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *fridgeStateCharacteristic = pService->createCharacteristic(
@@ -261,8 +260,20 @@ void setup() {
   powerModeCharacteristic->setCallbacks(new PowerManagerCharacteristicCallback());
 
 
-  
+  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *buzzingOnErrorCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_BUZZING_ON_ERROR_UUID,
+    BLECharacteristic::PROPERTY_WRITE | 
+    BLECharacteristic::PROPERTY_READ
+  );
+                                       
+  buzzingOnErrorCharacteristic->setCallbacks(new BuzzingOnErrorCharacteristicCallback());
+
+  //Spuštění begin funkce PowerManageru
   PowerManager::begin();
+
+  //Spuštění begin funkce ErrorCheckeru
+  ErrorChecker::begin();
 
 
 

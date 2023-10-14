@@ -161,4 +161,34 @@ export class CharacteristicController {
     return null;
   }
 
+  //Funkce pro zápis režimu piezo při chybě z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  public static writeBuzzingOnError(value: boolean): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device)  {
+      //Převedení stringu do bytes
+      let bytes: Uint8Array = BluetoothLE.stringToBytes(value ? "1" : "0");
+      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+      //Zapsání charakteristiky
+      return BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_BUZZING_ON_ERROR_UUID,
+        value: encodedUnicodeString,
+      });
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
+
+  //Funkce pro čtení režimu piezo při chybě z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  public static readBuzzingOnError(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Získání režimu piezo při chybě
+      return BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_BUZZING_ON_ERROR_UUID});
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
 }

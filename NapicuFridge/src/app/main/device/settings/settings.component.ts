@@ -1,6 +1,8 @@
 import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {CharacteristicController} from "../../../CharacteristicController";
+import {FridgePowerMode} from "../../../interface/Enums";
+import {boat} from "ionicons/icons";
 
 @Component({
   selector: 'app-settings',
@@ -30,7 +32,7 @@ export class SettingsComponent {
   //Funkce pro změnu stavu vnitřních ventilátorů
   public change_in_fans(event: any): void {
     //Uložení event hodnoty do konstantní proměnné
-    const value = event.currentTarget.checked;
+    const value: boolean = event.currentTarget.checked;
     //Zavolání funkce pro zapsání stavu vnitřních ventilátorů
     CharacteristicController.writeInFansAvailable(value)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
@@ -38,6 +40,21 @@ export class SettingsComponent {
       this.ngZone.run(() => {
         //Přepsání proměnné v nastavení
         AppComponent.fridge_data.config.fridge_in_fans = value;
+      });
+    });
+  }
+
+  //Funkce pro změnu nastavení piezo při chybě
+  public change_buzzing_on_error(event: any): void {
+    //Uložení event hodnoty do konstantní proměnné
+    const value: boolean = event.currentTarget.checked;
+    //Zavolání funkce pro zapsání stavu vnitřních ventilátorů
+    CharacteristicController.writeBuzzingOnError(value)?.then(() => {
+      //Až se úspěšně provede zápis charakteristiky provede se následující
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        //Přepsání proměnné v nastavení
+        AppComponent.fridge_data.config.buzzing_on_error = value;
       });
     });
   }
@@ -67,5 +84,10 @@ export class SettingsComponent {
   //Funkce, která vrátí režim napájení ledničky
   public get_power_mode(): number {
     return AppComponent.get_power_mode();
+  }
+
+  //Funkce, která vrátí zda při chybě bude bzučet piezo
+  public get_buzzing_on_error(): boolean {
+    return AppComponent.fridge_data.config.buzzing_on_error;
   }
 }

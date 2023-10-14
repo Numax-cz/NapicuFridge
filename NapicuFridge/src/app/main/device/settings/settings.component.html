@@ -26,18 +26,37 @@
             </div>
         </div>
       </div>
-      <div class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
-           [ngStyle]="!get_is_connected() || get_is_fridge_on_fatal_error() || get_power_mode() === 0 ? {'opacity': '0.5'} : null">
-          <div class="is-size-6">
-            Vnitřní ventilátory
-          </div>
-          <div class="napicu-switch">
-            <label class="toggle">
-              <input class="toggle-checkbox" type="checkbox" (change)="change_in_fans($event)" [checked]="get_is_in_fans_enabled()" [disabled]="!get_is_connected() || get_is_fridge_on_fatal_error() || get_power_mode() === 0">
-              <div class="toggle-switch"></div>
-            </label>
-          </div>
+
+      <div class="settings-container">
+
+
+        <div class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
+             [ngStyle]="!get_is_connected() || get_is_fridge_on_fatal_error() || get_power_mode() === 0 ? {'opacity': '0.5'} : null">
+            <div class="is-size-6">
+              Vnitřní ventilátory
+            </div>
+            <div class="napicu-switch">
+              <label class="toggle">
+                <input class="toggle-checkbox" type="checkbox" (change)="change_in_fans($event)" [checked]="get_is_in_fans_enabled()" [disabled]="!get_is_connected() || get_is_fridge_on_fatal_error() || get_power_mode() === 0">
+                <div class="toggle-switch"></div>
+              </label>
+            </div>
         </div>
-    </div>
+
+        <div class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
+               [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">
+            <div class="is-size-6">
+              Upozornění na poruchy
+            </div>
+            <div class="napicu-switch">
+              <label class="toggle">
+                <input class="toggle-checkbox" type="checkbox" (change)="change_buzzing_on_error($event)" [checked]="get_buzzing_on_error()" [disabled]="!get_is_connected()">
+                <div class="toggle-switch"></div>
+              </label>
+            </div>
+          </div>
+      </div>
+      </div>
+
   </section>
 </section>

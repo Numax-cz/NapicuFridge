@@ -54,12 +54,14 @@ export class AppComponent {
       fridge_display_available: true,
       fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1,
       fridge_in_fans: false,
+      buzzing_on_error: true,
       fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
+    },
+    errors: {
+      fridge_out_temp: false,
+      fridge_in_temp: false
     }
   }
-
-  //Statická proměnná, která určuje zda došlo v ledničce k problému
-  public static fridge_error: boolean = false;
 
   //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
   public static fridge_fatal_error: boolean = false;
@@ -256,6 +258,20 @@ export class AppComponent {
       //Vypsání hodnoty do vývojářské konzole
       console.error("error_discovered" + JSON.stringify(e));
     });
+
+    //Získání režimu piezo při chybě
+    await CharacteristicController.readBuzzingOnError()
+      ?.then((data: OperationResult) => {
+        //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+        let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+        //Převést bytes na string
+        let value: string = BluetoothLE.bytesToString(bytes);
+        //Nastavení proměnné na hodnotu podle získaných dat
+        this.fridge_data.config.buzzing_on_error = (value == "1");
+      }).catch((e) => {
+        //Vypsání hodnoty do vývojářské konzole
+        console.error("error_discovered" + JSON.stringify(e));
+    });
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
@@ -284,8 +300,12 @@ export class AppComponent {
               let value: string = BluetoothLE.bytesToString(bytes);
               //Spuštění funkce uvnitř zóny Angularu
               this.ngZone.run(() => {
+                //Pokud získaná hodnota je rovna "nan" provede se následující
+                //Zapíšeme do proměnné o vnitřní chybě log1
+                if(value === "nan") this.fridge_data.errors.fridge_in_temp = true;
+                //Pokud získaná hodnota není rovna "nan" provede se následující
                 //Zapsat převedený bytes na string do proměnné in_temp
-                this.fridge_data.in_temp = value;
+                else this.fridge_data.in_temp = value;
               });
               //Spuštění resolve funkce Promisu
               resolve();
@@ -317,9 +337,13 @@ export class AppComponent {
               let value: string = BluetoothLE.bytesToString(bytes);
               //Spuštění funkce uvnitř zóny Angularu
               this.ngZone.run(() => {
+                //Pokud získaná hodnota je rovna "nan" provede se následující
+                //Zapíšeme do proměnné o vnitřní chybě log1
+                if(value === "nan") this.fridge_data.errors.fridge_out_temp = true;
+                //Pokud získaná hodnota není rovna "nan" provede se následující
                 //Zapsat převedený bytes na string do proměnné out_temp
-                this.fridge_data.out_temp = value;
-              })
+                else this.fridge_data.out_temp = value;
+              });
               //Spuštění resolve funkce Promisu
               resolve();
             }
@@ -454,9 +478,15 @@ export class AppComponent {
     return DEFAULT_POWER_MODE_ON_SWITCH;
   }
 
+  //Statická funkce, která vrátí zda při chybě bude bzučet piezo
+  public static get_buzzing_on_error(): boolean {
+    return this.fridge_data.config.buzzing_on_error;
+  }
+
   //Statická funkce, která vrátí zda došlo v ledničce k problému
   public static get_is_fridge_on_error(): boolean {
-    return this.fridge_error;
+    return this.fridge_data.errors.fridge_in_temp
+      || this.fridge_data.errors.fridge_out_temp;
   }
 
   //Statická funkce, která vrátí zda došlo v ledničce k vážné poruše

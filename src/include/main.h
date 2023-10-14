@@ -76,8 +76,11 @@
 //Definice EEPROM pro ukládání stavu vnitřních ventilátorů log0/log1
 #define IN_FANS_EEPROM_SIZE 1
 #define IN_FANS_EEPROM_ADDR POWER_MODE_EEPROM_ADDR + 1 //Adresa v paměti EEPROM na kterou bude stav vnitřních ventilátorů uložen log0/log1
+//Definice EEPROM pro ukládání zda má piezo upozornit na chybu
+#define PIEZO_ON_ERROR_SIZE 1 //Délka stavu piezo -128 až 127
+#define PIEZO_ON_ERROR_ADDR IN_FANS_EEPROM_ADDR + 1 //Adresa v paměti EEPROM na kterou bude stav piezo ukládat
 //Definice celkové délky 
-#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE
+#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE + PIEZO_ON_ERROR_SIZE
 
 
 /////////////////////////////////////////////////////////////////////
@@ -94,7 +97,7 @@
 #define CHARACTERISTIC_DISPLAY_STATE_UUID "52a25b48-4596-11ee-be56-0242ac120002"
 #define CHARACTERISTIC_IN_FANS_UUID "615f0ef8-651a-11ee-8c99-0242ac120002"
 #define CHARACTERISTIC_POWER_MODE_UUID "c01280b7-3e33-4eb4-ae39-2ec305750179"
-
+#define CHARACTERISTIC_BUZZING_ON_ERROR_UUID "f639b9d8-6aa1-11ee-8c99-0242ac120002"
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
@@ -109,6 +112,8 @@
 //Definice výchozího režimu napájení
 #define DEFAULT_POWER_MODE 0 //V tomto případě je lednička vypnutá podle struktury fridge_power_mode
 
+//Definice, která určuje, zda má být piezo aktivní při chybě
+#define DEFAULT_PIEZO_ON_ERROR 1 //V tomto případě je piezo aktivní při chybě
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
