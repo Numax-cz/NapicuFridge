@@ -15,6 +15,7 @@ import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "../../con
 export class DevicePage {
 
   public active_error_info_in_temp: boolean = false;
+  public active_error_info_out_temp: boolean = false;
 
   //Proměnná pro uložení stavu alertu
   public active_alert: boolean = false;
@@ -103,5 +104,15 @@ export class DevicePage {
   //Funkce, která vrátí hodnotu vypnutého režimu
   public get_fridge_off_mode(): number {
     return FridgePowerMode.FRIDGE_OFF_POWER;
+  }
+
+  //Proměnná, která vrátí zda je vnitřní teploměr v chybě
+  public get_is_in_temp_in_error(): boolean {
+    return AppComponent.get_is_in_temp_in_error();
+  }
+
+  //Proměnná, která vrátí zda je venkovní teploměr v chybě
+  public get_is_out_temp_in_error(): boolean {
+    return AppComponent.get_is_out_temp_in_error();
   }
 }

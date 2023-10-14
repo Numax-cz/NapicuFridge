@@ -58,7 +58,7 @@ export class AppComponent {
       fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
     },
     errors: {
-      fridge_out_temp: true,
+      fridge_out_temp: false,
       fridge_in_temp: false
     }
   }
@@ -487,6 +487,16 @@ export class AppComponent {
   public static get_is_fridge_on_error(): boolean {
     return this.fridge_data.errors.fridge_in_temp
       || this.fridge_data.errors.fridge_out_temp;
+  }
+
+  //Statická proměnná, která vrátí zda je vnitřní teploměr v chybě
+  public static get_is_in_temp_in_error(): boolean {
+    return this.fridge_data.errors.fridge_in_temp;
+  }
+
+  //Statická proměnná, která vrátí zda je venkovní teploměr v chybě
+  public static get_is_out_temp_in_error(): boolean {
+    return this.fridge_data.errors.fridge_out_temp;
   }
 
   //Statická funkce, která vrátí zda došlo v ledničce k vážné poruše
