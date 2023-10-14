@@ -14,7 +14,9 @@ import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "../../con
 })
 export class DevicePage {
 
+  //Proměnná, která určuje, zda je informační menu o erroru vnitřního teploměru otevřené
   public active_error_info_in_temp: boolean = false;
+  //Proměnná, která určuje, zda je informační menu o erroru venkovního teploměru otevřené
   public active_error_info_out_temp: boolean = false;
 
   //Proměnná pro uložení stavu alertu
