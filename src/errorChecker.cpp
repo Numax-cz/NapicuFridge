@@ -72,9 +72,6 @@ void ErrorChecker::loop() {
     ErrorChecker::check_fatal_error();
     //Spuštění funkce pro zkontrolování chyb
     ErrorChecker::check_error();
-
-
-
 }
 
 //Statická funkce, která zkontroluje chyby

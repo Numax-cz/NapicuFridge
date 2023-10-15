@@ -14,6 +14,14 @@ export class InfoPage {
 
   constructor() { }
 
+  public open_info_alert(): void {
+
+  }
+
+  public close_info_alert(): void {
+    
+  }
+
   //Funkce, která vrátí vnitřní teplotu
   public get_in_temp(): string {
     return AppComponent.get_in_temp();

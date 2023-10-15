@@ -21,6 +21,7 @@
 #include <include/powerManager.h>
 #include <include/piezoManager.h>
 #include <include/errorChecker.h>
+#include <include/thermistorManager.h>
 /////////////////////////////////////////////////////////////////////
 //Definice propojovacích pinů
 
@@ -42,12 +43,12 @@
 #define X9_UD  26 //Pin UD pinu potenciometru 
 
 //Definice pinů termistoru
-#define SENSOR_PIN             4 //Pin pro příjem dat
-#define REFERENCE_RESISTANCE    9830 // Referenční hodnota rezistoru 
-#define NOMINAL_RESISTANCE     7400 // Nominální odpor
-#define NOMINAL_TEMPERATURE    26 //Nominální teplota 
-#define B_VALUE                3950 //beta hodnota 
-#define STM32_ANALOG_RESOLUTION 4095 //Analogové Rozlišení 
+#define COOLER_NTC_SENSOR_PIN             4 //Pin pro příjem dat
+#define COOLER_NTC_REFERENCE_RESISTANCE    9830 // Referenční hodnota rezistoru 
+#define COOLER_NTC_NOMINAL_RESISTANCE     7400 // Nominální odpor
+#define COOLER_NTC_NOMINAL_TEMPERATURE    26 //Nominální teplota 
+#define COOLER_NTC_B_VALUE                3950 //beta hodnota 
+#define COOLER_NTC_STM32_ANALOG_RESOLUTION 4095 //Analogové Rozlišení 
 
 //Definicie pinů chladících ventilátorů
 #define COOLING_FAN_PWM 15 //Pin pro řízení PWM  
@@ -98,6 +99,7 @@
 #define CHARACTERISTIC_IN_FANS_UUID "615f0ef8-651a-11ee-8c99-0242ac120002"
 #define CHARACTERISTIC_POWER_MODE_UUID "c01280b7-3e33-4eb4-ae39-2ec305750179"
 #define CHARACTERISTIC_BUZZING_ON_ERROR_UUID "f639b9d8-6aa1-11ee-8c99-0242ac120002"
+#define CHARACTERISTIC_NTC_COOLER_UUID "e67ad112-b64c-445f-8588-d358311d9612"
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
@@ -146,6 +148,9 @@ struct fridge_data
     //Proměnná pro ukládání venkovní teploty ve formátu string 
     String out_temp = "";
 
+    //Proměnná pro ukládání teploty chladiče ve formátu string 
+    String cooler_temp = "";
+
     //Proměnná pro uložení zda ve vnitřním teploměru došlo k chybě
     bool in_temp_error = false;
 
@@ -160,12 +165,15 @@ extern fridge_data FridgeData;
 class FridgeTempDHT;
 class ButtonManager;
 class PowerManager;
+class ThermistorManager;
 //Proměnná pro uložení BLE serveru
 extern BLEServer* pServer;
 //Proměnná pro uložení DHT senzoru vnitřní teploty
-extern FridgeTempDHT* insideTempDHT;
+extern FridgeTempDHT* inside_temp_dht;
 //Proměnná pro uložení DHT senzoru venkovní teploty
-extern FridgeTempDHT* outsideTempDHT;
+extern FridgeTempDHT* outside_temp_dht;
+//Proměnná pro uložení NTC senzoru teploty chladiče
+extern ThermistorManager* cooler_temp_ntc;
 //Proměnná pro uložení třídy resetovacího tlačítka
 extern ButtonManager* resetButton;
 //Proměnná pro uložení třídy relé chladících ventilátorů
@@ -176,8 +184,6 @@ extern RelayModule* relay_in_fans;
 extern RelayModule* relay_peltier;
 //Proměnná pro uložení třídy relé ovládací režim napájení peltierů
 extern RelayModule* relay_peltier_power_mode;
-//Proměnná pro uložení třídy termistoru pro zaznamenávaní teploty teplé strany chladiče
-extern Thermistor* out_thermistor;
 //Proměnná pro uložení třídy digitálního potenciometru
 extern DigiPot* digitalPotentiometer;
 //Proměnná pro uložení venkovních chladících PWM ventilátorů

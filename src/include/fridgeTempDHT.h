@@ -15,6 +15,7 @@ private:
 public:
     FridgeTempDHT(int pin, const char* uuid, BLEService* pService, String& value);
     ~FridgeTempDHT();
+    
     void begin();
     void sendTemperature();
     void updateTemperature();

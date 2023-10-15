@@ -23,9 +23,11 @@ fridge_data FridgeData;
 //Proměnná pro uložení BLE serveru
 BLEServer* pServer = NULL;
 //Proměnná pro uložení DHT senzoru vnitřní teploty
-FridgeTempDHT* insideTempDHT = NULL;
+FridgeTempDHT* inside_temp_dht = NULL;
 //Proměnná pro uložení DHT senzoru venkovní teploty
-FridgeTempDHT* outsideTempDHT = NULL;
+FridgeTempDHT* outside_temp_dht = NULL;
+//Proměnná pro uložení NTC senzoru teploty chladiče
+ThermistorManager* cooler_temp_ntc = NULL;
 //Proměnná pro uložení třídy resetovacího tlačítka
 ButtonManager* resetButton = NULL;
 //Proměnná pro uložení třídy relé chladících ventilátorů
@@ -36,8 +38,6 @@ RelayModule* relay_in_fans = NULL;
 RelayModule* relay_peltier = NULL;
 //Proměnná pro uložení třídy relé ovládací režim napájení peltierů
 RelayModule* relay_peltier_power_mode = NULL;
-//Proměnná pro uložení třídy termistoru pro zaznamenávaní teploty teplé strany chladiče
-Thermistor* out_thermistor;
 //Proměnná pro uložení třídy digitálního potenciometru
 DigiPot* digitalPotentiometer = NULL;
 //Proměnná pro uložení venkovních chladících PWM ventilátorů
@@ -149,18 +149,6 @@ void setup() {
 
 
 
-  //Vytvoření třídy pro ntc termistor 
-  out_thermistor = new NTC_Thermistor(
-    SENSOR_PIN,
-    REFERENCE_RESISTANCE,
-    NOMINAL_RESISTANCE,
-    NOMINAL_TEMPERATURE,
-    B_VALUE,
-    STM32_ANALOG_RESOLUTION // <- for a thermistor calibration
-  );
-
-
-
   FridgeDisplay::begin();
 
 
@@ -212,16 +200,27 @@ void setup() {
 
 
   // Vytvoření teploměru pro vnitřní zaznamenávání teploty
-  insideTempDHT = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_UUID, pService, FridgeData.in_temp);
+  inside_temp_dht = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_UUID, pService, FridgeData.in_temp);
   //Spuštění begin funkce
-  insideTempDHT->begin();
+  inside_temp_dht->begin();
 
   // Vytvoření teploměru pro venkovní zaznamenávání teploty
-  outsideTempDHT = new FridgeTempDHT(DHT_OUTSIDE, CHARACTERISTIC_DHT_OUTSIDE_UUID, pService, FridgeData.out_temp);
+  outside_temp_dht = new FridgeTempDHT(DHT_OUTSIDE, CHARACTERISTIC_DHT_OUTSIDE_UUID, pService, FridgeData.out_temp);
   //Spuštění begin funkce
-  outsideTempDHT->begin();
-  
+  outside_temp_dht->begin();
 
+  //Vytvoření třídy pro ntc termistor 
+  cooler_temp_ntc = new ThermistorManager(
+    COOLER_NTC_SENSOR_PIN,
+    CHARACTERISTIC_NTC_COOLER_UUID,
+    pService,
+    FridgeData.cooler_temp,
+    COOLER_NTC_REFERENCE_RESISTANCE,
+    COOLER_NTC_NOMINAL_RESISTANCE,
+    COOLER_NTC_NOMINAL_TEMPERATURE,
+    COOLER_NTC_B_VALUE,
+    COOLER_NTC_STM32_ANALOG_RESOLUTION
+  );
   
   // Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *fridgeEnableCharacteristic = pService->createCharacteristic(
@@ -343,27 +342,26 @@ void loop() {
 
   //Načasování programu
   if(time >= data_send_time_now + data_send_period) {
-    //Získání dat od venkovního termistoru ve stupních celsia
-    const double celsius = out_thermistor->readCelsius();
 
-    //Pokud se proměnná celsius rovná -273.15 (nesmyslná hodnota při nezískání dat např. vadný senzor) provede se následující
-    if(celsius == -273.15) {
-      
-    }
+  
 
  
 
     data_send_time_now += data_send_period;
-    //Aktualizování hodnot 
-    insideTempDHT->updateTemperature();
-    //Aktualizování hodnot 
-    outsideTempDHT->updateTemperature();
+    //Spuštění funkce pro aktualizování hodnot o vnitřní teplotě 
+    inside_temp_dht->updateTemperature();
+    //Spuštění funkce pro aktualizování hodnot o venkovní teplotě 
+    outside_temp_dht->updateTemperature();
+    //Spuštění funkce pro aktualizování hodnot o teplotě chladiče 
+    cooler_temp_ntc->updateTemperature();
     //Pokud je zařízení připojeno k ESP32
     if (devicePaired == true) {
-      //Začneme s odesíláním dat
-      insideTempDHT->sendTemperature();
-      //Začneme s odesíláním dat
-      outsideTempDHT->sendTemperature();
+      //Spuštění funkce pro odeslání vnitřní teploty skrze BLE do připojeného zařízení
+      inside_temp_dht->sendTemperature();
+      //Spuštění funkce pro odeslání venkovní teploty skrze BLE do připojeného zařízení
+      outside_temp_dht->sendTemperature();
+      //Spuštění funkce pro odeslání teploty chladiče skrze BLE do připojeného zařízení
+      cooler_temp_ntc->sendTemperature();
     }
   }
 }
