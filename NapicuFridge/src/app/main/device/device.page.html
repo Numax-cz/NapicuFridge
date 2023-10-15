@@ -24,7 +24,7 @@
 
   <div *ngIf="get_is_fridge_on_error()" class="box info-box is-size-6 has-text-weight-bold has-text-centered">
     <ng-container *ngIf="get_is_in_temp_in_error()">
-      <div class="is-flex is-justify-content-space-between is-align-items-center" (click)="active_error_info_in_temp = !active_error_info_in_temp">
+      <div class="is-flex mb-2 is-justify-content-space-between is-align-items-center" (click)="active_error_info_in_temp = !active_error_info_in_temp">
         <div class="is-flex is-justify-content-flex-start is-align-items-center">
           <ion-icon name="alert-circle" class="error-red-color is-size-3"></ion-icon>
           <div class="has-text-weight-medium pl-2">Chyba vnitřního teploměru</div>
@@ -38,7 +38,7 @@
     </ng-container>
 
     <ng-container *ngIf="get_is_out_temp_in_error()">
-      <div class="is-flex is-justify-content-space-between is-align-items-center" (click)="active_error_info_out_temp = !active_error_info_out_temp">
+      <div class="is-flex mb-2 is-justify-content-space-between is-align-items-center" (click)="active_error_info_out_temp = !active_error_info_out_temp">
         <div class="is-flex is-justify-content-flex-start is-align-items-center">
           <ion-icon name="alert-circle" class="error-red-color is-size-3"></ion-icon>
           <div class="has-text-weight-medium pl-2">Chyba venkovního teploměru</div>
