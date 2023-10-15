@@ -50,6 +50,7 @@ export class AppComponent {
     //Vnitřní teplota ledničky
     in_temp: "",
     out_temp: "",
+    cooler_temp: "",
     config: {
       fridge_display_available: true,
       fridge_display_state: FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1,
@@ -59,7 +60,8 @@ export class AppComponent {
     },
     errors: {
       fridge_out_temp: false,
-      fridge_in_temp: false
+      fridge_in_temp: false,
+      fridge_cooler_temp: false
     }
   }
 
@@ -150,7 +152,9 @@ export class AppComponent {
             await AppComponent.subscribe_in_temp();
             //Přihlášení se k odběru charakteristiky venkovní teploty
             await AppComponent.subscribe_out_temp();
-
+            //Přihlášení se k odběru charakteristiky teploty chladiče
+            await AppComponent.subscribe_cooler_temp();
+            //Spuštění resolve funkce Promisu
             resolve();
           }).catch((e) => {
           //Vypsání hodnoty do vývojářské konzole
@@ -342,7 +346,7 @@ export class AppComponent {
               //Spuštění funkce uvnitř zóny Angularu
               this.ngZone.run(() => {
                 //Pokud získaná hodnota je rovna "nan" provede se následující
-                //Zapíšeme do proměnné o vnitřní chybě log1
+                //Zapíšeme do proměnné o venkovní chybě teploměru log1
                 if(value === "nan") this.fridge_data.errors.fridge_out_temp = true;
                 //Pokud získaná hodnota není rovna "nan" provede se následující
                 else {
@@ -350,6 +354,47 @@ export class AppComponent {
                   this.fridge_data.out_temp = value;
                   //Zapíšeme do proměnné o venkovní chybě teploměru log0
                   this.fridge_data.errors.fridge_in_temp = false;
+                }
+              });
+              //Spuštění resolve funkce Promisu
+              resolve();
+            }
+          },
+          error: (e) => {
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error" + JSON.stringify(e));
+            //Spuštění reject funkce Promisu
+            reject();
+          }
+        }
+      );
+    });
+  }
+
+  //Statická funkce pro přihlášení se k odběru pro získávání dat z teploměru na chladiči
+  private static subscribe_cooler_temp(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      //Přihlášení se k odběru charakteristiky teploty chladiče
+      CharacteristicController.subscribeCoolerTemp()?.subscribe(
+        {
+          next: (data: OperationResult) => {
+            //Po získání dat z bluetooth charakteristiky provést následující
+            if(data.value) {
+              //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+              let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+              //Převést bytes na string
+              let value: string = BluetoothLE.bytesToString(bytes);
+              //Spuštění funkce uvnitř zóny Angularu
+              this.ngZone.run(() => {
+                //Pokud získaná hodnota je rovna "nan" provede se následující
+                //Zapíšeme do proměnné o chybě teploměru na chladiči log1
+                if(value === "nan") this.fridge_data.errors.fridge_cooler_temp = true;
+                //Pokud získaná hodnota není rovna "nan" provede se následující
+                else {
+                  //Zapsat převedený bytes na string do proměnné cooler_temp
+                  this.fridge_data.cooler_temp = value;
+                  //Zapíšeme do proměnné o chybě teploměru na chladiči log0
+                  this.fridge_data.errors.fridge_cooler_temp = false;
                 }
               });
               //Spuštění resolve funkce Promisu
@@ -382,7 +427,7 @@ export class AppComponent {
 
   //Statická funkce, která obnoví tovární nastavení
   public static factory_reset(): void {
-
+    //TODO přidat komunikaci s ESP32
   }
 
   //Statická funkce, která vrátí uložená data o spárovaném zařízení
@@ -418,6 +463,11 @@ export class AppComponent {
   //Statická funkce, která vrátí venkovní teplotu
   public static get_out_temp(): string {
     return this.fridge_data.out_temp;
+  }
+
+  //Statická funkce, která vrátí teplotu chladiče
+  public static get_cooler_temp(): string {
+    return this.fridge_data.cooler_temp;
   }
 
   //Statická funkce, která vrátí zda je displej chytré ledničky povolen
@@ -494,17 +544,23 @@ export class AppComponent {
   //Statická funkce, která vrátí zda došlo v ledničce k problému
   public static get_is_fridge_on_error(): boolean {
     return this.fridge_data.errors.fridge_in_temp
-      || this.fridge_data.errors.fridge_out_temp;
+      || this.fridge_data.errors.fridge_out_temp
+      || this.fridge_data.errors.fridge_cooler_temp;
   }
 
-  //Statická proměnná, která vrátí zda je vnitřní teploměr v chybě
+  //Statická funkce, která vrátí zda je vnitřní teploměr v chybě
   public static get_is_in_temp_in_error(): boolean {
     return this.fridge_data.errors.fridge_in_temp;
   }
 
-  //Statická proměnná, která vrátí zda je venkovní teploměr v chybě
+  //Statická funkce, která vrátí zda je venkovní teploměr v chybě
   public static get_is_out_temp_in_error(): boolean {
     return this.fridge_data.errors.fridge_out_temp;
+  }
+
+  //Statická funkce, která vártí zda je teploměr na chladiči v chybě
+  public static get_is_cooler_temp_in_error(): boolean {
+    return this.fridge_data.errors.fridge_cooler_temp;
   }
 
   //Statická funkce, která vrátí zda došlo v ledničce k vážné poruše

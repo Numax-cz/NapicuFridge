@@ -1,8 +1,6 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AppComponent} from "../../app.component";
 import {alert_animations} from "../Animation";
-
-
 
 @Component({
   selector: 'app-info',
@@ -11,18 +9,23 @@ import {alert_animations} from "../Animation";
   animations: alert_animations
 })
 export class InfoPage {
-
+  //Proměnná, která určuje zda je informační alert zobrazen
   public is_info_icon_alert_activated: boolean = false;
 
+  constructor() { }
 
-  constructor() {
-  }
-
+  //Funkce, která vrátí vnitřní teplotu
   public get_in_temp(): string {
     return AppComponent.get_in_temp();
   }
 
+  //Funkce, která vrátí venkovní teplotu
   public get_out_temp(): string {
     return AppComponent.get_out_temp();
+  }
+
+  //Funkce, která vrátí teplotu chladiče
+  public get_cooler_temp(): string {
+    return AppComponent.get_cooler_temp();
   }
 }

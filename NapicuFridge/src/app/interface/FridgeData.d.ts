@@ -6,7 +6,7 @@ import {FridgeDisplayState, FridgePowerMode} from "./Enums";
 export declare interface FridgeData {
   in_temp: string,
   out_temp: string,
-
+  cooler_temp: string
 
   config: {
     fridge_display_available: boolean,
@@ -22,6 +22,7 @@ export declare interface FridgeData {
 
   errors: {
     fridge_in_temp: boolean,
-    fridge_out_temp: boolean
+    fridge_out_temp: boolean,
+    fridge_cooler_temp: boolean
   }
 }

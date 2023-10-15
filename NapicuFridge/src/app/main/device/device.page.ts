@@ -18,6 +18,8 @@ export class DevicePage {
   public active_error_info_in_temp: boolean = false;
   //Proměnná, která určuje, zda je informační menu o erroru venkovního teploměru otevřené
   public active_error_info_out_temp: boolean = false;
+  //Proměnná, která určuje, zda je informační menu o erroru teploměru chladiče otevřené
+  public active_error_info_cooler_temp: boolean = false;
 
   //Proměnná pro uložení stavu alertu
   public active_alert: boolean = false;
@@ -108,13 +110,18 @@ export class DevicePage {
     return FridgePowerMode.FRIDGE_OFF_POWER;
   }
 
-  //Proměnná, která vrátí zda je vnitřní teploměr v chybě
+  //Funkce, která vrátí zda je vnitřní teploměr v chybě
   public get_is_in_temp_in_error(): boolean {
     return AppComponent.get_is_in_temp_in_error();
   }
 
-  //Proměnná, která vrátí zda je venkovní teploměr v chybě
+  //Funkce, která vrátí zda je venkovní teploměr v chybě
   public get_is_out_temp_in_error(): boolean {
     return AppComponent.get_is_out_temp_in_error();
+  }
+
+  //Funkce, která vrátí zda je venkovní teploměr v chybě
+  public get_is_cooler_temp_in_error(): boolean {
+    return AppComponent.get_is_cooler_temp_in_error();
   }
 }

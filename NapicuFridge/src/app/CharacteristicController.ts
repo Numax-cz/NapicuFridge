@@ -6,7 +6,7 @@ import {FridgePowerMode} from "./interface/Enums";
 
 //Třída pro správu charakteristiky BLE
 export class CharacteristicController {
-  //Funkce pro přihlášení se k odběru pro získávání dat z vnitřního teploměru
+  //Funkce pro přihlášení se k odběru pro získávání dat z vnitřního teploměru (Pokud se vrátí null, zařízení není připojené)
   public static subscribeInTemp(): Observable<OperationResult> | null {
       //Kontrola, zda je zařízení spárované
       if(AppComponent.connected_device) {
@@ -21,7 +21,7 @@ export class CharacteristicController {
       return null;
   }
 
-  //Funkce pro přihlášení se k odběru pro získávání dat z venkovního teploměru
+  //Funkce pro přihlášení se k odběru pro získávání dat z venkovního teploměru (Pokud se vrátí null, zařízení není připojené)
   public static subscribeOutTemp():  Observable<OperationResult> | null {
     //Kontrola, zda je zařízení spárované
     if(AppComponent.connected_device) {
@@ -31,6 +31,21 @@ export class CharacteristicController {
             service: Configuration.SERVICE_UUID,
             characteristic: Configuration.CHARACTERISTIC_DHT_OUTSIDE_UUID
         });
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
+
+  //Funkce pro přihlášení se k odběru pro získávání dat z teploměru na chaldiči (Pokud se vrátí null, zařízení není připojené)
+  public static subscribeCoolerTemp(): Observable<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Přihlášení se k odběru charakteristiky teploty chladiče
+      return BluetoothLE.subscribe({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_NTC_COOLER_UUID
+      });
     }
     //Vrácení null, pokud není připojené zařízení
     return null;

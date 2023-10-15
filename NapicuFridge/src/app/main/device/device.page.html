@@ -22,7 +22,6 @@
     </ng-container>
   </div>
 
-
   <div *ngIf="get_is_fridge_on_error()" class="box info-box is-size-6 has-text-weight-bold has-text-centered">
     <ng-container *ngIf="get_is_in_temp_in_error()">
       <div class="is-flex is-justify-content-space-between is-align-items-center" (click)="active_error_info_in_temp = !active_error_info_in_temp">
@@ -48,6 +47,20 @@
       </div>
       <div  *ngIf="active_error_info_out_temp" class="is-size-7 box mt-2 has-background-light has-text-weight-normal has-text-left">
         Chyba venkovního teploměru. Zkontrolujte, zda je správně připojen, nebo uveďte ledničku do továrního nastavení. V případě,
+        že nebyl nalezen problém, vyměňte teploměr za nový popřípadě kontaktujte výrobce.
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="get_is_cooler_temp_in_error()">
+      <div class="is-flex is-justify-content-space-between is-align-items-center" (click)="active_error_info_cooler_temp = !active_error_info_cooler_temp">
+        <div class="is-flex is-justify-content-flex-start is-align-items-center">
+          <ion-icon name="alert-circle" class="error-red-color is-size-3"></ion-icon>
+          <div class="has-text-weight-medium pl-2">Chyba teploměru chladiče</div>
+        </div>
+        <div [@InfoBoxRotatedState]="active_error_info_cooler_temp" class="is-size-5">></div>
+      </div>
+      <div  *ngIf="active_error_info_cooler_temp" class="is-size-7 box mt-2 has-background-light has-text-weight-normal has-text-left">
+        Chyba teploměru chladiče. Zkontrolujte, zda je správně připojen, nebo uveďte ledničku do továrního nastavení. V případě,
         že nebyl nalezen problém, vyměňte teploměr za nový popřípadě kontaktujte výrobce.
       </div>
     </ng-container>
