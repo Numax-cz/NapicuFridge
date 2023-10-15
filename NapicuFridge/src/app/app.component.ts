@@ -149,11 +149,11 @@ export class AppComponent {
             //Synchronizování nastavení na ESP32
             await AppComponent.update_config_from_esp();
             //Přihlášení se k odběru charakteristiky vnitřní teploty
-            await AppComponent.subscribe_in_temp();
+            AppComponent.subscribe_in_temp();
             //Přihlášení se k odběru charakteristiky venkovní teploty
-            await AppComponent.subscribe_out_temp();
+            AppComponent.subscribe_out_temp();
             //Přihlášení se k odběru charakteristiky teploty chladiče
-            await AppComponent.subscribe_cooler_temp();
+            AppComponent.subscribe_cooler_temp();
             //Spuštění resolve funkce Promisu
             resolve();
           }).catch((e) => {
