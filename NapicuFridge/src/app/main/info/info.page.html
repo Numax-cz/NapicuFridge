@@ -1,7 +1,7 @@
 <section class="section">
   <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
     <div style="position: relative">
-      <ion-icon name="alert-circle-outline" class="info-icon" (click)="is_info_icon_alert_activated = true"></ion-icon>
+      <ion-icon name="alert-circle-outline" class="info-icon" (click)="open_info_alert()"></ion-icon>
       {{get_in_temp()}}°C
     </div>
   </div>
@@ -28,8 +28,8 @@
 <div @AlertAnimation class="box info-box alert-container" *ngIf="is_info_icon_alert_activated">
   <p class="is-size-6 has-text-weight-medium has-text-centered" style="border-bottom: 1px solid #0000004a;padding: 9px;">Zde uvidíte vnitřní teplotu chytré ledničky</p>
   <div class="mt-2 is-flex is-justify-content-space-around is-align-items-center">
-    <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="is_info_icon_alert_activated = false;">OK</div>
+    <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="close_info_alert()">OK</div>
   </div>
 </div>
 
-<div @AlertAnimationBackground class="alert" *ngIf="is_info_icon_alert_activated" (click)="is_info_icon_alert_activated = false;"></div>
+<div @AlertAnimationBackground class="alert" *ngIf="is_info_icon_alert_activated" (click)="close_info_alert()"></div>

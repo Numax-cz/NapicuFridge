@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../app.component";
 import {alert_animations} from "../Animation";
 
@@ -12,14 +12,24 @@ export class InfoPage {
   //Proměnná, která určuje zda je informační alert zobrazen
   public is_info_icon_alert_activated: boolean = false;
 
-  constructor() { }
+  constructor(protected ngZone: NgZone) { }
 
+  //Funkce, která zobrazí informační alert
   public open_info_alert(): void {
-
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() =>{
+      //Nastavení proměnné na log1
+      this.is_info_icon_alert_activated = true;
+    });
   }
 
+  //Funkce, která zavře informační alert
   public close_info_alert(): void {
-    
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() =>{
+      //Nastavení proměnné na log0
+      this.is_info_icon_alert_activated = false;
+    });
   }
 
   //Funkce, která vrátí vnitřní teplotu
@@ -36,4 +46,6 @@ export class InfoPage {
   public get_cooler_temp(): string {
     return AppComponent.get_cooler_temp();
   }
+
+  protected readonly open = open;
 }

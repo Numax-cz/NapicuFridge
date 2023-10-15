@@ -59,9 +59,9 @@ export class AppComponent {
       fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
     },
     errors: {
-      fridge_out_temp: true,
-      fridge_in_temp: true,
-      fridge_cooler_temp: true
+      fridge_out_temp: false,
+      fridge_in_temp: false,
+      fridge_cooler_temp: false
     }
   }
 
