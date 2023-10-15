@@ -353,7 +353,7 @@ export class AppComponent {
                   //Zapsat převedený bytes na string do proměnné out_temp
                   this.fridge_data.out_temp = value;
                   //Zapíšeme do proměnné o venkovní chybě teploměru log0
-                  this.fridge_data.errors.fridge_in_temp = false;
+                  this.fridge_data.errors.fridge_out_temp = false;
                 }
               });
               //Spuštění resolve funkce Promisu
