@@ -206,4 +206,15 @@ export class CharacteristicController {
     //Vrácení null, pokud není připojené zařízení
     return null;
   }
+
+  //Funkce pro čtení doby od spuštění chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  public static readUptime(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Získání doby spuštění chytré ledničky
+      return BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_UPTIME_UUID});
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
 }
