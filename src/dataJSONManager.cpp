@@ -125,7 +125,6 @@ void DataJSONManager::write() {
 
     //V následujícím bloku kódu rozkouskujeme data po 20 bajtech
 
-    
     //Pošleme výchozí indikaci jako začátek bloku dat
     DataJSONManager::pCharacteristic->setValue("#START");
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -144,9 +143,9 @@ void DataJSONManager::write() {
         int packet_size = min(remaining_bytes, 20); 
         //Data balíčku ve formátu string 
         String packet_data = jsonString.substring(current_index, current_index + packet_size);
-        //Nastavení hodnoty charakteristiky 
+        //Nastavení hodnotu balíčku pro charakteristiku 
         DataJSONManager::pCharacteristic->setValue(packet_data.c_str());
-        //Odeslání zprávy skrze BLE do připojeného zařízení
+        //Odeslání balíčku skrze BLE do připojeného zařízení
         DataJSONManager::pCharacteristic->notify();
         //Přičteme k aktuální velikost poslanou velikost aktuálního balíčku
         current_index += packet_size;  
