@@ -13,7 +13,7 @@ void BuzzingOnErrorCharacteristicCallback::onRead(BLECharacteristic *pCharacteri
 }
 
 void BuzzingOnErrorCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
-        //Proměnná pro ukládání přijaté zprávy
+    //Proměnná pro ukládání přijaté zprávy
     std::string msg = pCharacteristic->getValue();
 
     //Vypsání následujících hodnot do konzole

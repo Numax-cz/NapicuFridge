@@ -190,6 +190,13 @@ void PowerManager::power_on() {
     relay_cooling_fans->open();
 }
 
+//Funkce, která vrací zda je chladící systém zapnutý 
+bool PowerManager::is_power_on() {
+    //Proměnná pro uložení dat z EEPROM
+    uint8_t data = EEPROM.read(IN_FANS_EEPROM_ADDR);
+    return (data != FRIDGE_OFF_POWER);
+}
+
 //Funkce pro vypnutí chladících ventilátorů
 void PowerManager::turn_off_cooling_fans() {
     //Spuštění funkce pro zavření relátka chladících ventilátorů (PWM)

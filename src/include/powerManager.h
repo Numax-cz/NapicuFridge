@@ -44,7 +44,8 @@ public:
     static void turn_off_in_fans();
     //Statická funkce pro zapnutí vnitřních ventilátorů
     static void turn_on_in_fans();
-
+    //Statická funkce, která vrací zda je chladící systém zapnutý 
+    static bool is_power_on();
 };
 
 class PowerManagerCharacteristicCallback : public BLECharacteristicCallbacks {

@@ -62,6 +62,11 @@ export class AppComponent {
       fridge_out_temp: false,
       fridge_in_temp: false,
       fridge_cooler_temp: false
+    },
+    json_graph: {
+      in_temp: [],
+      out_temp: [],
+      cooler_temp: []
     }
   }
 
@@ -154,6 +159,8 @@ export class AppComponent {
             AppComponent.subscribe_out_temp();
             //Spuštění funkce pro přihlášení se k odběru charakteristiky teploty chladiče
             AppComponent.subscribe_cooler_temp();
+            //Spuštění funkce pro přihlášení se k odběru charakteristiky JSON dat
+            AppComponent.subscribe_json_data();
             //Spuštění resolve funkce Promisu
             resolve();
           }).catch((e) => {
@@ -412,6 +419,38 @@ export class AppComponent {
     });
   }
 
+    //Statická funkce pro přihlášení se k odběru pro získávání naměřených JSON dat z chytré ledničky
+    private static subscribe_json_data(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            //Přihlášení se k odběru charakteristiky JSON dat
+            CharacteristicController.subscribeJsonData()?.subscribe(
+                {
+                    next: (data: OperationResult) => {
+                        //Po získání dat z bluetooth charakteristiky provést následující
+                        if(data.value) {
+                            //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+                            let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+                            //Převést bytes na string
+                            let value: string = BluetoothLE.bytesToString(bytes);
+                            //Spuštění funkce uvnitř zóny Angularu
+                            this.ngZone.run(() => {
+                              console.log(value);
+                            });
+                            //Spuštění resolve funkce Promisu
+                            resolve();
+                        }
+                    },
+                    error: (e) => {
+                        //Vypsání hodnoty do vývojářské konzole
+                        console.log("error" + JSON.stringify(e));
+                        //Spuštění reject funkce Promisu
+                        reject();
+                    }
+                }
+            );
+        });
+    }
+
   //Funkce, která vrátí aktuální hodnotu na daném displej statu
   public static get_display_value_by_state(): string | null {
     //TODO DOC
@@ -541,11 +580,11 @@ export class AppComponent {
     return this.fridge_data.config.buzzing_on_error;
   }
 
-  //Statická funkce, která vrátí zda došlo v ledničce k problému
+  //Statická funkce, která vrátí zda došlo v ledničce k problému (zařízení musí být připojené, jinak se vrátí log0)
   public static get_is_fridge_on_error(): boolean {
-    return this.fridge_data.errors.fridge_in_temp
+    return (this.fridge_data.errors.fridge_in_temp
       || this.fridge_data.errors.fridge_out_temp
-      || this.fridge_data.errors.fridge_cooler_temp;
+      || this.fridge_data.errors.fridge_cooler_temp) && this.is_connected();
   }
 
   //Statická funkce, která vrátí zda je vnitřní teploměr v chybě

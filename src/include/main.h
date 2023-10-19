@@ -22,7 +22,12 @@
 #include <include/piezoManager.h>
 #include <include/errorChecker.h>
 #include <include/thermistorManager.h>
+#include <include/dataJSONManager.h>
+#include <include/uptime.h>
 /////////////////////////////////////////////////////////////////////
+
+#define DEV_MODE 1
+
 //Definice propojovacích pinů
 
 //pro analogový vstup a LED diodu
@@ -100,6 +105,8 @@
 #define CHARACTERISTIC_POWER_MODE_UUID "c01280b7-3e33-4eb4-ae39-2ec305750179"
 #define CHARACTERISTIC_BUZZING_ON_ERROR_UUID "f639b9d8-6aa1-11ee-8c99-0242ac120002"
 #define CHARACTERISTIC_NTC_COOLER_UUID "e67ad112-b64c-445f-8588-d358311d9612"
+#define CHARACTERISTIC_UPTIME_UUID "1e95497f-7cff-4376-836e-d6d9b9f1eb7e"
+#define CHARACTERISTIC_JSON_DATA_UUID "ddb31e15-aa44-4a42-b3e7-e253f457da2d"
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
@@ -116,6 +123,22 @@
 
 //Definice, která určuje, zda má být piezo aktivní při chybě
 #define DEFAULT_PIEZO_ON_ERROR 1 //V tomto případě je piezo aktivní při chybě
+
+//Definice, která určuje, po jaké době se mají ukládat data o naměřených hodnot
+#define DEFAULT_JSON_DATA_SAVE_INTERVAL 1000 * 60 //V tomto případě se každou minutu uloží naměřená data do JSON souboru na ESP
+
+
+//Zde následuje několik definicí ke správci dat pro graf (dataJSONManager) 
+
+//Definice názvu souboru pro ukládání dat v grafu
+#define DEFAULT_JSON_DATA_FILE_NAME "/fridge_data.json" 
+//Definice názvu klíče v JSON vnitřní teploty 
+#define DEFAULT_JSON_IN_TEMP_NAME "in_temp"
+//Definice názvu klíče v JSON venkovní teploty
+#define DEFAULT_JSON_OUT_TEMP_NAME "out_temp"
+//Definice názvu klíče v JSON určující teplotu chladiče
+#define DEFAULT_JSON_COOLER_TEMP_NAME "cooler_temp"
+
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////

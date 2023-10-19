@@ -1,7 +1,11 @@
 import {FridgeDisplayState, FridgePowerMode} from "./Enums";
 
 
-
+export declare interface FridgeJSONData {
+  in_temp: number[];
+  out_temp: number[];
+  cooler_temp: number[];
+}
 
 export declare interface FridgeData {
   in_temp: string,
@@ -25,4 +29,5 @@ export declare interface FridgeData {
     fridge_out_temp: boolean,
     fridge_cooler_temp: boolean
   }
+  json_graph: FridgeJSONData
 }

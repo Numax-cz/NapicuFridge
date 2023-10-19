@@ -13,6 +13,7 @@ export namespace Configuration {
   export const CHARACTERISTIC_BUZZING_ON_ERROR_UUID: string = "f639b9d8-6aa1-11ee-8c99-0242ac120002";
   export const CHARACTERISTIC_NTC_COOLER_UUID: string =  "e67ad112-b64c-445f-8588-d358311d9612";
   export const CHARACTERISTIC_UPTIME_UUID: string = "1e95497f-7cff-4376-836e-d6d9b9f1eb7e";
+  export const CHARACTERISTIC_JSON_DATA_UUID: string = "ddb31e15-aa44-4a42-b3e7-e253f457da2d";
 }
 
 //Definice proměnné, která ukládá výchozí režim do kterého lednička přejde po prvním zapnutí

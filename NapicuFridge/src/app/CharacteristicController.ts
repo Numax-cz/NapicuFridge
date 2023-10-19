@@ -51,6 +51,21 @@ export class CharacteristicController {
     return null;
   }
 
+    //Statická funkce pro přihlášení se k odběru naměřených pro získání JSON dat z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+    public static subscribeJsonData(): Observable<OperationResult> | null  {
+        //Kontrola, zda je zařízení spárované
+        if(AppComponent.connected_device) {
+            //Přihlášení se k odběru charakteristiky JSON dat
+            return BluetoothLE.subscribe({
+                address: AppComponent.connected_device.address,
+                service: Configuration.SERVICE_UUID,
+                characteristic: Configuration.CHARACTERISTIC_JSON_DATA_UUID
+            });
+        }
+        //Vrácení null, pokud není připojené zařízení
+        return null;
+    }
+
   //Funkce pro zápis stavu displeje chytré ledničky (Pokud se vrátí null, zařízení není připojené)
   public static writeDisplayState(value: number): Promise<OperationResult> | null {
       //Kontrola, zda je zařízení spárované

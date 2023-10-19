@@ -3,7 +3,7 @@
 
 void DisplayEnableCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
-    Serial.print("Odeslání informací o stavu displeje");
+    Serial.println("Odeslání informací o stavu displeje");
 
     int value = FridgeDisplay::get_is_enable() ? 1 : 0;
 

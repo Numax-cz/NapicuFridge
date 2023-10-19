@@ -222,7 +222,7 @@ void setup() {
     COOLER_NTC_STM32_ANALOG_RESOLUTION
   );
   
-  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *fridgeEnableCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_DISPLAY_ENABLE_UUID,
     BLECharacteristic::PROPERTY_WRITE | 
@@ -231,7 +231,7 @@ void setup() {
                                        
   fridgeEnableCharacteristic->setCallbacks(new DisplayEnableCharacteristicCallback());
 
-  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *fridgeStateCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_DISPLAY_STATE_UUID,
     BLECharacteristic::PROPERTY_WRITE | 
@@ -240,7 +240,7 @@ void setup() {
                                        
   fridgeStateCharacteristic->setCallbacks(new DisplayStateCharacteristicCallback());
 
-  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *fridgeInFansCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_IN_FANS_UUID,
     BLECharacteristic::PROPERTY_WRITE | 
@@ -249,7 +249,7 @@ void setup() {
                                        
   fridgeInFansCharacteristic->setCallbacks(new InFansCharacteristicCallback());
 
-  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *powerModeCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_POWER_MODE_UUID,
     BLECharacteristic::PROPERTY_WRITE | 
@@ -258,8 +258,7 @@ void setup() {
                                        
   powerModeCharacteristic->setCallbacks(new PowerManagerCharacteristicCallback());
 
-
-  // Vytvoření BLE komunikačního kanálu pro komunikaci
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *buzzingOnErrorCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_BUZZING_ON_ERROR_UUID,
     BLECharacteristic::PROPERTY_WRITE | 
@@ -267,6 +266,19 @@ void setup() {
   );
                                        
   buzzingOnErrorCharacteristic->setCallbacks(new BuzzingOnErrorCharacteristicCallback());
+
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *uptimeCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_UPTIME_UUID,
+    BLECharacteristic::PROPERTY_INDICATE |
+    BLECharacteristic::PROPERTY_NOTIFY |
+    BLECharacteristic::PROPERTY_READ
+  );
+                                       
+  uptimeCharacteristic->setCallbacks(new FridgeUpTimeCharacteristicCallback());
+
+  //Spuštění begin funkce DataJSONManageru
+  DataJSONManager::begin(pService);          
 
   //Spuštění begin funkce PowerManageru
   PowerManager::begin();
@@ -302,7 +314,8 @@ void setup() {
 
   Serial.println("BLE nastaveno, ceka na pripojeni..");
 
-  
+
+
 
 
  
@@ -342,11 +355,6 @@ void loop() {
 
   //Načasování programu
   if(time >= data_send_time_now + data_send_period) {
-
-  
-
- 
-
     data_send_time_now += data_send_period;
     //Spuštění funkce pro aktualizování hodnot o vnitřní teplotě 
     inside_temp_dht->updateTemperature();
@@ -362,6 +370,11 @@ void loop() {
       outside_temp_dht->sendTemperature();
       //Spuštění funkce pro odeslání teploty chladiče skrze BLE do připojeného zařízení
       cooler_temp_ntc->sendTemperature();
+    }
+
+    //Pokud je zapnutý chladící systém provede se následující
+    if(PowerManager::is_power_on()) {
+      DataJSONManager::loop();
     }
   }
 }
