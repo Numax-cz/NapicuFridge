@@ -120,15 +120,18 @@ void DataJSONManager::write() {
         Serial.println("Chyba při zápisu dat");
     }   
 
-    String jsonString = "";
-    serializeJson(doc, jsonString);
-
+    /////////////////////////////////////////////////////////////////////
     //V následujícím bloku kódu rozkouskujeme data po 20 bajtech
 
     //Pošleme výchozí indikaci jako začátek bloku dat
     DataJSONManager::pCharacteristic->setValue("#START");
     //Odeslání zprávy skrze BLE do připojeného zařízení
     DataJSONManager::pCharacteristic->notify();
+
+    //Proměnná pro uložení hodnoty JSONu
+    String jsonString = "";
+    //Vytvoříme a uložíme JSON dokument do proměnné
+    serializeJson(doc, jsonString);
 
     //Uložíme velikost stringu do proměnné 
     int data_length = jsonString.length();
@@ -155,7 +158,8 @@ void DataJSONManager::write() {
     DataJSONManager::pCharacteristic->setValue("#END");
     //Odeslání zprávy skrze BLE do připojeného zařízení
     DataJSONManager::pCharacteristic->notify();
-
+    /////////////////////////////////////////////////////////////////////
+    
     //Vymazání paměti json dokumentu
     doc.clear();
     //Spuštění funkce pro zavření souboru
