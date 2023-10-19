@@ -122,7 +122,7 @@ void DataJSONManager::write() {
 
     /////////////////////////////////////////////////////////////////////
     //Jelikož skrze BLE lze poslat v jeden čas 20 bajtů pro charakteristiku musíme
-    //v následujícím bloku kódu rozkouskujeme data po 20 bajtech
+    //v následujícím bloku kódu rozkouskovat data po 20 bajtech
 
     //Pošleme výchozí indikaci jako začátek bloku dat
     DataJSONManager::pCharacteristic->setValue("#START");
