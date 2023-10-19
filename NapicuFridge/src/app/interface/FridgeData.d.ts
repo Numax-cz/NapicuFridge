@@ -29,5 +29,5 @@ export declare interface FridgeData {
     fridge_out_temp: boolean,
     fridge_cooler_temp: boolean
   }
-  json_graph: FridgeJSONData
+  json_graph_string: string
 }

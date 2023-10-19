@@ -107,6 +107,9 @@
 #define CHARACTERISTIC_NTC_COOLER_UUID "e67ad112-b64c-445f-8588-d358311d9612"
 #define CHARACTERISTIC_UPTIME_UUID "1e95497f-7cff-4376-836e-d6d9b9f1eb7e"
 #define CHARACTERISTIC_JSON_DATA_UUID "ddb31e15-aa44-4a42-b3e7-e253f457da2d"
+
+//Definice maximální délku datového balíčku
+#define MAX_PACKET_SIZE 20;  // Maximální délka balíčku v bajtech
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////

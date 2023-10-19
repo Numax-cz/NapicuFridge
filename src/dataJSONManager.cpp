@@ -123,10 +123,28 @@ void DataJSONManager::write() {
     String jsonString = "";
     serializeJson(doc, jsonString);
 
+
+
+    int dataLength = jsonString.length();
+    int currentIndex = 0;
+
+    while (currentIndex < dataLength) {
+        int remaining_bytes = dataLength - currentIndex;
+        int packet_size = min(remaining_bytes, 20); // Určíme velikost aktuálního balíčku
+        String packet_data = jsonString.substring(currentIndex, currentIndex + packet_size);
+        //Nastavení hodnoty charakteristiky 
+        DataJSONManager::pCharacteristic->setValue(packet_data.c_str());
+        //Odeslání zprávy skrze BLE do připojeného zařízení
+        DataJSONManager::pCharacteristic->notify();
+
+        currentIndex += packet_size;  // Posuneme se na další část dat
+    } 
+
     //Nastavení hodnoty charakteristiky 
-    DataJSONManager::pCharacteristic->setValue(jsonString.c_str());
+    DataJSONManager::pCharacteristic->setValue("#END");
     //Odeslání zprávy skrze BLE do připojeného zařízení
     DataJSONManager::pCharacteristic->notify();
+
 
     //Vymazání paměti json dokumentu
     doc.clear();

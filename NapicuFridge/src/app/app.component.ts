@@ -63,11 +63,7 @@ export class AppComponent {
       fridge_in_temp: false,
       fridge_cooler_temp: false
     },
-    json_graph: {
-      in_temp: [],
-      out_temp: [],
-      cooler_temp: []
-    }
+    json_graph_string: ""
   }
 
   //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
@@ -434,7 +430,11 @@ export class AppComponent {
                             let value: string = BluetoothLE.bytesToString(bytes);
                             //Spuštění funkce uvnitř zóny Angularu
                             this.ngZone.run(() => {
-                              console.log(value);
+                              if(value != "#END") {
+                                this.fridge_data.json_graph_string += value;
+                              } else {
+                                console.log(this.fridge_data.json_graph_string);
+                              }
                             });
                             //Spuštění resolve funkce Promisu
                             resolve();
