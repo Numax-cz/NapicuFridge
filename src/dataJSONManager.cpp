@@ -123,28 +123,39 @@ void DataJSONManager::write() {
     String jsonString = "";
     serializeJson(doc, jsonString);
 
+    //V následujícím bloku kódu rozkouskujeme data po 20 bajtech
 
+    
+    //Pošleme výchozí indikaci jako začátek bloku dat
+    DataJSONManager::pCharacteristic->setValue("#START");
+    //Odeslání zprávy skrze BLE do připojeného zařízení
+    DataJSONManager::pCharacteristic->notify();
 
-    int dataLength = jsonString.length();
-    int currentIndex = 0;
+    //Uložíme velikost stringu do proměnné 
+    int data_length = jsonString.length();
+    //Deklarace proměnné pro ukládání aktuální velikost poslaných dat
+    int current_index = 0;
 
-    while (currentIndex < dataLength) {
-        int remaining_bytes = dataLength - currentIndex;
-        int packet_size = min(remaining_bytes, 20); // Určíme velikost aktuálního balíčku
-        String packet_data = jsonString.substring(currentIndex, currentIndex + packet_size);
+    //Dokud je aktuální index menší než velikost dat proveď následující
+    while (current_index < data_length) {
+        //Uložíme velikost zbývajících
+        int remaining_bytes = data_length - current_index;
+        //Vypočítáme velikost aktuálního balíčku a uložíme jej do proměnné
+        int packet_size = min(remaining_bytes, 20); 
+        //Data balíčku ve formátu string 
+        String packet_data = jsonString.substring(current_index, current_index + packet_size);
         //Nastavení hodnoty charakteristiky 
         DataJSONManager::pCharacteristic->setValue(packet_data.c_str());
         //Odeslání zprávy skrze BLE do připojeného zařízení
         DataJSONManager::pCharacteristic->notify();
-
-        currentIndex += packet_size;  // Posuneme se na další část dat
+        //Přičteme k aktuální velikost poslanou velikost aktuálního balíčku
+        current_index += packet_size;  
     } 
 
-    //Nastavení hodnoty charakteristiky 
+    //Pošleme výchozí indikaci jako konec bloku dat
     DataJSONManager::pCharacteristic->setValue("#END");
     //Odeslání zprávy skrze BLE do připojeného zařízení
     DataJSONManager::pCharacteristic->notify();
-
 
     //Vymazání paměti json dokumentu
     doc.clear();

@@ -430,10 +430,17 @@ export class AppComponent {
                             let value: string = BluetoothLE.bytesToString(bytes);
                             //Spuštění funkce uvnitř zóny Angularu
                             this.ngZone.run(() => {
-                              if(value != "#END") {
-                                this.fridge_data.json_graph_string += value;
-                              } else {
+                              //Pokud se získaná hodnota rovná "#START" provede se následující
+                              if(value == "#START") {
+                                //Nastaví se proměnná na prázdný string
+                                this.fridge_data.json_graph_string = "";
+                              }
+                              //Pokud se získaná hodnota rovná "#END" provede se následující 
+                              else if(value == "#END") {
                                 console.log(this.fridge_data.json_graph_string);
+                              } else {
+                                //Přidáme získanou hodnotu do proměnné
+                                this.fridge_data.json_graph_string += value;
                               }
                             });
                             //Spuštění resolve funkce Promisu
