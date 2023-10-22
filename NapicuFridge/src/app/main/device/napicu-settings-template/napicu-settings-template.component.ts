@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 
 @Component({
@@ -8,10 +8,13 @@ import {Router} from "@angular/router";
 })
 export class NapicuSettingsTemplateComponent {
 
+
+  @Input() redirect: string = "/main/device";
+
   constructor(private router: Router) { }
 
   //Funkce, která vrátí uživatele na předchozí stránku
   public back(): void {
-    this.router.navigate(["/main/device"]);
+    this.router.navigate([this.redirect]);
   }
 }

@@ -80,7 +80,6 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
             FridgeDisplay::change_display_state(FRIDGE_DISPLAY_IN_TEMP_1);
           }
 
-
           //Nastavení proměnné na log1
           devicePaired = true;
         } else {
@@ -199,6 +198,7 @@ void setup() {
 
 
 
+
   // Vytvoření teploměru pro vnitřní zaznamenávání teploty
   inside_temp_dht = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_UUID, pService, FridgeData.in_temp);
   //Spuštění begin funkce
@@ -278,7 +278,7 @@ void setup() {
   uptimeCharacteristic->setCallbacks(new FridgeUpTimeCharacteristicCallback());
 
   //Spuštění begin funkce DataJSONManageru
-  DataJSONManager::begin(pService);          
+  DataJSONManager::begin(pService);  
 
   //Spuštění begin funkce PowerManageru
   PowerManager::begin();
@@ -353,6 +353,8 @@ void loop() {
     factory_reset();
   });
 
+
+
   //Načasování programu
   if(time >= data_send_time_now + data_send_period) {
     data_send_time_now += data_send_period;
@@ -363,7 +365,7 @@ void loop() {
     //Spuštění funkce pro aktualizování hodnot o teplotě chladiče 
     cooler_temp_ntc->updateTemperature();
     //Pokud je zařízení připojeno k ESP32
-    if (devicePaired == true) {
+    if (devicePaired) {
       //Spuštění funkce pro odeslání vnitřní teploty skrze BLE do připojeného zařízení
       inside_temp_dht->sendTemperature();
       //Spuštění funkce pro odeslání venkovní teploty skrze BLE do připojeného zařízení
@@ -371,12 +373,10 @@ void loop() {
       //Spuštění funkce pro odeslání teploty chladiče skrze BLE do připojeného zařízení
       cooler_temp_ntc->sendTemperature();
     }
-
-    //Pokud je zapnutý chladící systém provede se následující
-    if(PowerManager::is_power_on()) {
-      DataJSONManager::loop();
-    }
   }
+
+  //Spuštění loop funkce DataJSONManageru
+  DataJSONManager::loop();
 }
 
 BLEAddress* read_paired_device_mac_address_from_eeprom() {

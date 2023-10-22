@@ -193,7 +193,7 @@ void PowerManager::power_on() {
 //Funkce, která vrací zda je chladící systém zapnutý 
 bool PowerManager::is_power_on() {
     //Proměnná pro uložení dat z EEPROM
-    uint8_t data = EEPROM.read(IN_FANS_EEPROM_ADDR);
+    uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
     return (data != FRIDGE_OFF_POWER);
 }
 

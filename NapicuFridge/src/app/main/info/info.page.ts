@@ -12,6 +12,23 @@ export class InfoPage {
   //Proměnná, která určuje zda je informační alert zobrazen
   public is_info_icon_alert_activated: boolean = false;
 
+  public preview_graph_data = [
+    {
+      "name": "Vnitřní teplota",
+      "series": [
+        {
+          "value": 0,
+          "name": "1m"
+        },
+        {
+          "value": 0,
+          "name": "2m"
+        },
+      ]
+    },
+  ]
+
+
   constructor(protected ngZone: NgZone) { }
 
   //Funkce, která zobrazí informační alert

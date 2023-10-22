@@ -12,6 +12,8 @@ import {NapicuSettingsTemplateComponent} from "./napicu-settings-template/napicu
 import {SettingsComponent} from "./settings/settings.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DisplayComponent} from "./display/display.component";
+import {ChartsComponent} from "./charts/charts.component";
+import {LineChartModule} from "@swimlane/ngx-charts";
 
 @NgModule({
   imports: [
@@ -19,8 +21,9 @@ import {DisplayComponent} from "./display/display.component";
     FormsModule,
     IonicModule,
     DevicePageRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    LineChartModule
   ],
-  declarations: [DevicePage, InformationComponent, SettingsComponent, DisplayComponent ,NapicuSettingsTemplateComponent]
+  declarations: [DevicePage, InformationComponent, SettingsComponent, DisplayComponent, ChartsComponent ,NapicuSettingsTemplateComponent]
 })
 export class DevicePageModule {}

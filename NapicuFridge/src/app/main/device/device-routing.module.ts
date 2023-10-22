@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {InformationComponent} from "./information/information.component";
 import {SettingsComponent} from "./settings/settings.component";
 import {DisplayComponent} from "./display/display.component";
+import {ChartsComponent} from "./charts/charts.component";
 
 
 
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: "device-display",
     component: DisplayComponent,
+  },
+  {
+    path: "device-data",
+    component: ChartsComponent,
   }
 ];
 

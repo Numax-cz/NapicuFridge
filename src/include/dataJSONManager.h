@@ -18,6 +18,8 @@
 class DataJSONManager
 {
 private:
+    //Statická proměnná aktuální doby 
+    static inline long time_now = 0;
     //Statická proměnná BLE komunikačního kanálu pro odesílání dat
     static inline BLECharacteristic *pCharacteristic = NULL;
     //Statická funkce pro zápis dat do souboru
@@ -25,9 +27,9 @@ private:
 public:
     //Statická funkce pro inicializaci DataJsonManager
     static void begin(BLEService* pService);
-
     //Statická loop funkce pro DataJSONManager
     static void loop();
+    //Statická funkce, která odešle naměřená data do připojeného zařízení
+    static void send();
 };
-
 

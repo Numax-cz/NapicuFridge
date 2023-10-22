@@ -1,0 +1,24 @@
+<section class="section">
+  <app-napicu-settings-template [redirect]="'/main/info'">Teploty</app-napicu-settings-template>
+  <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
+    <div class="pb-2 pt-2  is-align-items-center" >
+      <div class="is-size-6">
+        Název
+      </div>
+      <div>
+        <ngx-charts-line-chart
+          [autoScale]="true"
+          [results]="preview_graph_data"
+          [xAxis]="true"
+          [yAxis]="true"
+          [tooltipDisabled]="true"
+          [animations]="false"
+        >
+        </ngx-charts-line-chart>
+      </div>
+    </div>
+
+  </div>
+
+
+</section>

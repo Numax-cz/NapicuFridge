@@ -1,36 +1,12 @@
 #include <include/dataJSONManager.h>
-#include <SD.h>
+#include <SPIFFS.h>
 
 
-//void DataJSONCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
-//     //Vypsání hodnoty do konzole
-//     Serial.println("Odeslání dat o zaznamenaných informací");
-//     //Přečtení souboru a uložení třídy do proměnné
-//     File file = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_READ);
-//     //Nastavení hodnoty charakteristiky 
-//     pCharacteristic->setValue(file.readString().c_str());
-//     //Odeslání zprávy skrze BLE do připojeného zařízení
-//     pCharacteristic->notify();
-//     //Spuštění funkce pro zavření souboru
-//     file.flush();
-// }
 
 //Funkce pro inicializaci DataJsonManager
 void DataJSONManager::begin(BLEService* pService) {
-    //Vytvoření BLE komunikačního kanálu pro komunikaci
-    DataJSONManager::pCharacteristic = pService->createCharacteristic(
-        CHARACTERISTIC_JSON_DATA_UUID,
-        BLECharacteristic::PROPERTY_INDICATE |
-        BLECharacteristic::PROPERTY_NOTIFY |
-        BLECharacteristic::PROPERTY_READ
-    );
-    
-    //Přiřazení deskriptoru k této charakteristice.
-    DataJSONManager::pCharacteristic->addDescriptor(new BLE2902());      
-    
-
     //Funkce pro inicializaci SPIFFS, pokud došlo k problému provede se následující
-    if(!SPIFFS.begin(false, "/spiffs", 5)){
+    if(!SPIFFS.begin(true, "/spiffs", 5)){
         //Vypsání hodnoty do konzole
         Serial.println("Neúspěšná inicializace systému SPIFFS");
         return;
@@ -38,6 +14,16 @@ void DataJSONManager::begin(BLEService* pService) {
 
     //Vypsání hodnoty do konzole
     Serial.println("Inicializace systému SPIFFS proběhla úspěšně!");
+
+    //Vytvoření BLE komunikačního kanálu pro komunikaci
+    DataJSONManager::pCharacteristic = pService->createCharacteristic(
+        CHARACTERISTIC_JSON_DATA_UUID,
+        BLECharacteristic::PROPERTY_INDICATE |
+        BLECharacteristic::PROPERTY_NOTIFY |
+        BLECharacteristic::PROPERTY_READ
+    );
+    //Přiřazení deskriptoru k této charakteristice.
+    DataJSONManager::pCharacteristic->addDescriptor(new BLE2902());      
 
     //Přečtení souboru a uložení třídy do proměnné
     File file = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_WRITE);
@@ -50,20 +36,23 @@ void DataJSONManager::begin(BLEService* pService) {
 
     //Spuštění funkce pro zavření souboru
     file.flush(); 
-
 }
 
 //Loop funkce pro DataJSONManager
 void DataJSONManager::loop() {
-    DataJSONManager::write();
+    //Uložíme aktuální čas běhu do konstantní proměnné time 
+    const unsigned long time = millis();
+    //Načasování programu
+    if(time >= DataJSONManager::time_now + DEFAULT_JSON_DATA_SAVE_INTERVAL) {
+        if(PowerManager::is_power_on()) {
+            //Přičte se statická proměnná delay k proměnné určující aktuální dobu
+            DataJSONManager::time_now += DEFAULT_JSON_DATA_SAVE_INTERVAL;
+            //Spuštění funkce pro zápist dat 
+            DataJSONManager::write();
+        }
+    }
 }
 
-
-
-//TODO 
-//TODO 
-//TODO 
-//TODO 
 //Funkce pro zápis dat do souboru
 void DataJSONManager::write() {
     DynamicJsonDocument doc(2048);
@@ -76,7 +65,7 @@ void DataJSONManager::write() {
     DeserializationError error = deserializeJson(doc, fileBuffer, file.size()+1);
 
     //Spuštění funkce pro zavření souboru
-    file.close();
+    file.flush();
 
     //Přečtení souboru a uložení třídy do proměnné
     file = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_WRITE);
@@ -120,10 +109,47 @@ void DataJSONManager::write() {
         Serial.println("Chyba při zápisu dat");
     }   
 
+    //Vymazání paměti json dokumentu
+    doc.clear();
+    //Spuštění funkce pro zavření souboru
+    file.flush();
+
+    //Pokud je zařízení připojené provede se následující
+    if(devicePaired) {
+        //Spuštění funkce pro odeslání naměřených hodnot do připojeného zaířzení 
+        DataJSONManager::send();
+    }
+
+
+    //Pokud je zapnutý vývojářký režim, provede se následující 
+    if(DEV_MODE) {
+        //Přečtení souboru a uložení třídy do proměnné
+        File file2 = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_READ);
+        //Vypíšeme obsah souboru do konzole
+        Serial.println(file2.readString());
+        //Spuštění funkce pro zavření souboru
+        file2.flush();
+    }
+}
+
+
+//Funkce, která odešle naměřená data do připojeného zařízení
+void DataJSONManager::send() {
     /////////////////////////////////////////////////////////////////////
     //Jelikož skrze BLE lze poslat v jeden čas 20 bajtů pro charakteristiku musíme
     //v následujícím bloku kódu rozkouskovat data po 20 bajtech
 
+    DynamicJsonDocument doc(2048);
+    //Přečtení souboru a uložení třídy do proměnné
+    File file_data = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_READ);
+    //Vypíšeme obsah souboru do konzole
+
+    DeserializationError error = deserializeJson(doc, file_data.readString());
+    //Spuštění funkce pro zavření souboru
+    file_data.flush();
+
+    //Vypsání hodnoty do konzole
+    Serial.println("Odeslání informací o naměřených hodnot");
     //Pošleme výchozí indikaci jako začátek bloku dat
     DataJSONManager::pCharacteristic->setValue("#START");
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -159,20 +185,7 @@ void DataJSONManager::write() {
     DataJSONManager::pCharacteristic->setValue("#END");
     //Odeslání zprávy skrze BLE do připojeného zařízení
     DataJSONManager::pCharacteristic->notify();
-    /////////////////////////////////////////////////////////////////////
-    
     //Vymazání paměti json dokumentu
     doc.clear();
-    //Spuštění funkce pro zavření souboru
-    file.close(); //TODO FLUSH
-       
-    //Pokud je zapnutý vývojářký režim, provede se následující 
-    if(DEV_MODE) {
-        //Přečtení souboru a uložení třídy do proměnné
-        File file2 = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_READ);
-        //Vypíšeme obsah souboru do konzole
-        Serial.println(file2.readString());
-        //Spuštění funkce pro zavření souboru
-        file2.close();
-    }
+    /////////////////////////////////////////////////////////////////////
 }

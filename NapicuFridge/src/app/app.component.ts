@@ -10,7 +10,7 @@ import {
   DeviceInfo,
   OperationResult
 } from "@awesome-cordova-plugins/bluetooth-le";
-import {FridgeData} from "./interface/FridgeData";
+import {FridgeData, FridgeJSONData} from "./interface/FridgeData";
 import {alert_animations, app_animation} from "./main/Animation";
 import {FridgeDisplayState, FridgePowerMode} from "./interface/Enums";
 import {environment} from "../environments/environment";
@@ -63,7 +63,8 @@ export class AppComponent {
       fridge_in_temp: false,
       fridge_cooler_temp: false
     },
-    json_graph_string: ""
+    json_graph_string: "",
+    json_graph_chars_format: [] //TODO Save
   }
 
   //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
@@ -93,6 +94,7 @@ export class AppComponent {
         AppVersion.getVersionNumber().then((value: string) => AppComponent.application_version_code = value);
         //Zamknutí orientace aplikace (na výšku)
         screen.orientation.lock("portrait");
+
       }
     });
   }
@@ -428,16 +430,16 @@ export class AppComponent {
                             let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
                             //Převést bytes na string
                             let value: string = BluetoothLE.bytesToString(bytes);
+
                             //Spuštění funkce uvnitř zóny Angularu
                             this.ngZone.run(() => {
                               //Pokud se získaná hodnota rovná "#START" provede se následující
-                              if(value == "#START") {
+                              if(value == "#START") { }
+                              //Pokud se získaná hodnota rovná "#END" provede se následující
+                              else if(value == "#END") {
+                                this.fridge_data.json_graph_chars_format = this.format_json_to_char();
                                 //Nastaví se proměnná na prázdný string
                                 this.fridge_data.json_graph_string = "";
-                              }
-                              //Pokud se získaná hodnota rovná "#END" provede se následující 
-                              else if(value == "#END") {
-                                console.log(this.fridge_data.json_graph_string);
                               } else {
                                 //Přidáme získanou hodnotu do proměnné
                                 this.fridge_data.json_graph_string += value;
@@ -469,6 +471,30 @@ export class AppComponent {
       default:
         return null;
     }
+  }
+
+  //Statická funkce, která formátuje json do formátu json pro graf
+  public static format_json_to_char(): {name: string, series: {value: number, name: string}[]}[] {
+    //Převedení stringu na formát JSON
+    let json: FridgeJSONData = JSON.parse(this.fridge_data.json_graph_string);
+    //Převedení pole uchovavající venkovní teplotu do formátu pro vytvoření grafu
+    // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
+    let out_temp_series_char_format: {value: number, name: string}[] =
+      json.out_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
+    //Převedení pole uchovavající vnitřní teplotu do formátu pro vytvoření grafu
+    // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
+    let in_temp_series_char_format: {value: number, name: string}[] =
+      json.in_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
+    //Převedení pole uchovavající teplotu chladiče do formátu pro vytvoření grafu
+    // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
+    let cooler_temp_series_char_format: {value: number, name: string}[] =
+      json.in_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
+    //Vrácení zformátovaných dat do objektu
+    return [
+      {name: "Venkovní teplota", series: out_temp_series_char_format},
+      {name: "Vnitřní teplota", series: in_temp_series_char_format},
+      {name: "Teplota chladiče", series: cooler_temp_series_char_format},
+    ];
   }
 
   //Statická funkce, která obnoví tovární nastavení
@@ -575,7 +601,7 @@ export class AppComponent {
     //Získání uložených dat
     let i: string | null = AppComponent.application_settings.getItem("previous_power_mode");
     //Pokud existuje uložená hodnota provede se následující
-    if(i) return JSON.parse(i) as FridgePowerMode;
+    if(i && (JSON.parse(i) as FridgePowerMode) !== FridgePowerMode.FRIDGE_OFF_POWER) return JSON.parse(i) as FridgePowerMode;
     //Nastavení výchozí hodnoty
     this.set_previous_power_mode(DEFAULT_POWER_MODE_ON_SWITCH);
     //Vrácení výchozí hodnoty
