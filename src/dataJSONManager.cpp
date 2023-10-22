@@ -1,10 +1,25 @@
 #include <include/dataJSONManager.h>
 #include <SPIFFS.h>
 
+void DataJSONReadySendCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
+    //Proměnná pro ukládání přijaté zprávy
+    std::string prijataZprava = pCharacteristic->getValue();
 
+    //Pokud obsahuje znak 1 provede se následující
+    if (prijataZprava == "1") {
+        //Nastavení proměnné určující zda je zařízení připraveno k odeslání dat k připojenému zařízení na log1
+        DataJSONManager::set_ready_to_send();
+    }
+}
 
-//Funkce pro inicializaci DataJsonManager
-void DataJSONManager::begin(BLEService* pService) {
+/**
+ * @brief Statická funkce pro inicializaci DataJsonManager 
+ * 
+ * @param pService BLE služba
+ * @param notify_uuid UUID pro oznamování naměřených dat
+ * @param ready_to_send_uuid UUID pro vynucení odeslání dat
+ */
+void DataJSONManager::begin(BLEService* pService, const char* notify_uuid, const char* ready_to_send_uuid) {
     //Funkce pro inicializaci SPIFFS, pokud došlo k problému provede se následující
     if(!SPIFFS.begin(true, "/spiffs", 5)){
         //Vypsání hodnoty do konzole
@@ -17,13 +32,23 @@ void DataJSONManager::begin(BLEService* pService) {
 
     //Vytvoření BLE komunikačního kanálu pro komunikaci
     DataJSONManager::pCharacteristic = pService->createCharacteristic(
-        CHARACTERISTIC_JSON_DATA_UUID,
+        notify_uuid,
         BLECharacteristic::PROPERTY_INDICATE |
         BLECharacteristic::PROPERTY_NOTIFY |
         BLECharacteristic::PROPERTY_READ
     );
+    
     //Přiřazení deskriptoru k této charakteristice.
-    DataJSONManager::pCharacteristic->addDescriptor(new BLE2902());      
+    DataJSONManager::pCharacteristic->addDescriptor(new BLE2902());
+
+    //Vytvoření BLE komunikačního kanálu pro komunikaci
+    BLECharacteristic *readyDataCharacteristic = pService->createCharacteristic(
+        ready_to_send_uuid,
+        BLECharacteristic::PROPERTY_WRITE
+    );
+
+    //Přiřazení zpětného volání k této charakteristice.
+    readyDataCharacteristic->setCallbacks(new DataJSONReadySendCharacteristicCallback());
 
     //Přečtení souboru a uložení třídy do proměnné
     File file = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_WRITE);
@@ -49,6 +74,17 @@ void DataJSONManager::loop() {
             DataJSONManager::time_now += DEFAULT_JSON_DATA_SAVE_INTERVAL;
             //Spuštění funkce pro zápist dat 
             DataJSONManager::write();
+        }
+    }
+
+    //Pokud je proměnná určující zda je zařízení připraveno k odeslání dat k připojenému zařízení provede se následující 
+    if(DataJSONManager::ready_to_send) {
+        //Pokud je zařízení připojené provede se následující
+        if(devicePaired) {
+            //Spuštění funkce pro odeslání naměřených hodnot do připojeného zaířzení 
+            DataJSONManager::send();
+            //Nastavení proměnné určující zda je zařízení připraveno k odeslání dat k připojenému zařízení na log0
+            DataJSONManager::ready_to_send = false;
         }
     }
 }
@@ -114,12 +150,8 @@ void DataJSONManager::write() {
     //Spuštění funkce pro zavření souboru
     file.flush();
 
-    //Pokud je zařízení připojené provede se následující
-    if(devicePaired) {
-        //Spuštění funkce pro odeslání naměřených hodnot do připojeného zaířzení 
-        DataJSONManager::send();
-    }
-
+    //Nastavení proměnné určující zda je zařízení připraveno k odeslání dat k připojenému zařízení na log1 
+    DataJSONManager::ready_to_send = true;
 
     //Pokud je zapnutý vývojářký režim, provede se následující 
     if(DEV_MODE) {

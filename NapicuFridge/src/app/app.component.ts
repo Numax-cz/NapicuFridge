@@ -159,6 +159,8 @@ export class AppComponent {
             AppComponent.subscribe_cooler_temp();
             //Spuštění funkce pro přihlášení se k odběru charakteristiky JSON dat
             AppComponent.subscribe_json_data();
+            //Spuštění funkce pro vynucení naměřených JSON dat z chytré ledničky
+            AppComponent.force_json_data();
             //Spuštění resolve funkce Promisu
             resolve();
           }).catch((e) => {
@@ -417,48 +419,54 @@ export class AppComponent {
     });
   }
 
-    //Statická funkce pro přihlášení se k odběru pro získávání naměřených JSON dat z chytré ledničky
-    private static subscribe_json_data(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            //Přihlášení se k odběru charakteristiky JSON dat
-            CharacteristicController.subscribeJsonData()?.subscribe(
-                {
-                    next: (data: OperationResult) => {
-                        //Po získání dat z bluetooth charakteristiky provést následující
-                        if(data.value) {
-                            //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
-                            let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
-                            //Převést bytes na string
-                            let value: string = BluetoothLE.bytesToString(bytes);
+  //Statická funkce pro přihlášení se k odběru pro získávání naměřených JSON dat z chytré ledničky
+  private static subscribe_json_data(): Promise<void> {
+      return new Promise((resolve, reject) => {
+          //Přihlášení se k odběru charakteristiky JSON dat
+          CharacteristicController.subscribeJsonData()?.subscribe(
+              {
+                  next: (data: OperationResult) => {
+                      //Po získání dat z bluetooth charakteristiky provést následující
+                      if(data.value) {
+                          //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+                          let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+                          //Převést bytes na string
+                          let value: string = BluetoothLE.bytesToString(bytes);
 
-                            //Spuštění funkce uvnitř zóny Angularu
-                            this.ngZone.run(() => {
-                              //Pokud se získaná hodnota rovná "#START" provede se následující
-                              if(value == "#START") { }
-                              //Pokud se získaná hodnota rovná "#END" provede se následující
-                              else if(value == "#END") {
-                                this.fridge_data.json_graph_chars_format = this.format_json_to_char();
-                                //Nastaví se proměnná na prázdný string
-                                this.fridge_data.json_graph_string = "";
-                              } else {
-                                //Přidáme získanou hodnotu do proměnné
-                                this.fridge_data.json_graph_string += value;
-                              }
-                            });
-                            //Spuštění resolve funkce Promisu
-                            resolve();
-                        }
-                    },
-                    error: (e) => {
-                        //Vypsání hodnoty do vývojářské konzole
-                        console.log("error" + JSON.stringify(e));
-                        //Spuštění reject funkce Promisu
-                        reject();
-                    }
-                }
-            );
-        });
-    }
+                          //Spuštění funkce uvnitř zóny Angularu
+                          this.ngZone.run(() => {
+                            //Pokud se získaná hodnota rovná "#START" provede se následující
+                            if(value == "#START") { }
+                            //Pokud se získaná hodnota rovná "#END" provede se následující
+                            else if(value == "#END") {
+                              this.fridge_data.json_graph_chars_format = this.format_json_to_char();
+                              //Nastaví se proměnná na prázdný string
+                              this.fridge_data.json_graph_string = "";
+                            } else {
+                              //Přidáme získanou hodnotu do proměnné
+                              this.fridge_data.json_graph_string += value;
+                            }
+                          });
+                          //Spuštění resolve funkce Promisu
+                          resolve();
+                      }
+                  },
+                  error: (e) => {
+                      //Vypsání hodnoty do vývojářské konzole
+                      console.log("error" + JSON.stringify(e));
+                      //Spuštění reject funkce Promisu
+                      reject();
+                  }
+              }
+          )
+      });
+  }
+
+  //Statická funkce pro vynucení naměřených JSON dat z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  private static force_json_data(): void {
+    //Spuštění funkce pro vynucení naměřených JSON dat z chytré ledničky
+    CharacteristicController.forceJSONData();
+  }
 
   //Funkce, která vrátí aktuální hodnotu na daném displej statu
   public static get_display_value_by_state(): string | null {

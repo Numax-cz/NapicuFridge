@@ -278,7 +278,7 @@ void setup() {
   uptimeCharacteristic->setCallbacks(new FridgeUpTimeCharacteristicCallback());
 
   //Spuštění begin funkce DataJSONManageru
-  DataJSONManager::begin(pService);  
+  DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  
 
   //Spuštění begin funkce PowerManageru
   PowerManager::begin();
