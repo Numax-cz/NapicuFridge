@@ -730,12 +730,15 @@ export class AppComponent {
 
   //Statická funkce, která aktualizuje data naměřených teplot, které se mají zobrazit v grafu
   public static update_char_view_data(): void {
-    this.fridge_data.json_graph_chars_format_view = this.get_full_json_temp_char()?.filter((value) => {
-      return (
-        (value.name === CHAR_IN_TEMP_TEXT && this.get_char_settings().display_in_temp) ||
-        (value.name === CHAR_OUT_TEMP_TEXT && this.get_char_settings().display_out_temp) ||
-        (value.name === CHAR_COOLER_TEMP_TEXT && this.get_char_settings().display_cooler_temp));
-    }) || null;
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() => {
+      this.fridge_data.json_graph_chars_format_view = this.get_full_json_temp_char()?.filter((value) => {
+        return (
+          (value.name === CHAR_IN_TEMP_TEXT && this.get_char_settings().display_in_temp) ||
+          (value.name === CHAR_OUT_TEMP_TEXT && this.get_char_settings().display_out_temp) ||
+          (value.name === CHAR_COOLER_TEMP_TEXT && this.get_char_settings().display_cooler_temp));
+      }) || null;
+    })
   }
 
   //Statická funkce, která vymaže data zobrazující se v grafu
