@@ -27,6 +27,8 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+@import "@ng-select/ng-select/themes/default.theme.css";
+
 .error-red-background {
   background-color: #ed441d !important;
 }
@@ -68,7 +70,7 @@
 
 
 
-  .info-box{
+.info-box{
   border-radius: 13px !important;
 }
 
@@ -200,4 +202,26 @@ $color2: #3e8ed0;
       }
     }
   }
+}
+
+.ng-select.custom {
+  border:0px;
+  min-height: 0px;
+  border-radius: 0;
+}
+.ng-select.custom .ng-select-container  {
+  min-height: 0px;
+  border-radius: 13px;
+}
+
+.ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+  border-color: transparent;
+  box-shadow: transparent;
+}
+
+
+.ng-select.custom ::ng-deep .ng-select-container  {
+  min-height: 0px;
+  border-radius: 0;
+
 }

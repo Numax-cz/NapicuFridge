@@ -14,6 +14,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DisplayComponent} from "./display/display.component";
 import {ChartsComponent} from "./charts/charts.component";
 import {LineChartModule} from "@swimlane/ngx-charts";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   imports: [
@@ -22,7 +23,9 @@ import {LineChartModule} from "@swimlane/ngx-charts";
     IonicModule,
     DevicePageRoutingModule,
     BrowserAnimationsModule,
-    LineChartModule
+    LineChartModule,
+    NgSelectModule,
+    FormsModule
   ],
   declarations: [DevicePage, InformationComponent, SettingsComponent, DisplayComponent, ChartsComponent ,NapicuSettingsTemplateComponent]
 })

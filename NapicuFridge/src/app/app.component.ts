@@ -10,12 +10,19 @@ import {
   DeviceInfo,
   OperationResult
 } from "@awesome-cordova-plugins/bluetooth-le";
-import {FridgeData, FridgeJSONData} from "./interface/FridgeData";
+import {CharSettings, FridgeData, FridgeJSONData} from "./interface/FridgeData";
 import {alert_animations, app_animation} from "./main/Animation";
 import {FridgeDisplayState, FridgePowerMode} from "./interface/Enums";
 import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
-import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "./config/configuration";
+import {
+  CHAR_COOLER_TEMP_TEXT,
+  CHAR_IN_TEMP_TEXT,
+  CHAR_OUT_TEMP_TEXT,
+  DEFAULT_IN_FANS_ON_SWITCH,
+  DEFAULT_POWER_MODE_ON_SWITCH
+} from "./config/configuration";
+import {CharTempsData} from "./interface/CharData";
 
 @Component({
   selector: 'app-root',
@@ -45,6 +52,9 @@ export class AppComponent {
   //Statická proměnná pro uložení hodnoty, zda je alert viditelný
   public static device_connection_alert_display: boolean = false;
 
+  //Statická proměnná pro uložení jednotlivých balíčků naměřených hodnot
+  protected static temp_json_graph_string: string | null = null;
+
   //Statická proměnná pro ukládání informací z ESP32
   public static fridge_data: FridgeData = {
     //Vnitřní teplota ledničky
@@ -63,8 +73,13 @@ export class AppComponent {
       fridge_in_temp: false,
       fridge_cooler_temp: false
     },
-    json_graph_string: "",
-    json_graph_chars_format: [] //TODO Save
+    char_settings: {
+      display_in_temp: true,
+      display_out_temp: true,
+      display_cooler_temp: true
+    },
+    json_graph_chars_format: null,
+    json_graph_chars_format_view: null
   }
 
   //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
@@ -149,6 +164,8 @@ export class AppComponent {
         //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
         BluetoothLE.discover({address: device.address, clearCache: true})
           .then(async (d: Device) => {
+            //Spuštění funkce pro načtení uložených hodnot v zařízení
+            AppComponent.load_config_from_storage();
             //Synchronizování nastavení na ESP32
             await AppComponent.update_config_from_esp();
             //Spuštění funkce pro přihlášení se k odběru charakteristiky vnitřní teploty
@@ -283,6 +300,14 @@ export class AppComponent {
         //Vypsání hodnoty do vývojářské konzole
         console.error("error_discovered" + JSON.stringify(e));
     });
+  }
+
+  //Statická funkce, která načte uložené hodnoty
+  public static load_config_from_storage(): void {
+    //Uložení a získání naměřených hodnot v json formátu pro graf
+    this.fridge_data.json_graph_chars_format = this.get_json_temp_char_from_storage();
+    //Uložení a získání nastavení grafu
+    this.fridge_data.char_settings = this.get_char_settings_from_storage();
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
@@ -436,15 +461,24 @@ export class AppComponent {
                           //Spuštění funkce uvnitř zóny Angularu
                           this.ngZone.run(() => {
                             //Pokud se získaná hodnota rovná "#START" provede se následující
-                            if(value == "#START") { }
+                            if(value == "#START") {
+                              this.temp_json_graph_string = "";
+                            }
                             //Pokud se získaná hodnota rovná "#END" provede se následující
                             else if(value == "#END") {
                               this.fridge_data.json_graph_chars_format = this.format_json_to_char();
+                              //Pokud jsou data v proměnné pro ukládaní dat k zobrazení v grafu
+                              if(this.fridge_data.json_graph_chars_format_view) {
+                                //Spuštění funkce pro aktualizovaní dat, které se mají zobrazit v grafu
+                                this.update_char_view_data();
+                              }
+                              //Spuštění funkce pro uložení grafu
+                              this.save_json_temp_char_to_storage(this.fridge_data.json_graph_chars_format);
                               //Nastaví se proměnná na prázdný string
-                              this.fridge_data.json_graph_string = "";
+                              this.temp_json_graph_string = null;
                             } else {
                               //Přidáme získanou hodnotu do proměnné
-                              this.fridge_data.json_graph_string += value;
+                              this.temp_json_graph_string += value;
                             }
                           });
                           //Spuštění resolve funkce Promisu
@@ -482,9 +516,9 @@ export class AppComponent {
   }
 
   //Statická funkce, která formátuje json do formátu json pro graf
-  public static format_json_to_char(): {name: string, series: {value: number, name: string}[]}[] {
+  protected static format_json_to_char(): CharTempsData {
     //Převedení stringu na formát JSON
-    let json: FridgeJSONData = JSON.parse(this.fridge_data.json_graph_string);
+    let json: FridgeJSONData = JSON.parse(this.temp_json_graph_string || "");
     //Převedení pole uchovavající venkovní teplotu do formátu pro vytvoření grafu
     // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
     let out_temp_series_char_format: {value: number, name: string}[] =
@@ -496,16 +530,57 @@ export class AppComponent {
     //Převedení pole uchovavající teplotu chladiče do formátu pro vytvoření grafu
     // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
     let cooler_temp_series_char_format: {value: number, name: string}[] =
-      json.in_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
+      json.cooler_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
     //Vrácení zformátovaných dat do objektu
     return [
-      {name: "Venkovní teplota", series: out_temp_series_char_format},
-      {name: "Vnitřní teplota", series: in_temp_series_char_format},
-      {name: "Teplota chladiče", series: cooler_temp_series_char_format},
+      {name: CHAR_OUT_TEMP_TEXT, series: out_temp_series_char_format},
+      {name: CHAR_IN_TEMP_TEXT, series: in_temp_series_char_format},
+      {name: CHAR_COOLER_TEMP_TEXT, series: cooler_temp_series_char_format},
     ];
   }
 
-  //Statická funkce, která obnoví tovární nastavení
+  //Statická funkce, která uloží json graf naměřených teplot
+  protected static save_json_temp_char_to_storage(json: CharTempsData): void {
+    //Uložení grafu
+    AppComponent.application_settings.setItem("temp_char", JSON.stringify(json));
+  }
+
+  //Statická funkce, která vrátí uložený json graf naměřených teplot
+  protected static get_json_temp_char_from_storage(): CharTempsData | null{
+    //Získání uložených dat
+    let i: string | null = AppComponent.application_settings.getItem("device");
+    //Pokud existuje uložená hodnota provede se následující
+    if(i) return JSON.parse(i) as CharTempsData;
+    //Vrácení výchozích hodnot pokud uložená data neexistují
+    return null
+  }
+
+  //Statická funkce, která vrátí celý json graf naměřených teplot
+  protected static get_full_json_temp_char(): CharTempsData | null {
+    return this.fridge_data.json_graph_chars_format;
+  }
+
+  //Statická funkce, která vrátí uložé nastavení grafů
+  protected static get_char_settings_from_storage(): CharSettings {
+      //Získání uložených dat
+      let i: string | null = AppComponent.application_settings.getItem("char_settings");
+      //Pokud existuje uložená hodnota provede se následující
+      if(i) return JSON.parse(i) as CharSettings;
+      //Vrácení výchozích hodnot pokud uložená data neexistují
+      return this.fridge_data.char_settings;
+  }
+
+  //Statická funkce, která uloží aktuální nastavení grafů
+  public static save_char_settings(): void {
+    AppComponent.application_settings.setItem("char_settings", JSON.stringify(this.fridge_data.char_settings));
+  }
+
+  //Statická funkce, která vrátí nastavení grafu
+  public static get_char_settings(): CharSettings {
+      return this.fridge_data.char_settings;
+  }
+
+    //Statická funkce, která obnoví tovární nastavení
   public static factory_reset(): void {
     //TODO přidat komunikaci s ESP32
   }
@@ -646,5 +721,52 @@ export class AppComponent {
   //Statická funkce, která vrátí zda došlo v ledničce k vážné poruše
   public static get_is_fridge_on_fatal_error(): boolean {
     return this.fridge_fatal_error;
+  }
+
+  //Statická funkce, která vrátí data naměřených teplot, které se mají zobrazit v grafu
+  public static get_char_view_data(): CharTempsData | null {
+    return this.fridge_data.json_graph_chars_format_view;
+  }
+
+  //Statická funkce, která aktualizuje data naměřených teplot, které se mají zobrazit v grafu
+  public static update_char_view_data(): void {
+    this.fridge_data.json_graph_chars_format_view = this.get_full_json_temp_char()?.filter((value) => {
+      return (
+        (value.name === CHAR_IN_TEMP_TEXT && this.get_char_settings().display_in_temp) ||
+        (value.name === CHAR_OUT_TEMP_TEXT && this.get_char_settings().display_out_temp) ||
+        (value.name === CHAR_COOLER_TEMP_TEXT && this.get_char_settings().display_cooler_temp));
+    }) || null;
+  }
+
+  //Statická funkce, která vymaže data zobrazující se v grafu
+  public static clear_char_view_data(): void {
+    this.fridge_data.json_graph_chars_format_view = null;
+  }
+
+  //Statická funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky vnitřní teploty na grafu
+  public static switch_in_temp_display_char(): void {
+    this.fridge_data.char_settings.display_in_temp = !this.fridge_data.char_settings.display_in_temp;
+    //Spuštění funkce pro uložení nastavení grafu
+    this.save_char_settings();
+    //Spuštění funkce pro aktualizovaní dat, které se mají zobrazit v grafu
+    this.update_char_view_data();
+  }
+
+  //Statická funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky venkovní teploty na grafu
+  public static switch_out_temp_display_char(): void {
+    this.fridge_data.char_settings.display_out_temp = !this.fridge_data.char_settings.display_out_temp;
+    //Spuštění funkce pro uložení nastavení grafu
+    this.save_char_settings();
+    //Spuštění funkce pro aktualizovaní dat, které se mají zobrazit v grafu
+    this.update_char_view_data();
+  }
+
+  //Statická funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky teploty na chladiči v grafu
+  public static switch_cooler_temp_display_char(): void {
+    this.fridge_data.char_settings.display_cooler_temp = !this.fridge_data.char_settings.display_cooler_temp;
+    //Spuštění funkce pro uložení nastavení grafu
+    this.save_char_settings();
+    //Spuštění funkce pro aktualizovaní dat, které se mají zobrazit v grafu
+    this.update_char_view_data();
   }
 }

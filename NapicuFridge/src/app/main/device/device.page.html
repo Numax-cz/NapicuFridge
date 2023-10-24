@@ -74,14 +74,14 @@
       Chlazení
     </div>
 
-      <div class="napicu-switch">
-        <label class="toggle">
-          <input class="toggle-checkbox" type="checkbox" (change)="change_power_mode($event)"
-                 [checked]="is_connected() && !get_is_fridge_on_fatal_error() && get_power_mode() !== get_fridge_off_mode()" [disabled]="!is_connected() || get_is_fridge_on_fatal_error()">
-          <div class="toggle-switch"></div>
+    <div class="napicu-switch">
+      <label class="toggle">
+        <input class="toggle-checkbox" type="checkbox" (change)="change_power_mode($event)"
+               [checked]="is_connected() && !get_is_fridge_on_fatal_error() && get_power_mode() !== get_fridge_off_mode()" [disabled]="!is_connected() || get_is_fridge_on_fatal_error()">
+        <div class="toggle-switch"></div>
 
-        </label>
-      </div>
+      </label>
+    </div>
 
   </div>
 

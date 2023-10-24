@@ -1,10 +1,17 @@
 import {FridgeDisplayState, FridgePowerMode} from "./Enums";
+import {CharTempsData} from "./CharData";
 
 
 export declare interface FridgeJSONData {
   in_temp: number[];
   out_temp: number[];
   cooler_temp: number[];
+}
+
+export declare interface CharSettings {
+    display_in_temp: boolean,
+    display_out_temp: boolean,
+    display_cooler_temp: boolean
 }
 
 export declare interface FridgeData {
@@ -29,6 +36,7 @@ export declare interface FridgeData {
     fridge_out_temp: boolean,
     fridge_cooler_temp: boolean
   }
-  json_graph_string: string,
-  json_graph_chars_format: {name: string, series: {value: number, name: string}[]}[]
+  char_settings: CharSettings,
+  json_graph_chars_format: CharTempsData | null,
+  json_graph_chars_format_view: CharTempsData |null
 }

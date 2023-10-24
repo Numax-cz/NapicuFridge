@@ -3,22 +3,72 @@
   <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
     <div class="pb-2 pt-2  is-align-items-center" >
       <div class="is-size-6">
-        Název
+        <!--Teploty-->
       </div>
-      <div>
-        <ngx-charts-line-chart
-          [autoScale]="true"
-          [results]="preview_graph_data"
-          [xAxis]="true"
-          [yAxis]="true"
-          [tooltipDisabled]="true"
-          [animations]="false"
-        >
-        </ngx-charts-line-chart>
+      <div class="is-relative">
+          <ngx-charts-line-chart
+            [autoScale]="true"
+            [results]="get_char_view_data()"
+            [xAxis]="true"
+            [yAxis]="true"
+            [tooltipDisabled]="true"
+            [animations]="false"
+          ></ngx-charts-line-chart>
+        <ng-container *ngIf="!get_char_view_data()">
+          <div class="is-size-5 has-text-centered" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0.7">Žádná data</div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div>
+<!--    <ng-select [(ngModel)]="selectedCar" class="custom" [searchable]="false" [clearable]="false">-->
+<!--      <ng-option *ngFor="let car of cars; let i = index" [value]="i">{{car.name}}</ng-option>-->
+<!--    </ng-select>-->
+
+
+
+
+    <div class="box info-box">
+      <div class="is-size-5 has-text-weight-bold">Nastavení grafu</div>
+      <div class="is-flex is-flex-direction-column">
+        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box"
+             [ngClass]="{'has-background-info has-text-white': get_char_settings().display_in_temp}"
+             (click)="switch_in_temp_display_char()">
+          <div class="has-text-weight-bold">Vnitřní teplota</div>
+          <ion-icon  name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_in_temp ? {'opacity': '0'} : null" style="font-size: 30px;"></ion-icon>
+        </div>
+        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box"
+             [ngClass]="{'has-background-info has-text-white': get_char_settings().display_out_temp}"
+             (click)="switch_out_temp_display_char()">
+          <div class="has-text-weight-bold">Venkovní teplota</div>
+          <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_out_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
+        </div>
+        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box"
+             [ngClass]="{'has-background-info has-text-white': get_char_settings().display_cooler_temp}"
+             (click)="switch_cooler_temp_display_char()">
+          <div class="has-text-weight-bold">Teplota chladiče</div>
+          <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_cooler_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
+        </div>
       </div>
     </div>
 
+
+<!--    <div class="container">-->
+<!--      <div class="radio">-->
+<!--        <input id="radio-1" name="radio" type="radio" [checked]="selected_item === 1" >-->
+<!--        <label for="radio-1" class="radio-label has-text-weight-medium">Vnitřní teplota</label>-->
+<!--      </div>-->
+
+<!--      <div class="radio">-->
+<!--        <input id="radio-2" name="radio" type="radio" [checked]="selected_item === 2" >-->
+<!--        <label  for="radio-2" class="radio-label has-text-weight-medium">Venkovní teplota</label>-->
+<!--      </div>-->
+
+<!--      <div class="radio">-->
+<!--        <input id="radio-3" name="radio" type="radio" [checked]="selected_item === 3" >-->
+<!--        <label  for="radio-3" class="radio-label has-text-weight-medium">Teplota chladiče</label>-->
+<!--      </div>-->
+
   </div>
-
-
 </section>

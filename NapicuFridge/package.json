@@ -30,6 +30,7 @@
     "@capacitor/status-bar": "5.0.6",
     "@ionic-native/bluetooth-serial": "^5.36.0",
     "@ionic/angular": "^7.4.0",
+    "@ng-select/ng-select": "^11.1.2",
     "@swimlane/ngx-charts": "^20.4.1",
     "bulma": "^0.9.4",
     "cordova-plugin-android-permissions": "^1.1.5",
