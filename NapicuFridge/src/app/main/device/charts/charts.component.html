@@ -18,7 +18,9 @@
           <div class="is-size-5 has-text-centered" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0.7">Žádná data</div>
         </ng-container>
 
-        <div class="is-size-7" style="opacity: 0.7">Naposledy aktualizováno: {{get_char_last_update_basic_format()}}</div>
+        <ng-container *ngIf="get_char_view_data()?.length">
+          <div class="is-size-7" style="opacity: 0.7">Naposledy aktualizováno: {{get_char_last_update_basic_format()}}</div>
+        </ng-container>
       </div>
     </div>
   </div>
