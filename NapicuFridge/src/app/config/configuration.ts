@@ -1,4 +1,5 @@
 import {FridgePowerMode} from "../interface/Enums";
+import {Color, ScaleType} from "@swimlane/ngx-charts";
 
 export namespace Configuration {
 
@@ -31,3 +32,14 @@ export const CHAR_IN_TEMP_TEXT: string = "Vnitřní teplota";
 export const CHAR_COOLER_TEMP_TEXT: string = "Teplota teplota";
 //Definice výchozího formátu času poslední aktualizace grafu
 export const CHAR_LAST_UPDATE_DATE_FORMAT: string = "%dt.%MM.%yyyy %HH:%mm";
+//Definice výchozích barev pro graf
+export const CHAR_COLOR_SCHEMA: Color = {
+    name: "color",
+    selectable: false,
+    group: ScaleType.Linear,
+    domain: [
+        '#3e8ed0',
+        '#48c78e',
+        '#f14668',
+    ]
+};

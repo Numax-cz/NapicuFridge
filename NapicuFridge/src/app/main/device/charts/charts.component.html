@@ -10,6 +10,7 @@
             [autoScale]="true"
             [results]="get_char_view_data()"
             [xAxis]="true"
+            [scheme]="char_color_schema"
             [yAxis]="true"
             [tooltipDisabled]="true"
             [animations]="false"
@@ -43,13 +44,13 @@
           <ion-icon  name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_in_temp ? {'opacity': '0'} : null" style="font-size: 30px;"></ion-icon>
         </div>
         <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box"
-             [ngClass]="{'has-background-info has-text-white': get_char_settings().display_out_temp}"
+             [ngClass]="{'has-background-success has-text-white': get_char_settings().display_out_temp}"
              (click)="switch_out_temp_display_char()">
           <div class="has-text-weight-bold">Venkovní teplota</div>
           <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_out_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
         </div>
         <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box"
-             [ngClass]="{'has-background-info has-text-white': get_char_settings().display_cooler_temp}"
+             [ngClass]="{'has-background-danger has-text-white': get_char_settings().display_cooler_temp}"
              (click)="switch_cooler_temp_display_char()">
           <div class="has-text-weight-bold">Teplota chladiče</div>
           <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_cooler_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>

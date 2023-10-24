@@ -3,6 +3,8 @@ import {AppComponent} from "../../../app.component";
 import {CharTempsData} from "../../../interface/CharData";
 import {CharSettings} from "../../../interface/FridgeData";
 import {ViewWillLeave} from "@ionic/angular";
+import {Color, ScaleType} from "@swimlane/ngx-charts";
+import {CHAR_COLOR_SCHEMA} from "../../../config/configuration";
 
 
 @Component({
@@ -11,6 +13,8 @@ import {ViewWillLeave} from "@ionic/angular";
   styleUrls: ['./charts.component.scss'],
 })
 export class ChartsComponent implements ViewWillLeave{
+  //Definice barev křivek v grafu
+  public readonly char_color_schema: Color = CHAR_COLOR_SCHEMA;
 
   constructor(private ngZone: NgZone) {
     //Spuštění funkce uvnitř zóny Angularu
