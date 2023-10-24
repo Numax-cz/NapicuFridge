@@ -27,14 +27,7 @@
   </div>
 
   <div>
-<!--    <ng-select [(ngModel)]="selectedCar" class="custom" [searchable]="false" [clearable]="false">-->
-<!--      <ng-option *ngFor="let car of cars; let i = index" [value]="i">{{car.name}}</ng-option>-->
-<!--    </ng-select>-->
-
-
-
-
-    <div class="box info-box">
+    <div class="box info-box" [ngStyle]="!get_char_view_data()?.length ? {'opacity': '0.5'} : null">
       <div class="is-size-5 has-text-weight-bold">Nastavení grafu</div>
       <div class="is-flex is-flex-direction-column">
         <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box"
@@ -57,23 +50,5 @@
         </div>
       </div>
     </div>
-
-
-<!--    <div class="container">-->
-<!--      <div class="radio">-->
-<!--        <input id="radio-1" name="radio" type="radio" [checked]="selected_item === 1" >-->
-<!--        <label for="radio-1" class="radio-label has-text-weight-medium">Vnitřní teplota</label>-->
-<!--      </div>-->
-
-<!--      <div class="radio">-->
-<!--        <input id="radio-2" name="radio" type="radio" [checked]="selected_item === 2" >-->
-<!--        <label  for="radio-2" class="radio-label has-text-weight-medium">Venkovní teplota</label>-->
-<!--      </div>-->
-
-<!--      <div class="radio">-->
-<!--        <input id="radio-3" name="radio" type="radio" [checked]="selected_item === 3" >-->
-<!--        <label  for="radio-3" class="radio-label has-text-weight-medium">Teplota chladiče</label>-->
-<!--      </div>-->
-
   </div>
 </section>
