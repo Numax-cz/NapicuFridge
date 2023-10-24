@@ -29,3 +29,5 @@ export const CHAR_OUT_TEMP_TEXT: string = "Venkovní teplota";
 export const CHAR_IN_TEMP_TEXT: string = "Vnitřní teplota";
 //Definice výchozího názvu teploty chladiče
 export const CHAR_COOLER_TEMP_TEXT: string = "Teplota teplota";
+//Definice výchozího formátu času poslední aktualizace grafu
+export const CHAR_LAST_UPDATE_DATE_FORMAT: string = "%dt.%MM.%yyyy %HH:%mm";

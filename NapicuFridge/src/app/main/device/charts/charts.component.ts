@@ -1,8 +1,9 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {CharTempsData} from "../../../interface/CharData";
 import {CharSettings} from "../../../interface/FridgeData";
 import {ViewWillLeave} from "@ionic/angular";
+
 
 @Component({
   selector: 'app-charts',
@@ -55,5 +56,10 @@ export class ChartsComponent implements ViewWillLeave{
   //Funkce, která vrátí nastavení grafu
   public get_char_settings(): CharSettings {
       return AppComponent.get_char_settings();
+  }
+
+  //Funkce která vrátí čas ve kterém se naposledy aktualizoval graf naměřených hodnot v základním formátu
+  public get_char_last_update_basic_format(): string {
+    return AppComponent.get_char_last_update_basic_format();
   }
 }

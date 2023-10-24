@@ -17,12 +17,13 @@ import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
 import {
   CHAR_COOLER_TEMP_TEXT,
-  CHAR_IN_TEMP_TEXT,
+  CHAR_IN_TEMP_TEXT, CHAR_LAST_UPDATE_DATE_FORMAT,
   CHAR_OUT_TEMP_TEXT,
   DEFAULT_IN_FANS_ON_SWITCH,
   DEFAULT_POWER_MODE_ON_SWITCH
 } from "./config/configuration";
 import {CharTempsData} from "./interface/CharData";
+import {NapicuDate} from "napicuformatter";
 
 @Component({
   selector: 'app-root',
@@ -54,6 +55,9 @@ export class AppComponent {
 
   //Statická proměnná pro uložení jednotlivých balíčků naměřených hodnot
   protected static temp_json_graph_string: string | null = null;
+
+  //Statická proměnná pro uložení času ve kterém se naposledy aktualizoval graf naměřených hodnot
+  protected static json_graph_last_update_date: number = 0;
 
   //Statická proměnná pro ukládání informací z ESP32
   public static fridge_data: FridgeData = {
@@ -474,6 +478,10 @@ export class AppComponent {
                               }
                               //Spuštění funkce pro uložení grafu
                               this.save_json_temp_char_to_storage(this.fridge_data.json_graph_chars_format);
+                              //Uložení času pro zjištění času poslední aktualizace grafu
+                              this.json_graph_last_update_date = new Date().getTime();
+                              //Spuštění funkce pro uložení čas poslední aktualizace grafu naměřených hodnot
+                              this.save_json_graph_last_update_date();
                               //Nastaví se proměnná na prázdný string
                               this.temp_json_graph_string = null;
                             } else {
@@ -568,6 +576,21 @@ export class AppComponent {
       if(i) return JSON.parse(i) as CharSettings;
       //Vrácení výchozích hodnot pokud uložená data neexistují
       return this.fridge_data.char_settings;
+  }
+
+  //Statická funkce, která vrátí uložený čas poslední aktualizace grafu naměřených hodnot
+  protected static get_json_graph_last_update_date_from_storage(): number {
+    //Získání uložených dat
+    let i: string | null = AppComponent.application_settings.getItem("char_last_update");
+    //Pokud existuje uložená hodnota provede se následující
+    if(i) return parseInt(i);
+    //Vrácení výchozích hodnot pokud uložená data neexistují
+    return 0;
+  }
+
+  //Statická funkce, která uloží čas poslední aktualizace grafu naměřených hodnot
+  protected static save_json_graph_last_update_date(): void {
+    AppComponent.application_settings.setItem("char_last_update", this.json_graph_last_update_date.toString());
   }
 
   //Statická funkce, která uloží aktuální nastavení grafů
@@ -771,5 +794,15 @@ export class AppComponent {
     this.save_char_settings();
     //Spuštění funkce pro aktualizovaní dat, které se mají zobrazit v grafu
     this.update_char_view_data();
+  }
+
+  //Statická funkce která vrátí čas ve kterém se naposledy aktualizoval graf naměřených hodnot
+  public static get_char_last_update_time(): number {
+    return this.json_graph_last_update_date;
+  }
+
+  //Statická funkce která vrátí čas ve kterém se naposledy aktualizoval graf naměřených hodnot v základním formátu
+  public static get_char_last_update_basic_format(): string { //TODO Optimize
+    return new NapicuDate(this.get_char_last_update_time()).format(CHAR_LAST_UPDATE_DATE_FORMAT);
   }
 }
