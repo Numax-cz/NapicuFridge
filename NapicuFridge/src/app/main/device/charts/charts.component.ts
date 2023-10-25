@@ -46,18 +46,24 @@ export class ChartsComponent implements ViewWillLeave{
 
   //Funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky venkovní teploty na grafu
   public switch_out_temp_display_char(): void {
-    //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => {
-      AppComponent.switch_out_temp_display_char();
-    });
+    //Pokud jsou dostupné data naměřených teplot, provede se následující
+    if(this.get_char_view_data()?.length) {
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        AppComponent.switch_out_temp_display_char();
+      });
+    }
   }
 
   //Funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky teploty na chladiči v grafu
   public switch_cooler_temp_display_char(): void {
-    //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => {
-      AppComponent.switch_cooler_temp_display_char();
-    });
+    //Pokud jsou dostupné data naměřených teplot, provede se následující
+    if(this.get_char_view_data()?.length) {
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        AppComponent.switch_cooler_temp_display_char();
+      });
+    }
   }
 
   //Funkce, která vrátí nastavení grafu
