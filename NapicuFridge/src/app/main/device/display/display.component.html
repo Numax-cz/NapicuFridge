@@ -17,29 +17,37 @@
   </div>
 
   <section @ContentAnimation *ngIf="get_is_display_available() && get_is_connected()" class="mt-5">
-    <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
-      <div class="display">
-        <div>
-          {{get_display_value()}}°C
+
+
+
+    <div class="container">
+      <div class="box info-box" [ngStyle]="!get_is_connected() || get_is_fridge_on_fatal_error() ? {'opacity': '0.5'} : null">
+
+        <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
+          <div class="display">
+            <div>
+              {{get_display_value()}}°C
+            </div>
+          </div>
+        </div>
+
+
+        <div class="is-flex is-flex-direction-column">
+          <div class="mt-2 p-4 info-box"
+               [ngClass]="{'has-background-info has-text-white': selected_item === 1}"
+               (click)="change_input_display_state(1)">
+            <div class="has-text-weight-bold">Zobrazení vnitřní teploty</div>
+          </div>
+          <div class="mt-2 p-4 info-box"
+               [ngClass]="{'has-background-info has-text-white': selected_item === 2}"
+               (click)="change_input_display_state(2)">
+            <div class="has-text-weight-bold">Zobrazení venkovní teploty</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!--Todo checked -->
-    <div class="container">
-      <div class="radio">
-        <input id="radio-1" name="radio" type="radio" [checked]="selected_item === 1" (change)="change_input_display_state(1)">
-        <label for="radio-1" class="radio-label has-text-weight-medium">Zobrazení vnitřní teploty</label>
-      </div>
 
-      <div class="radio">
-        <input id="radio-2" name="radio" type="radio" [checked]="selected_item === 2" (change)="change_input_display_state(2)">
-        <label  for="radio-2" class="radio-label has-text-weight-medium">Zobrazení venkovní teploty</label>
-      </div>
-<!--      <div class="radio">-->
-<!--        <input id="radio-3" name="radio" type="radio">-->
-<!--        <label  for="radio-3" class="radio-label has-text-weight-medium">Zobrazení teploty chladiče</label>-->
-<!--      </div>-->
-    </div>
+
   </section>
 </section>

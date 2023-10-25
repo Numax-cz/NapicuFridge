@@ -73,6 +73,11 @@ export class DisplayComponent {
     });
   }
 
+  //Funkce, která vrátí zda došlo v ledničce k vážné poruše
+  public get_is_fridge_on_fatal_error(): boolean {
+    return AppComponent.get_is_fridge_on_fatal_error();
+  }
+
   //Funkce, která vrátí zda je displej chytré ledničky povolen
   public get_is_display_available(): boolean {
     return AppComponent.get_is_display_available();
