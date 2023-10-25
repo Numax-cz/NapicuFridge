@@ -24,22 +24,18 @@ export const DEFAULT_POWER_MODE_ON_SWITCH: FridgePowerMode = FridgePowerMode.FRI
 export const DEFAULT_IN_FANS_ON_SWITCH: boolean = false;
 
 
-//Definice výchozího názvu venkovní teploty
-export const CHAR_OUT_TEMP_TEXT: string = "Venkovní teplota";
 //Definice výchozího názvu vnitřní teploty
 export const CHAR_IN_TEMP_TEXT: string = "Vnitřní teplota";
+//Definice výchozího názvu venkovní teploty
+export const CHAR_OUT_TEMP_TEXT: string = "Venkovní teplota";
 //Definice výchozího názvu teploty chladiče
 export const CHAR_COOLER_TEMP_TEXT: string = "Teplota teplota";
 //Definice výchozího formátu času poslední aktualizace grafu
 export const CHAR_LAST_UPDATE_DATE_FORMAT: string = "%dt.%MM.%yyyy %HH:%mm";
-//Definice výchozích barev pro graf
-export const CHAR_COLOR_SCHEMA: Color = {
-    name: "color",
-    selectable: false,
-    group: ScaleType.Linear,
-    domain: [
-        '#3e8ed0',
-        '#48c78e',
-        '#f14668',
-    ]
-};
+
+//Definice výchozí barvy křivky znázorňující vnitřní teplotu
+export const CHAR_IN_TEMP_COLOR: string = "#00a8ff";
+//Definice výchozí barvy křivky znázorňující venkovní teplotu
+export const CHAR_OUT_TEMP_COLOR: string = "#4cd137";
+//Definice výchozí barvy křivky znázorňující teplotu chladiče
+export const CHAR_COOLER_TEMP_COLOR: string = "#e84118";
