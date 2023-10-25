@@ -1,7 +1,7 @@
 <div class="box info-box mt-5">
   <div class="is-size-5 has-text-weight-bold"><ng-content></ng-content></div>
   <div class="box info-box mt-2 p-3 info-box"
-       (click)="active_menu = !active_menu" style="position: relative">
+       (click)="set_active_menu(!active_menu)" style="position: relative">
     <div class=" is-flex is-align-items-center is-justify-content-space-between">
       <div class="has-text-weight-bold">{{get_selected_option()}}</div>
       <div [@InfoBoxRotatedStateMinus]="active_menu" class="is-size-5">></div>
@@ -19,5 +19,5 @@
 </div>
 
 <ng-container *ngIf="active_menu">
-  <div class="alert" style="background: transparent !important;" (click)="active_menu = false"></div>
+  <div class="alert" style="background: transparent !important;" (click)="set_active_menu(false)"></div>
 </ng-container>
