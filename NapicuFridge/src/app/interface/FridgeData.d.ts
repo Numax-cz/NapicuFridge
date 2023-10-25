@@ -9,9 +9,10 @@ export declare interface FridgeJSONData {
 }
 
 export declare interface CharSettings {
-    display_in_temp: boolean,
-    display_out_temp: boolean,
-    display_cooler_temp: boolean
+  display_in_temp: boolean,
+  display_out_temp: boolean,
+  display_cooler_temp: boolean,
+  display_resolution: number
 }
 
 export declare interface FridgeData {
@@ -38,5 +39,5 @@ export declare interface FridgeData {
   }
   char_settings: CharSettings,
   json_graph_chars_format: CharTempsData | null,
-  json_graph_chars_format_view: CharTempsData |null
+  json_graph_chars_format_view: CharTempsData |null,
 }

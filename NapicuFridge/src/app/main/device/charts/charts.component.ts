@@ -46,6 +46,14 @@ export class ChartsComponent implements ViewWillLeave{
     AppComponent.clear_char_view_data();
   }
 
+  //Funkce, která nastaví kolit dat naměřených teplot, se mají zobrazit v grafu
+  public set_char_resolution = (index: number): void => {
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() => {
+      AppComponent.set_char_resolution(index);
+    });
+  }
+
   //Funkce, která vrátí data naměřených teplot, které se mají zobrazit v grafu
   public get_char_view_data(): CharTempsData | null {
     return AppComponent.get_char_view_data();

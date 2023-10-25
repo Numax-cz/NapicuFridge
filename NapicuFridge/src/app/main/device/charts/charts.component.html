@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <app-napicu-option-template [options]="char_view_resolution_option">Nastavení rozsahu</app-napicu-option-template>
+  <app-napicu-option-template [options]="char_view_resolution_option" [on_change]="set_char_resolution">Nastavení rozsahu</app-napicu-option-template>
 
   <div class="box info-box mt-5" [ngStyle]="!get_char_view_data()?.length ? {'opacity': '0.5'} : null">
     <div class="is-size-5 has-text-weight-bold">Nastavení grafu</div>

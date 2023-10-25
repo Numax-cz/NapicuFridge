@@ -39,9 +39,9 @@ export const CHAR_IN_TEMP_COLOR: string = "#00a8ff";
 export const CHAR_OUT_TEMP_COLOR: string = "#4cd137";
 //Definice výchozí barvy křivky znázorňující teplotu chladiče
 export const CHAR_COOLER_TEMP_COLOR: string = "#e84118";
-//Definice výchozí udávající maximální počet posledních naměřených hodnot, které se zobrazí
-export const CHAR_MAX_DATA_VIEW_LENGTH: number = 10;
-
+//Definice výchozí možnosti rozlišení grafu podle proměnné CHAR_VIEW_RESOLUTION_OPTIONS
+export const CHAR_DEFAULT_VIEW_RESOLUTION_INDEX: number = 0;
+//Definice výchozích hodnot určující kolik maximálně hodnot se má zobrazovat v grafu
 export const CHAR_VIEW_RESOLUTION_OPTIONS: number[] = [
   5,
   10,
