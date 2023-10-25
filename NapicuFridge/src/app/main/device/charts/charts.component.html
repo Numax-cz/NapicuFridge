@@ -36,13 +36,13 @@
           <div class="has-text-weight-bold">Vnitřní teplota</div>
           <ion-icon  name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_in_temp ? {'opacity': '0'} : null" style="font-size: 30px;"></ion-icon>
         </div>
-        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_in_temp ? get_char_out_temp_color() : '' }"
+        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_out_temp ? get_char_out_temp_color() : '' }"
              [ngClass]="{'has-text-white': get_char_settings().display_out_temp}"
              (click)="switch_out_temp_display_char()">
           <div class="has-text-weight-bold">Venkovní teplota</div>
           <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_out_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
         </div>
-        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_in_temp ? get_char_cooler_temp_color() : '' }"
+        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_cooler_temp ? get_char_cooler_temp_color() : '' }"
              [ngClass]="{'has-text-white': get_char_settings().display_cooler_temp}"
              (click)="switch_cooler_temp_display_char()">
           <div class="has-text-weight-bold">Teplota chladiče</div>
