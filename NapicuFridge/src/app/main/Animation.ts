@@ -77,9 +77,17 @@ export const show_box_animations: any[] = [
   //   ]),
   // ]),
 
+  //TODO VARIABLE
   trigger('InfoBoxRotatedState', [
     state('false', style({ transform: 'rotate(0)' })),
     state('true', style({ transform: 'rotate(90deg)' })),
+    transition('true => false', animate('150ms ease-out')),
+    transition('false => true', animate('150ms ease-in'))
+  ]),
+  //TODO VARIABLE
+  trigger('InfoBoxRotatedStateMinus', [
+    state('false', style({ transform: 'rotate(0)' })),
+    state('true', style({ transform: 'rotate(-90deg)' })),
     transition('true => false', animate('150ms ease-out')),
     transition('false => true', animate('150ms ease-in'))
   ])

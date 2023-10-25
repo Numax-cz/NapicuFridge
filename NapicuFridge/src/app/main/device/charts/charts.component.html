@@ -26,28 +26,28 @@
     </div>
   </div>
 
-  <div>
-    <div class="box info-box" [ngStyle]="!get_char_view_data()?.length ? {'opacity': '0.5'} : null">
-      <div class="is-size-5 has-text-weight-bold">Nastavení grafu</div>
-      <div class="is-flex is-flex-direction-column">
-        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_in_temp ? get_char_in_temp_color() : '' }"
-             [ngClass]="{'has-text-white': get_char_settings().display_in_temp}"
-             (click)="switch_in_temp_display_char()">
-          <div class="has-text-weight-bold">Vnitřní teplota</div>
-          <ion-icon  name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_in_temp ? {'opacity': '0'} : null" style="font-size: 30px;"></ion-icon>
-        </div>
-        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_out_temp ? get_char_out_temp_color() : '' }"
-             [ngClass]="{'has-text-white': get_char_settings().display_out_temp}"
-             (click)="switch_out_temp_display_char()">
-          <div class="has-text-weight-bold">Venkovní teplota</div>
-          <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_out_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
-        </div>
-        <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_cooler_temp ? get_char_cooler_temp_color() : '' }"
-             [ngClass]="{'has-text-white': get_char_settings().display_cooler_temp}"
-             (click)="switch_cooler_temp_display_char()">
-          <div class="has-text-weight-bold">Teplota chladiče</div>
-          <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_cooler_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
-        </div>
+  <app-napicu-option-template [options]="char_view_resolution_option">Nastavení rozsahu</app-napicu-option-template>
+
+  <div class="box info-box mt-5" [ngStyle]="!get_char_view_data()?.length ? {'opacity': '0.5'} : null">
+    <div class="is-size-5 has-text-weight-bold">Nastavení grafu</div>
+    <div class="is-flex is-flex-direction-column">
+      <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_in_temp ? get_char_in_temp_color() : '' }"
+           [ngClass]="{'has-text-white': get_char_settings().display_in_temp}"
+           (click)="switch_in_temp_display_char()">
+        <div class="has-text-weight-bold">Vnitřní teplota</div>
+        <ion-icon  name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_in_temp ? {'opacity': '0'} : null" style="font-size: 30px;"></ion-icon>
+      </div>
+      <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_out_temp ? get_char_out_temp_color() : '' }"
+           [ngClass]="{'has-text-white': get_char_settings().display_out_temp}"
+           (click)="switch_out_temp_display_char()">
+        <div class="has-text-weight-bold">Venkovní teplota</div>
+        <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_out_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
+      </div>
+      <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_cooler_temp ? get_char_cooler_temp_color() : '' }"
+           [ngClass]="{'has-text-white': get_char_settings().display_cooler_temp}"
+           (click)="switch_cooler_temp_display_char()">
+        <div class="has-text-weight-bold">Teplota chladiče</div>
+        <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_cooler_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
       </div>
     </div>
   </div>

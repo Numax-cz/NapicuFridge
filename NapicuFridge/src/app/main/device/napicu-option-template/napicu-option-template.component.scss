@@ -1,0 +1,10 @@
+.box-options{
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%);
+  width: -webkit-fill-available;
+  width: -moz-available;
+  overflow: hidden;
+}

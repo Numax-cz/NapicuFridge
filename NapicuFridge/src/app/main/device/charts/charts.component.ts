@@ -7,7 +7,7 @@ import {Color, ScaleType} from "@swimlane/ngx-charts";
 import {
   CHAR_COOLER_TEMP_COLOR,
   CHAR_IN_TEMP_COLOR,
-  CHAR_OUT_TEMP_COLOR
+  CHAR_OUT_TEMP_COLOR, CHAR_VIEW_RESOLUTION_OPTIONS
 } from "../../../config/configuration";
 
 
@@ -30,6 +30,9 @@ export class ChartsComponent implements ViewWillLeave{
     ]
   };
 
+  public char_view_resolution_option: string[] = CHAR_VIEW_RESOLUTION_OPTIONS.map((value: number) => {
+    return `${value} minut`;
+  });
 
   constructor(private ngZone: NgZone) {
     //Spuštění funkce uvnitř zóny Angularu

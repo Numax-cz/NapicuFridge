@@ -74,6 +74,11 @@
   border-radius: 13px !important;
 }
 
+.is-clickable:active {
+  background-color: #e1e1e1 !important;
+  border-radius: 5px;
+}
+
 .settings-container{
   margin-top: 1rem;
   margin-bottom: 4rem;

@@ -83,7 +83,62 @@ export class AppComponent {
       display_cooler_temp: true
     },
     json_graph_chars_format: null,
-    json_graph_chars_format_view: null
+    json_graph_chars_format_view: [{
+      name: CHAR_IN_TEMP_TEXT,
+      series: [
+        {
+          name: "1m",
+          value: 20
+        },
+        {
+          name: "2m",
+          value: 19
+        },
+        {
+          name: "2m",
+          value: 18
+        },
+        {
+          name: "3m",
+          value: 17
+        },
+        {
+          name: "4m",
+          value: 16
+        },        {
+          name: "5m",
+          value: 17
+        },
+        {
+          name: "6m",
+          value: 20
+        },
+        {
+          name: "7m",
+          value: 19
+        },
+        {
+          name: "8m",
+          value: 18
+        },
+        {
+          name: "9m",
+          value: 17
+        },
+        {
+          name: "10m",
+          value: 16
+        },
+        {
+          name: "11m",
+          value: 17
+        },
+        {
+          name: "12m",
+          value: 17
+        }
+      ]
+    }]
   }
 
   //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
@@ -113,6 +168,9 @@ export class AppComponent {
         AppVersion.getVersionNumber().then((value: string) => AppComponent.application_version_code = value);
         //Zamknutí orientace aplikace (na výšku)
         screen.orientation.lock("portrait");
+
+
+        AppComponent.update_char_view_data();
 
       }
     });
@@ -755,12 +813,12 @@ export class AppComponent {
   public static update_char_view_data(): void {
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
-      this.fridge_data.json_graph_chars_format_view = this.get_full_json_temp_char()?.filter((value) => {
-        return (
-          (value.name === CHAR_IN_TEMP_TEXT && this.get_char_settings().display_in_temp) ||
-          (value.name === CHAR_OUT_TEMP_TEXT && this.get_char_settings().display_out_temp) ||
-          (value.name === CHAR_COOLER_TEMP_TEXT && this.get_char_settings().display_cooler_temp));
-      }) || null;
+      // this.fridge_data.json_graph_chars_format_view = this.get_full_json_temp_char()?.filter((value) => {
+      //   return (
+      //     (value.name === CHAR_IN_TEMP_TEXT && this.get_char_settings().display_in_temp) ||
+      //     (value.name === CHAR_OUT_TEMP_TEXT && this.get_char_settings().display_out_temp) ||
+      //     (value.name === CHAR_COOLER_TEMP_TEXT && this.get_char_settings().display_cooler_temp));
+      // }) || null;
 
 
       /////////////////////////////////////////////////////////////////////

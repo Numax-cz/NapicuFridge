@@ -41,3 +41,10 @@ export const CHAR_OUT_TEMP_COLOR: string = "#4cd137";
 export const CHAR_COOLER_TEMP_COLOR: string = "#e84118";
 //Definice výchozí udávající maximální počet posledních naměřených hodnot, které se zobrazí
 export const CHAR_MAX_DATA_VIEW_LENGTH: number = 10;
+
+export const CHAR_VIEW_RESOLUTION_OPTIONS: number[] = [
+  5,
+  10,
+  30,
+  60
+]

@@ -15,6 +15,7 @@ import {DisplayComponent} from "./display/display.component";
 import {ChartsComponent} from "./charts/charts.component";
 import {LineChartModule} from "@swimlane/ngx-charts";
 import {NgSelectModule} from "@ng-select/ng-select";
+import {NapicuOptionTemplateComponent} from "./napicu-option-template/napicu-option-template.component";
 
 @NgModule({
   imports: [
@@ -27,6 +28,6 @@ import {NgSelectModule} from "@ng-select/ng-select";
     NgSelectModule,
     FormsModule
   ],
-  declarations: [DevicePage, InformationComponent, SettingsComponent, DisplayComponent, ChartsComponent ,NapicuSettingsTemplateComponent]
+  declarations: [DevicePage, InformationComponent, SettingsComponent, DisplayComponent, ChartsComponent ,NapicuSettingsTemplateComponent, NapicuOptionTemplateComponent]
 })
 export class DevicePageModule {}
