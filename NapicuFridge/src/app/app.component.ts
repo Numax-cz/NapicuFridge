@@ -17,7 +17,7 @@ import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
 import {
   CHAR_COOLER_TEMP_TEXT,
-  CHAR_IN_TEMP_TEXT, CHAR_LAST_UPDATE_DATE_FORMAT,
+  CHAR_IN_TEMP_TEXT, CHAR_LAST_UPDATE_DATE_FORMAT, CHAR_MAX_DATA_VIEW_LENGTH,
   CHAR_OUT_TEMP_TEXT,
   DEFAULT_IN_FANS_ON_SWITCH,
   DEFAULT_POWER_MODE_ON_SWITCH
@@ -761,7 +761,25 @@ export class AppComponent {
           (value.name === CHAR_OUT_TEMP_TEXT && this.get_char_settings().display_out_temp) ||
           (value.name === CHAR_COOLER_TEMP_TEXT && this.get_char_settings().display_cooler_temp));
       }) || null;
-    })
+
+
+      /////////////////////////////////////////////////////////////////////
+      //V následujícím bloku kódu omezíme délky naměřených dat na
+      // maximální délku definovanou proměnnou CHAR_MAX_DATA_VIEW_LENGTH
+
+      //Pokud existují data, provede se následující úpravy
+      if (this.fridge_data.json_graph_chars_format_view) {
+        //Provedeme for loop všech dat v proměnné obsahující veškeré data, které se mají zobrazit v grafu
+        for (let i = 0; i < this.fridge_data.json_graph_chars_format_view.length; i++) {
+          //Pokud je délka naměřených dat větší, nebo rovno proměnnou CHAR_MAX_DATA_VIEW_LENGTH
+          if (this.fridge_data.json_graph_chars_format_view[i].series.length >= CHAR_MAX_DATA_VIEW_LENGTH) {
+            // Oříznutí objektu naměřených dat na maximální délku
+            this.fridge_data.json_graph_chars_format_view[i].series = this.fridge_data.json_graph_chars_format_view[i].series.slice(-CHAR_MAX_DATA_VIEW_LENGTH);
+          }
+        }
+      }
+      /////////////////////////////////////////////////////////////////////
+    });
   }
 
   //Statická funkce, která vymaže data zobrazující se v grafu

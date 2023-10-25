@@ -5,6 +5,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {BluetoothLE} from "@awesome-cordova-plugins/bluetooth-le";
 import {Configuration} from "../../../config/configuration";
 import {CharacteristicController} from "../../../CharacteristicController";
+import {CharTempsData} from "../../../interface/CharData";
 
 
 @Component({
