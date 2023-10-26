@@ -26,7 +26,11 @@
     </div>
   </div>
 
-  <app-napicu-option-template [options]="char_view_resolution_option" [selected]="get_char_resolution_index()" [on_change]="set_char_resolution">Nastavení rozsahu</app-napicu-option-template>
+  <app-napicu-option-template
+    [options]="char_view_resolution_option"
+    [selected]="get_char_resolution_index()"
+    [disabled]="!get_char_view_data()?.length"
+    [on_change]="set_char_resolution">Nastavení rozsahu</app-napicu-option-template>
 
   <div class="box info-box mt-5" [ngStyle]="!get_char_view_data()?.length ? {'opacity': '0.5'} : null">
     <div class="is-size-5 has-text-weight-bold">Nastavení grafu</div>
@@ -49,6 +53,13 @@
         <div class="has-text-weight-bold">Teplota chladiče</div>
         <ion-icon name="checkmark-circle-outline" [ngStyle]="!get_char_settings().display_cooler_temp ? {'opacity': '0'} : null" style="font-size: 30px"></ion-icon>
       </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="mt-2 p-3 info-box has-background-grey-light has-text-white has-text-centered"
+         (click)="switch_out_temp_display_char()">
+      <div class="has-text-weight-bold">Zkopírovat JSON data</div>
     </div>
   </div>
 </section>

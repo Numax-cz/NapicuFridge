@@ -16,10 +16,13 @@ export class NapicuOptionTemplateComponent {
   @Input() selected: number = 0;
   //Proměná pro uložení zpětného volání
   @Input() on_change: ((index: number) => void) | null = null;
+  //Proměnná, která určuje zda je povoleno ovládání
+  @Input() disabled: boolean = false;
 
   constructor(private ngZone: NgZone) { }
 
   public set_active_menu(value: boolean): void {
+    if(this.disabled) return;
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       this.active_menu = value;

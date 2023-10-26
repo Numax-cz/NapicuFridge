@@ -1,4 +1,4 @@
-<div class="box info-box mt-5">
+<div class="box info-box mt-5" [ngStyle]="disabled ? {'opacity': '0.5'} : null">
   <div class="is-size-5 has-text-weight-bold"><ng-content></ng-content></div>
   <div class="box info-box mt-2 p-3 info-box"
        (click)="set_active_menu(!active_menu)" style="position: relative">
