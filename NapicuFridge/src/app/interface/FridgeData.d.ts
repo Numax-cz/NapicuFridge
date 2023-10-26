@@ -37,7 +37,9 @@ export declare interface FridgeData {
     fridge_out_temp: boolean,
     fridge_cooler_temp: boolean
   }
+
   char_settings: CharSettings,
   json_graph_chars_format: CharTempsData | null,
   json_graph_chars_format_view: CharTempsData |null,
+  json_graph_resolution_view: string[] | null
 }

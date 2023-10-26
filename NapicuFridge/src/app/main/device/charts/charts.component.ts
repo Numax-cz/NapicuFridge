@@ -1,4 +1,4 @@
-import {Component, NgZone} from '@angular/core';
+import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {CharTempsData} from "../../../interface/CharData";
 import {CharSettings} from "../../../interface/FridgeData";
@@ -9,6 +9,7 @@ import {
   CHAR_IN_TEMP_COLOR,
   CHAR_OUT_TEMP_COLOR, CHAR_VIEW_RESOLUTION_OPTIONS
 } from "../../../config/configuration";
+import {Clipboard} from "@capacitor/clipboard";
 
 
 @Component({
@@ -30,9 +31,8 @@ export class ChartsComponent implements ViewWillLeave{
     ]
   };
 
-  public char_view_resolution_option: string[] = CHAR_VIEW_RESOLUTION_OPTIONS.map((value: number) => {
-    return `${value} minut`;
-  });
+
+
 
   constructor(private ngZone: NgZone) {
     //Spuštění funkce uvnitř zóny Angularu
@@ -45,7 +45,7 @@ export class ChartsComponent implements ViewWillLeave{
   public ionViewWillLeave() {
     AppComponent.clear_char_view_data();
   }
-
+  //Funkce, která vrátí index jaká hodnota je vybraná v CHAR_VIEW_RESOLUTION_OPTIONS
   public get_char_resolution_index(): number {
     return AppComponent.get_char_resolution_index();
   }
@@ -85,13 +85,24 @@ export class ChartsComponent implements ViewWillLeave{
   //Funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky teploty na chladiči v grafu
   public switch_cooler_temp_display_char(): void {
     //Pokud jsou dostupné data naměřených teplot, provede se následující
-    if(this.get_char_view_data()?.length) {
+    if (this.get_char_view_data()?.length) {
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
         AppComponent.switch_cooler_temp_display_char();
       });
     }
   }
+
+  //Funkce, která vrátí dostupná rozlišení grafu podle velikosti naměřených hodnot
+  public get_char_available_resolutions(): string[] {
+    return AppComponent.get_char_available_resolutions();
+  }
+
+  //Funkce, která zkopíruje všechna naměřená data do schránky zařízení
+  public copy_json_data_to_clipboard(): void {
+    AppComponent.copy_json_data_to_clipboard();
+  }
+
 
   //Funkce, která vrátí nastavení grafu
   public get_char_settings(): CharSettings {

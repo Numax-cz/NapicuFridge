@@ -25,6 +25,7 @@ import {
 import {CharTempsData} from "./interface/CharData";
 import {NapicuDate} from "napicuformatter";
 import {CopyArray} from "./main/CopyArray";
+import { Clipboard } from '@capacitor/clipboard';
 
 @Component({
   selector: 'app-root',
@@ -85,7 +86,8 @@ export class AppComponent {
       display_resolution: CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
     },
     json_graph_chars_format: environment.production ? null : DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
-    json_graph_chars_format_view: null
+    json_graph_chars_format_view: null,
+    json_graph_resolution_view: []
   }
 
   //Statická proměnná, která určuje zda došlo v ledničce k vážné poruše
@@ -735,20 +737,56 @@ export class AppComponent {
       //Spuštění funkce uvnitř zóny Angularu
 
       //Pokud existují data, provede se následující úpravy
-      if (this.fridge_data.json_graph_chars_format_view) {
-        //Provedeme for loop všech dat v proměnné obsahující veškeré data, které se mají zobrazit v grafu
-        for (let i = 0; i < this.fridge_data.json_graph_chars_format_view.length; i++) {
-          //Pokud je délka naměřených dat větší, nebo rovno hodnotě v objektu CHAR_VIEW_RESOLUTION_OPTIONS na indexu CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
-          if (this.fridge_data.json_graph_chars_format_view[i].series.length >= this.get_char_resolution()) {
-            // Oříznutí objektu naměřených dat na maximální délku
-            this.fridge_data.json_graph_chars_format_view[i].series = this.fridge_data.json_graph_chars_format_view[i].series.slice(-this.get_char_resolution());
-          }
-        }
-      }
-      /////////////////////////////////////////////////////////////////////
+      // if (this.fridge_data.json_graph_chars_format_view) {
+      //   //Provedeme for loop všech dat v proměnné obsahující veškeré data, které se mají zobrazit v grafu
+      //   for (let i = 0; i < this.fridge_data.json_graph_chars_format_view.length; i++) {
+      //     //Pokud je délka naměřených dat větší, nebo rovno hodnotě v objektu CHAR_VIEW_RESOLUTION_OPTIONS na indexu CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
+      //     if (this.fridge_data.json_graph_chars_format_view[i].series.length >= this.get_char_resolution()) {
+      //       // Oříznutí objektu naměřených dat na maximální délku
+      //       this.fridge_data.json_graph_chars_format_view[i].series = this.fridge_data.json_graph_chars_format_view[i].series.slice(-this.get_char_resolution());
+      //     }
+      //   }
+      // }
+      // /////////////////////////////////////////////////////////////////////
+
+      //Spuštění funkce pro aktualizaci dostupných rozlišení grafu
+      this.update_char_available_resolutions();
     });
   }
 
+  //Statická funkce, která aktualizuje dostupná rozlišení grafu podle velikosti naměřených hodnot
+  protected static update_char_available_resolutions(): void {
+    //Uložení dostupných rozlišení pro graf
+    let available_resolutions: number[] = [...CHAR_VIEW_RESOLUTION_OPTIONS];
+    //Uložení celého grafu do konstantní proměnné
+    const data = this.fridge_data.json_graph_chars_format;
+    //Pokud existují data, provede se následující
+    if(data) {
+      //Filtrování pro dostupná rozlišení
+      available_resolutions = available_resolutions.filter((value: number, index: number) => {
+        return value < data[0].series.length || !index;
+      });
+    }
+    //Upravíme a vratíme objekt ve travu, který potřebujeme `${hodnota v minutách} minuta`
+    this.fridge_data.json_graph_resolution_view = available_resolutions.map((value: number) => {
+      return `${value} minut`;
+    });
+  }
+
+  //Statická funkce, která vrátí dostupná rozlišení grafu
+  public static get_char_available_resolutions(): string[] {
+    return this.fridge_data.json_graph_resolution_view || [];
+  }
+
+  //Statická funkce, která zkopíruje všechna naměřená data do schránky zařízení
+  public static copy_json_data_to_clipboard(): void {
+    const data: CharTempsData | null = this.get_full_json_temp_char();
+    if(data) {
+      Clipboard.write({
+        string: data.toString()
+      });
+    }
+  }
 
   //Statická funkce, která nastaví kolit dat naměřených teplot, se mají zobrazit v grafu
   public static set_char_resolution(index: number): void {
@@ -809,6 +847,7 @@ export class AppComponent {
   //Statická funkce, která vymaže data zobrazující se v grafu
   public static clear_char_view_data(): void {
     this.fridge_data.json_graph_chars_format_view = null;
+    this.fridge_data.json_graph_resolution_view = null;
   }
 
   //Statická funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky vnitřní teploty na grafu
