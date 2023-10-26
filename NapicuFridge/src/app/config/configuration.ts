@@ -1,5 +1,6 @@
 import {FridgePowerMode} from "../interface/Enums";
 import {Color, ScaleType} from "@swimlane/ngx-charts";
+import {CharTempsData} from "../interface/CharData";
 
 export namespace Configuration {
 
@@ -48,3 +49,74 @@ export const CHAR_VIEW_RESOLUTION_OPTIONS: number[] = [
   30,
   60
 ]
+
+//Definice proměnné výchozích dat pro graf, když je aplikace spuštěna ve vývojovém režimu
+export const DEFAULT_CHAR_VIEW_DATA_FOR_DEV: CharTempsData = [
+  {name: CHAR_IN_TEMP_TEXT, series: [
+      { name: "1m", value: 22.4 },
+      { name: "2m", value: 23.1 },
+      { name: "3m", value: 21.8 },
+      { name: "4m", value: 22.9 },
+      { name: "5m", value: 21.2 },
+      { name: "6m", value: 23.5 },
+      { name: "7m", value: 24.0 },
+      { name: "8m", value: 20.7 },
+      { name: "9m", value: 22.2 },
+      { name: "10m", value: 21.9 },
+      { name: "11m", value: 24.3 },
+      { name: "12m", value: 20.4 },
+      { name: "13m", value: 23.8 },
+      { name: "14m", value: 22.7 },
+      { name: "15m", value: 21.5 },
+      { name: "16m", value: 23.2 },
+      { name: "17m", value: 22.1 },
+      { name: "18m", value: 21.3 },
+      { name: "19m", value: 24.5 },
+      { name: "20m", value: 20.9 }
+    ]},
+  {name: CHAR_OUT_TEMP_TEXT, series: [
+      { name: "1m", value: 22.6 },
+      { name: "2m", value: 21.0 },
+      { name: "3m", value: 23.9 },
+      { name: "4m", value: 21.7 },
+      { name: "5m", value: 22.3 },
+      { name: "6m", value: 24.1 },
+      { name: "7m", value: 23.6 },
+      { name: "8m", value: 21.4 },
+      { name: "9m", value: 20.5 },
+      { name: "10m", value: 23.4 },
+      { name: "11m", value: 22.8 },
+      { name: "12m", value: 21.6 },
+      { name: "13m", value: 22.0 },
+      { name: "14m", value: 24.2 },
+      { name: "15m", value: 23.3 },
+      { name: "16m", value: 20.8 },
+      { name: "17m", value: 22.5 },
+      { name: "18m", value: 21.2 },
+      { name: "19m", value: 23.7 },
+      { name: "20m", value: 24.4 }
+    ]},
+  {name: CHAR_COOLER_TEMP_TEXT,
+    series: [
+
+      { name: "1m", value: 22.6 },
+      { name: "2m", value: 21.0 },
+      { name: "3m", value: 23.9 },
+      { name: "4m", value: 21.7 },
+      { name: "5m", value: 22.3 },
+      { name: "6m", value: 24.1 },
+      { name: "7m", value: 23.6 },
+      { name: "8m", value: 21.4 },
+      { name: "9m", value: 20.5 },
+      { name: "10m", value: 23.4 },
+      { name: "11m", value: 22.8 },
+      { name: "12m", value: 21.6 },
+      { name: "13m", value: 22.0 },
+      { name: "14m", value: 24.2 },
+      { name: "15m", value: 23.3 },
+      { name: "16m", value: 20.8 },
+      { name: "17m", value: 22.5 },
+      { name: "18m", value: 21.2 },
+      { name: "19m", value: 23.7 },
+      { name: "20m", value: 24.4 }
+    ]}]

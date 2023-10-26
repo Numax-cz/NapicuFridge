@@ -20,7 +20,7 @@ import {
   CHAR_IN_TEMP_TEXT, CHAR_LAST_UPDATE_DATE_FORMAT, CHAR_DEFAULT_VIEW_RESOLUTION_INDEX,
   CHAR_OUT_TEMP_TEXT,
   DEFAULT_IN_FANS_ON_SWITCH,
-  DEFAULT_POWER_MODE_ON_SWITCH, CHAR_VIEW_RESOLUTION_OPTIONS
+  DEFAULT_POWER_MODE_ON_SWITCH, CHAR_VIEW_RESOLUTION_OPTIONS, CHAR_COOLER_TEMP_COLOR, DEFAULT_CHAR_VIEW_DATA_FOR_DEV
 } from "./config/configuration";
 import {CharTempsData} from "./interface/CharData";
 import {NapicuDate} from "napicuformatter";
@@ -46,7 +46,7 @@ export class AppComponent {
   public static application_version_code: string | null = null;
 
   //Statická proměnná pro uložení základní informací připojeného zařízení (Pokud je aplikace spuštěna v testovacím režimu, nastaví se hodnoty pro vývoj aplikace)
-  public static connected_device: DeviceInfo | null = environment.production? null : {name: "TestDevice", address: "TestAddress", status: "connected"};
+  public static connected_device: DeviceInfo | null = environment.production ? null : {name: "TestDevice", address: "TestAddress", status: "connected"};
 
   //Statická proměnná pro uložení NgZone (jedná se o službu pro provádění funkcí uvnitř zóny Anguláru)
   private static ngZone: NgZone;
@@ -84,7 +84,7 @@ export class AppComponent {
       display_cooler_temp: true,
       display_resolution: CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
     },
-    json_graph_chars_format: null,
+    json_graph_chars_format: environment.production ? null : DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
     json_graph_chars_format_view: null
   }
 
@@ -115,6 +115,8 @@ export class AppComponent {
         AppVersion.getVersionNumber().then((value: string) => AppComponent.application_version_code = value);
         //Zamknutí orientace aplikace (na výšku)
         screen.orientation.lock("portrait");
+
+        if(!environment.production) AppComponent.update_char_view_data();
       }
     });
   }
