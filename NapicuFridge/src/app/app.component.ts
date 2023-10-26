@@ -118,7 +118,7 @@ export class AppComponent {
         AppVersion.getVersionNumber().then((value: string) => AppComponent.application_version_code = value);
         //Zamknutí orientace aplikace (na výšku)
         screen.orientation.lock("portrait");
-
+        //Pokud není aplikace ve vývojářském režimu provede se následující
         if(!environment.production) AppComponent.update_char_view_data();
       }
     });
