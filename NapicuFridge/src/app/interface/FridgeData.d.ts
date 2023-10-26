@@ -1,5 +1,6 @@
 import {FridgeDisplayState, FridgePowerMode} from "./Enums";
 import {CharTempsData} from "./CharData";
+import {NapicuOptionsData} from "./NapicuOption";
 
 
 export declare interface FridgeJSONData {
@@ -41,5 +42,5 @@ export declare interface FridgeData {
   char_settings: CharSettings,
   json_graph_chars_format: CharTempsData | null,
   json_graph_chars_format_view: CharTempsData |null,
-  json_graph_resolution_view: string[] | null
+  json_graph_resolution_view: NapicuOptionsData[] | null
 }

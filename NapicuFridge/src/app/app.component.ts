@@ -26,6 +26,7 @@ import {CharTempsData} from "./interface/CharData";
 import {NapicuDate} from "napicuformatter";
 import {CopyArray} from "./main/CopyArray";
 import { Clipboard } from '@capacitor/clipboard';
+import {NapicuOptionsData} from "./interface/NapicuOption";
 
 @Component({
   selector: 'app-root',
@@ -736,17 +737,17 @@ export class AppComponent {
       // maximální délku definovanou proměnnou CHAR_MAX_DATA_VIEW_LENGTH
       //Spuštění funkce uvnitř zóny Angularu
 
-      //Pokud existují data, provede se následující úpravy
-      // if (this.fridge_data.json_graph_chars_format_view) {
-      //   //Provedeme for loop všech dat v proměnné obsahující veškeré data, které se mají zobrazit v grafu
-      //   for (let i = 0; i < this.fridge_data.json_graph_chars_format_view.length; i++) {
-      //     //Pokud je délka naměřených dat větší, nebo rovno hodnotě v objektu CHAR_VIEW_RESOLUTION_OPTIONS na indexu CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
-      //     if (this.fridge_data.json_graph_chars_format_view[i].series.length >= this.get_char_resolution()) {
-      //       // Oříznutí objektu naměřených dat na maximální délku
-      //       this.fridge_data.json_graph_chars_format_view[i].series = this.fridge_data.json_graph_chars_format_view[i].series.slice(-this.get_char_resolution());
-      //     }
-      //   }
-      // }
+     // Pokud existují data, provede se následující úpravy
+      if (this.fridge_data.json_graph_chars_format_view) {
+        //Provedeme for loop všech dat v proměnné obsahující veškeré data, které se mají zobrazit v grafu
+        for (let i = 0; i < this.fridge_data.json_graph_chars_format_view.length; i++) {
+          //Pokud je délka naměřených dat větší, nebo rovno hodnotě v objektu CHAR_VIEW_RESOLUTION_OPTIONS na indexu CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
+          if (this.fridge_data.json_graph_chars_format_view[i].series.length >= this.get_char_resolution()) {
+            // Oříznutí objektu naměřených dat na maximální délku
+            this.fridge_data.json_graph_chars_format_view[i].series = this.fridge_data.json_graph_chars_format_view[i].series.slice(-this.get_char_resolution());
+          }
+        }
+      }
       // /////////////////////////////////////////////////////////////////////
 
       //Spuštění funkce pro aktualizaci dostupných rozlišení grafu
@@ -762,19 +763,20 @@ export class AppComponent {
     const data = this.fridge_data.json_graph_chars_format;
     //Pokud existují data, provede se následující
     if(data) {
-      //Filtrování pro dostupná rozlišení
-      available_resolutions = available_resolutions.filter((value: number, index: number) => {
-        return value < data[0].series.length || !index;
+      // //Filtrování pro dostupná rozlišení
+      // available_resolutions = available_resolutions.filter((value: number, index: number) => {
+      //   return value < data[0].series.length || !index;
+      // });
+
+      //Upravíme a vratíme objekt ve travu, který potřebujeme `${hodnota v minutách} minuta`
+      this.fridge_data.json_graph_resolution_view = available_resolutions.map((value: number, index: number) => {
+        return {value: `${value} minut`, enabled: (value < data[0].series.length || !index)};
       });
     }
-    //Upravíme a vratíme objekt ve travu, který potřebujeme `${hodnota v minutách} minuta`
-    this.fridge_data.json_graph_resolution_view = available_resolutions.map((value: number) => {
-      return `${value} minut`;
-    });
   }
 
   //Statická funkce, která vrátí dostupná rozlišení grafu
-  public static get_char_available_resolutions(): string[] {
+  public static get_char_available_resolutions(): NapicuOptionsData[] {
     return this.fridge_data.json_graph_resolution_view || [];
   }
 

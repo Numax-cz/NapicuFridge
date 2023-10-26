@@ -92,3 +92,17 @@ export const show_box_animations: any[] = [
     transition('false => true', animate('150ms ease-in'))
   ])
 ]
+
+export const arrows_expand_animations: any[] = [
+
+
+
+  trigger('ArrowExpand', [
+    state('void', style({ transform: 'rotate(0)'})),
+    transition(':enter', [
+      animate(150, style({ transform: 'rotate(90deg)'}))
+    ]),
+
+  ]),
+
+]

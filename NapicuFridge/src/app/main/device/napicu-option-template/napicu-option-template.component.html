@@ -6,12 +6,13 @@
       <div class="has-text-weight-bold">{{get_selected_option()}}</div>
       <div [@InfoBoxRotatedStateMinus]="active_menu" class="is-size-5">></div>
     </div>
-
     <ng-container *ngIf="active_menu">
       <div class="box info-box box-options">
-          <div *ngFor="let i of options; let index = index" class="has-text-weight-bold is-clickable p-3 info-box"
-               [ngClass]="{'has-background-info has-text-white': selected === index}" (click)="selected = index; on_change?.(index)">
-            {{i}}
+          <div *ngFor="let i of options; let index = index" class="has-text-weight-bold p-3 info-box"
+               [ngClass]="{'has-background-info has-text-white': selected === index, 'is-clickable': i.enabled}"
+               [ngStyle]="!i.enabled ? {'opacity': '0.5'} : null"
+               (click)="on_click_option(i, index, $event)">
+            {{i.value}}
           </div>
       </div>
     </ng-container>

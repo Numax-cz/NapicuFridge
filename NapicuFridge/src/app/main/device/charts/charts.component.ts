@@ -10,12 +10,15 @@ import {
   CHAR_OUT_TEMP_COLOR, CHAR_VIEW_RESOLUTION_OPTIONS
 } from "../../../config/configuration";
 import {Clipboard} from "@capacitor/clipboard";
+import {arrows_expand_animations} from "../../Animation";
+import {NapicuOptionsData} from "../../../interface/NapicuOption";
 
 
 @Component({
   selector: 'app-charts',
   templateUrl: './charts.component.html',
   styleUrls: ['./charts.component.scss'],
+  animations: [arrows_expand_animations]
 })
 export class ChartsComponent implements ViewWillLeave{
 
@@ -30,6 +33,8 @@ export class ChartsComponent implements ViewWillLeave{
       CHAR_COOLER_TEMP_COLOR,
     ]
   };
+
+  public expanded = false;
 
 
 
@@ -94,7 +99,7 @@ export class ChartsComponent implements ViewWillLeave{
   }
 
   //Funkce, která vrátí dostupná rozlišení grafu podle velikosti naměřených hodnot
-  public get_char_available_resolutions(): string[] {
+  public get_char_available_resolutions(): NapicuOptionsData[] {
     return AppComponent.get_char_available_resolutions();
   }
 

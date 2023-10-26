@@ -2,13 +2,14 @@
   <app-napicu-settings-template [redirect]="'/main/info'">Teploty</app-napicu-settings-template>
   <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
     <div class="pb-2 pt-2  is-align-items-center" >
-      <div class="is-size-6">
+      <div class="is-size-6 has-text-right">
         <!--Teploty-->
+
       </div>
-      <div class="is-relative" style="max-width: 100%; overflow-x: auto; max-height: 500px" #container>
+      <div class="is-relative mb-3 mt-3" style="max-width: 100%; overflow-x: auto; max-height: 500px" #container>
           <ngx-charts-line-chart
             [autoScale]="true"
-            [view]="[2000, container.offsetHeight]"
+            [view]="[((get_char_view_data()?.[0]?.series?.length || 0)  > 15) && expanded ? ((get_char_view_data()?.[0]?.series?.length || 0) / (container.offsetWidth / 80)) * (container.offsetWidth)  : container.offsetWidth , container.offsetHeight]"
             [results]="get_char_view_data()"
             [xAxis]="true"
             [scheme]="char_color_schema"
@@ -21,10 +22,21 @@
         </ng-container>
 
       </div>
-        <ng-container *ngIf="get_char_view_data()?.length">
+
+      <ng-container *ngIf="get_char_view_data()?.length">
+        <div class="is-flex is-align-items-center is-justify-content-space-between">
           <div class="is-size-7" style="opacity: 0.7">Naposledy aktualizováno: {{get_char_last_update_basic_format()}}</div>
-        </ng-container>
+
+          <ng-container *ngIf="((get_char_view_data()?.[0]?.series?.length || 0)  > 15)">
+            <ion-icon @ArrowExpand *ngIf="!expanded" name="resize-outline" style="font-size: 25px" (click)="expanded = true"></ion-icon>
+            <ion-icon @ArrowExpand *ngIf="expanded" name="chevron-collapse-outline" style="font-size: 25px; rotate: 45deg" (click)="expanded = false"></ion-icon>
+          </ng-container>
+
+        </div>
+      </ng-container>
     </div>
+
+
   </div>
 
   <app-napicu-option-template
