@@ -47,7 +47,7 @@ export const CHAR_VIEW_RESOLUTION_OPTIONS: number[] = [
   5,
   10,
   30,
-  60
+  60,
 ]
 
 //Definice proměnné výchozích dat pro graf, když je aplikace spuštěna ve vývojovém režimu
