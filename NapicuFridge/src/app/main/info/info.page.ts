@@ -1,6 +1,7 @@
 import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../app.component";
 import {alert_animations} from "../Animation";
+import {CharTempsData} from "../../interface/CharData";
 
 @Component({
   selector: 'app-info',
@@ -12,7 +13,7 @@ export class InfoPage {
   //Proměnná, která určuje zda je informační alert zobrazen
   public is_info_icon_alert_activated: boolean = false;
 
-  public preview_graph_data = [
+  protected readonly default_preview_graph_data = [
     {
       "name": "Vnitřní teplota",
       "series": [
@@ -38,6 +39,11 @@ export class InfoPage {
       //Nastavení proměnné na log1
       this.is_info_icon_alert_activated = true;
     });
+  }
+
+  public get_preview_char_data(): CharTempsData {
+    const data: CharTempsData | null = AppComponent.get_full_json_temp_char();
+    return [...(data?.[0] ? [data[0]] : this.default_preview_graph_data)];
   }
 
   //Funkce, která zavře informační alert
