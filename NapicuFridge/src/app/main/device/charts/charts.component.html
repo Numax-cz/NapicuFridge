@@ -44,7 +44,7 @@
     [disabled]="!get_char_view_data()?.length"
     [on_change]="set_char_resolution">Nastavení rozsahu</app-napicu-option-template>
 
-  <div class="box info-box mt-5" [ngStyle]="!get_char_view_data()?.length ? {'opacity': '0.5'} : null">
+  <div class="box info-box mt-5" [ngStyle]="!get_full_json_temp_char()?.length ? {'opacity': '0.5'} : null">
     <div class="is-size-5 has-text-weight-bold">Nastavení grafu</div>
     <div class="is-flex is-flex-direction-column">
       <div class="is-flex is-align-items-center is-justify-content-space-between mt-2 p-3 info-box" [ngStyle]="{ 'background-color': get_char_settings().display_in_temp ? get_char_in_temp_color() : '' }"

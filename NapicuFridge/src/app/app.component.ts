@@ -570,7 +570,7 @@ export class AppComponent {
   }
 
   //Statická funkce, která vrátí celý json graf naměřených teplot
-  protected static get_full_json_temp_char(): CharTempsData | null {
+  public static get_full_json_temp_char(): CharTempsData | null {
     return this.fridge_data.json_graph_chars_format;
   }
 
@@ -742,7 +742,7 @@ export class AppComponent {
         //Provedeme for loop všech dat v proměnné obsahující veškeré data, které se mají zobrazit v grafu
         for (let i = 0; i < this.fridge_data.json_graph_chars_format_view.length; i++) {
           //Pokud je délka naměřených dat větší, nebo rovno hodnotě v objektu CHAR_VIEW_RESOLUTION_OPTIONS na indexu CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
-          if (this.fridge_data.json_graph_chars_format_view[i].series.length > this.get_char_resolution()) {
+          if (this.fridge_data.json_graph_chars_format_view[i].series.length  > this.get_char_resolution()) {
             // Oříznutí objektu naměřených dat na maximální délku
             this.fridge_data.json_graph_chars_format_view[i].series = this.fridge_data.json_graph_chars_format_view[i].series.slice(-this.get_char_resolution() - 1);
           }
@@ -771,7 +771,7 @@ export class AppComponent {
 
       //Upravíme a vratíme objekt ve travu, který potřebujeme `${hodnota v minutách} minuta`
       this.fridge_data.json_graph_resolution_view = available_resolutions.map((value: number, index: number) => {
-        return {value: `${value} minut`, enabled: (value < data[0].series.length || !index)};
+        return {value: `${value} minut`, enabled: (value < data[0].series.length + 1 || !index)};
       });
     }
   }

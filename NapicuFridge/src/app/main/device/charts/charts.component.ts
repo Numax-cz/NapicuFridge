@@ -7,9 +7,8 @@ import {Color, ScaleType} from "@swimlane/ngx-charts";
 import {
   CHAR_COOLER_TEMP_COLOR,
   CHAR_IN_TEMP_COLOR,
-  CHAR_OUT_TEMP_COLOR, CHAR_VIEW_RESOLUTION_OPTIONS
+  CHAR_OUT_TEMP_COLOR
 } from "../../../config/configuration";
-import {Clipboard} from "@capacitor/clipboard";
 import {arrows_expand_animations} from "../../Animation";
 import {NapicuOptionsData} from "../../../interface/NapicuOption";
 
@@ -64,11 +63,15 @@ export class ChartsComponent implements ViewWillLeave{
   public get_char_view_data(): CharTempsData | null {
     return AppComponent.get_char_view_data();
   }
+  //Funkce, která vrátí celý json graf naměřených teplot
+  public get_full_json_temp_char(): CharTempsData | null {
+    return AppComponent.get_full_json_temp_char()
+  }
 
   //Funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky vnitřní teploty na grafu
   public switch_in_temp_display_char(): void {
     //Pokud jsou dostupné data naměřených teplot, provede se následující
-    if(this.get_char_view_data()?.length) {
+    if(this.get_full_json_temp_char()?.length) {
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
         AppComponent.switch_in_temp_display_char();
@@ -79,7 +82,7 @@ export class ChartsComponent implements ViewWillLeave{
   //Funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky venkovní teploty na grafu
   public switch_out_temp_display_char(): void {
     //Pokud jsou dostupné data naměřených teplot, provede se následující
-    if(this.get_char_view_data()?.length) {
+    if(this.get_full_json_temp_char()?.length) {
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
         AppComponent.switch_out_temp_display_char();
@@ -90,7 +93,7 @@ export class ChartsComponent implements ViewWillLeave{
   //Funkce, která nastaví obrácenou bool hodnotu proměnné určující zobrazení křivky teploty na chladiči v grafu
   public switch_cooler_temp_display_char(): void {
     //Pokud jsou dostupné data naměřených teplot, provede se následující
-    if (this.get_char_view_data()?.length) {
+    if (this.get_full_json_temp_char()?.length) {
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
         AppComponent.switch_cooler_temp_display_char();
