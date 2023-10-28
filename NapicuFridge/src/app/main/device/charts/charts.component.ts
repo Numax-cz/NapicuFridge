@@ -2,7 +2,7 @@ import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {CharTempsData} from "../../../interface/CharData";
 import {CharSettings} from "../../../interface/FridgeData";
-import {ViewWillLeave} from "@ionic/angular";
+import {ViewDidEnter, ViewWillEnter, ViewWillLeave} from "@ionic/angular";
 import {Color, ScaleType} from "@swimlane/ngx-charts";
 import {
   CHAR_COOLER_TEMP_COLOR,

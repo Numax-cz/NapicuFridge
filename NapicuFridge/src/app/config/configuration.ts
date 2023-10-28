@@ -115,7 +115,7 @@ export const DEFAULT_CHAR_VIEW_DATA_FOR_DEV: CharTempsData = [
         { name: "60m", value: 20.9 },
     ]},
   {name: CHAR_OUT_TEMP_TEXT, series: [
-        { name: "1m", value: 22.6 },
+        { name: "1m", value: 25.6 },
         { name: "2m", value: 21.0 },
         { name: "3m", value: 23.9 },
         { name: "4m", value: 21.7 },
@@ -178,7 +178,7 @@ export const DEFAULT_CHAR_VIEW_DATA_FOR_DEV: CharTempsData = [
     ]},
   {name: CHAR_COOLER_TEMP_TEXT,
     series: [
-        { name: "1m", value: 22.6 },
+        { name: "1m", value: 23.6 },
         { name: "2m", value: 21.0 },
         { name: "3m", value: 23.9 },
         { name: "4m", value: 21.7 },

@@ -2,6 +2,8 @@ import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../app.component";
 import {alert_animations} from "../Animation";
 import {CharTempsData} from "../../interface/CharData";
+import {Color, ScaleType} from "@swimlane/ngx-charts";
+import {CHAR_COOLER_TEMP_COLOR, CHAR_IN_TEMP_COLOR, CHAR_OUT_TEMP_COLOR} from "../../config/configuration";
 
 @Component({
   selector: 'app-info',
@@ -28,6 +30,19 @@ export class InfoPage {
       ]
     },
   ]
+
+  //Definice barev křivek pro graf
+  public readonly char_color_schema: Color = {
+    name: "color",
+    selectable: false,
+    group: ScaleType.Linear,
+    domain: [
+      CHAR_IN_TEMP_COLOR,
+      CHAR_OUT_TEMP_COLOR,
+      CHAR_COOLER_TEMP_COLOR,
+    ]
+  };
+
 
 
   constructor(protected ngZone: NgZone) { }

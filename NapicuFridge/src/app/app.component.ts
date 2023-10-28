@@ -536,15 +536,15 @@ export class AppComponent {
     //Převedení pole uchovavající venkovní teplotu do formátu pro vytvoření grafu
     // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
     let out_temp_series_char_format: {value: number, name: string}[] =
-      json.out_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
+      json.out_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index + 1}m`}});
     //Převedení pole uchovavající vnitřní teplotu do formátu pro vytvoření grafu
     // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
     let in_temp_series_char_format: {value: number, name: string}[] =
-      json.in_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
+      json.in_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index + 1}m`}});
     //Převedení pole uchovavající teplotu chladiče do formátu pro vytvoření grafu
     // (Pokud se nějaká hodnota v objektu po převedení ze stringu na number rovná NaN, nastaví se nula)
     let cooler_temp_series_char_format: {value: number, name: string}[] =
-      json.cooler_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index}m`}});
+      json.cooler_temp.map((value: number, index: number) => {return {value: isNaN(value) ? 0 : value, name: `${index + 1}m`}});
     //Vrácení zformátovaných dat do objektu
     return [
       {name: CHAR_OUT_TEMP_TEXT, series: out_temp_series_char_format},
