@@ -16,26 +16,22 @@
             [tooltipDisabled]="false"
             [animations]="false"
           ></ngx-charts-line-chart>
+
         <ng-container *ngIf="!get_char_view_data()?.length">
           <div class="is-size-5 has-text-centered" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0.7">Žádná data</div>
         </ng-container>
-
       </div>
 
       <ng-container *ngIf="get_char_view_data()?.length">
         <div class="is-flex is-align-items-center is-justify-content-space-between">
           <div class="is-size-7" style="opacity: 0.7">Naposledy aktualizováno: {{get_char_last_update_basic_format()}}</div>
-
           <ng-container *ngIf="((get_char_view_data()?.[0]?.series?.length || 0)  > 15)">
             <ion-icon @ArrowExpand *ngIf="!expanded" name="resize-outline" style="font-size: 25px" (click)="expanded = true"></ion-icon>
             <ion-icon @ArrowExpand *ngIf="expanded" name="chevron-collapse-outline" style="font-size: 25px; rotate: 45deg" (click)="expanded = false"></ion-icon>
           </ng-container>
-
         </div>
       </ng-container>
     </div>
-
-
   </div>
 
   <app-napicu-option-template
@@ -70,7 +66,8 @@
 
   <div>
     <div class="mt-2 p-3 info-box has-background-grey-light has-text-white has-text-centered is-clickable"
-         [ngStyle]="!get_char_view_data()?.length ? {'opacity': '0.5'} : null"
+         [ngClass]="{'is-clickable': get_full_json_temp_char()?.length}"
+         [ngStyle]="!get_full_json_temp_char()?.length ? {'opacity': '0.5'} : null"
          (click)="copy_json_data_to_clipboard()">
       <div class="has-text-weight-bold">Zkopírovat JSON data</div>
     </div>

@@ -783,14 +783,15 @@ export class AppComponent {
     });
   }
 
-  //Statická funkce, která zkopíruje všechna naměřená data do schránky zařízení
-  public static copy_json_data_to_clipboard(): void {
+  //Statická funkce, která zkopíruje všechna naměřená data do schránky zařízení (Pokud se vrátí null, data neexistují )
+  public static copy_json_data_to_clipboard(): Promise<void> | null {
     const data: CharTempsData | null = this.get_full_json_temp_char();
     if(data) {
-      Clipboard.write({
+      return Clipboard.write({
         string: data.toString()
       });
     }
+    return null;
   }
 
   //Statická funkce, která nastaví kolit dat naměřených teplot, se mají zobrazit v grafu
