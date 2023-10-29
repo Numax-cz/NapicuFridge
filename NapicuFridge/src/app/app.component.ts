@@ -778,7 +778,9 @@ export class AppComponent {
 
   //Statická funkce, která vrátí dostupná rozlišení grafu
   public static get_char_available_resolutions(): NapicuOptionsData[] {
-    return this.fridge_data.json_graph_resolution_view || [];
+    return this.fridge_data.json_graph_resolution_view?.length ? this.fridge_data.json_graph_resolution_view : CHAR_VIEW_RESOLUTION_OPTIONS.map((value: number, index: number) => {
+      return {value: `${value} minut`, enabled: false};
+    });
   }
 
   //Statická funkce, která zkopíruje všechna naměřená data do schránky zařízení
