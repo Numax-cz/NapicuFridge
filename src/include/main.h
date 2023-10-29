@@ -24,6 +24,7 @@
 #include <include/thermistorManager.h>
 #include <include/dataJSONManager.h>
 #include <include/uptime.h>
+#include <include/fridgeFactoryReset.h>
 /////////////////////////////////////////////////////////////////////
 
 #define DEV_MODE 1
@@ -108,6 +109,8 @@
 #define CHARACTERISTIC_UPTIME_UUID "1e95497f-7cff-4376-836e-d6d9b9f1eb7e"
 #define CHARACTERISTIC_JSON_DATA_UUID "ddb31e15-aa44-4a42-b3e7-e253f457da2d"
 #define CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0"
+#define CHARACTERISTIC_FACTORY_UUID "a488b067-27fc-47e6-85b2-22416551775d"
+
 
 //Definice maximální délku datového balíčku
 #define MAX_PACKET_SIZE 20;  // Maximální délka balíčku v bajtech
@@ -130,7 +133,6 @@
 
 //Definice, která určuje, po jaké době se mají ukládat data o naměřených hodnot
 #define DEFAULT_JSON_DATA_SAVE_INTERVAL 1000 * 60 //V tomto případě se každou minutu uloží naměřená data do JSON souboru na ESP
-
 
 //Zde následuje několik definicí ke správci dat pro graf (dataJSONManager) 
 
@@ -225,8 +227,5 @@ extern PowerManager* fridge_power_manager;
 
 //Funkce, která vrátí mac adresu spárované zařízení z EEPROM
 BLEAddress* read_paired_device_mac_address_from_eeprom();
-
-//Funkce, která uvede zařízení do továrního nastavení
-void factory_reset();
 
 /////////////////////////////////////////////////////////////////////

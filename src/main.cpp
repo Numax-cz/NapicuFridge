@@ -277,6 +277,14 @@ void setup() {
                                        
   uptimeCharacteristic->setCallbacks(new FridgeUpTimeCharacteristicCallback());
 
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *factoryCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_FACTORY_UUID,
+    BLECharacteristic::PROPERTY_WRITE
+  );
+                                       
+  factoryCharacteristic->setCallbacks(new FactoryResetCharacteristicCallback());
+
   //Spuštění begin funkce DataJSONManageru
   DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  
 
@@ -350,7 +358,7 @@ void loop() {
   resetButton->button_hold_time(5000, [](){
     //Po podržení tlačítka po dobu 5000ms se provede následující
     //Spuštění funkce pro uvedení zařízení do továního nastavení
-    factory_reset();
+    FridgeFactoryReset::factory_reset();
   });
 
 
@@ -396,25 +404,4 @@ BLEAddress* read_paired_device_mac_address_from_eeprom() {
   //Vrácení null ukazatele
   return nullptr;
 }
-
-//Funkce, která uvede zařízení do továrního nastavení
-void factory_reset() {
-  //Vypsání hodnoty do konzole
-  Serial.println("Tovární nastavení...");
-  //Následně vymaževe veškeré data z EEPROM (nastavíme veškeré adresy, které využíváme na 0xFF - 255)
-  for(int i = 0; i < EEPROM_MAX_SIZE; i++) {
-    //Zapsání hodnoty do EEPROM
-    EEPROM.write(i, 0xFF);
-  }
-  //Potvrzení změn
-  EEPROM.commit();
-
-  //Spuštění funkce pro pípnutí piezo
-  PiezoManager::tone_beep(2, []() {
-    //Po ukončení pípání piezo se provede následující
-    //Restartování ESP32
-    ESP.restart();
-  });
-}
-
 
