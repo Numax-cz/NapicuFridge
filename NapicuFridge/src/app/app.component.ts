@@ -17,10 +17,16 @@ import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
 import {
   CHAR_COOLER_TEMP_TEXT,
-  CHAR_IN_TEMP_TEXT, CHAR_LAST_UPDATE_DATE_FORMAT, CHAR_DEFAULT_VIEW_RESOLUTION_INDEX,
+  CHAR_IN_TEMP_TEXT,
+  CHAR_LAST_UPDATE_DATE_FORMAT,
+  CHAR_DEFAULT_VIEW_RESOLUTION_INDEX,
   CHAR_OUT_TEMP_TEXT,
   DEFAULT_IN_FANS_ON_SWITCH,
-  DEFAULT_POWER_MODE_ON_SWITCH, CHAR_VIEW_RESOLUTION_OPTIONS, CHAR_COOLER_TEMP_COLOR, DEFAULT_CHAR_VIEW_DATA_FOR_DEV
+  DEFAULT_POWER_MODE_ON_SWITCH,
+  CHAR_VIEW_RESOLUTION_OPTIONS,
+  CHAR_COOLER_TEMP_COLOR,
+  DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
+  DEFAULT_ALERT_DISPLAY_TIME
 } from "./config/configuration";
 import {CharTempsData} from "./interface/CharData";
 import {NapicuDate} from "napicuformatter";
@@ -128,11 +134,11 @@ export class AppComponent {
   public static show_connection_alert(): void {
     //Nastavení proměnné na log1
     this.device_connection_alert_display = true;
-    //Spuštění funkce pro vykonaní funkce po 3500ms
+    //Spuštění funkce pro vykonaní funkce po dobu definovanou proměnnou DEFAULT_ALERT_DISPLAY_TIME
     setTimeout(() => {
       //Nastavení proměnné na log0
       this.device_connection_alert_display = false;
-    }, 3500);
+    }, DEFAULT_ALERT_DISPLAY_TIME);
   }
 
   //Statická funkce pro připojení se k zařízení

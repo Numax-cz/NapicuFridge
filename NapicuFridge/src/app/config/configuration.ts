@@ -19,6 +19,7 @@ export namespace Configuration {
   export const CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID: string = "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0";
 }
 
+export const DEFAULT_ALERT_DISPLAY_TIME: number = 3500;
 //Definice proměnné, která ukládá výchozí režim do kterého lednička přejde po prvním zapnutí
 export const DEFAULT_POWER_MODE_ON_SWITCH: FridgePowerMode = FridgePowerMode.FRIDGE_NORMAL_POWER;
 

@@ -7,9 +7,9 @@ import {Color, ScaleType} from "@swimlane/ngx-charts";
 import {
   CHAR_COOLER_TEMP_COLOR,
   CHAR_IN_TEMP_COLOR,
-  CHAR_OUT_TEMP_COLOR
+  CHAR_OUT_TEMP_COLOR, DEFAULT_ALERT_DISPLAY_TIME
 } from "../../../config/configuration";
-import {arrows_expand_animations} from "../../Animation";
+import {alert_animations, arrows_expand_animations} from "../../Animation";
 import {NapicuOptionsData} from "../../../interface/NapicuOption";
 
 
@@ -17,7 +17,7 @@ import {NapicuOptionsData} from "../../../interface/NapicuOption";
   selector: 'app-charts',
   templateUrl: './charts.component.html',
   styleUrls: ['./charts.component.scss'],
-  animations: [arrows_expand_animations]
+  animations: [arrows_expand_animations, alert_animations]
 })
 export class ChartsComponent implements ViewWillLeave{
 
@@ -35,6 +35,7 @@ export class ChartsComponent implements ViewWillLeave{
 
   public expanded = false;
 
+  public copy_alert_display: boolean = false;
 
 
 
@@ -108,7 +109,18 @@ export class ChartsComponent implements ViewWillLeave{
 
   //Funkce, která zkopíruje všechna naměřená data do schránky zařízení
   public copy_json_data_to_clipboard(): void {
-    AppComponent.copy_json_data_to_clipboard();
+    AppComponent.copy_json_data_to_clipboard()?.then(() => {
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        //Nastavení proměnné na log1
+        this.copy_alert_display = true;
+        //Spuštění funkce pro vykonaní funkce po dobu definovanou proměnnou DEFAULT_ALERT_DISPLAY_TIME
+        setTimeout(() => {
+          //Nastavení proměnné na log0
+          this.copy_alert_display = false;
+        }, DEFAULT_ALERT_DISPLAY_TIME);
+      });
+    });
   }
 
 
@@ -135,5 +147,10 @@ export class ChartsComponent implements ViewWillLeave{
   //Funkce, která vrátí výchozí barvu křivky znázorňující teplotu chladiče
   public get_char_cooler_temp_color(): string {
     return CHAR_COOLER_TEMP_COLOR;
+  }
+
+  //Funkce, která vrátí zda je alert zobrazen
+  public get_copy_alert_display(): boolean {
+    return this.copy_alert_display;
   }
 }

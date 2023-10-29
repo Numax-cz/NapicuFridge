@@ -73,3 +73,11 @@
     </div>
   </div>
 </section>
+
+<div @AlertAnimationTop *ngIf="get_copy_alert_display()" class="box info-box alert-container alert-container-top"
+     style="overflow: hidden" (click)="copy_alert_display = false">
+  <div class="is-flex is-align-items-center is-justify-content-center" style="width: max-content;margin: auto;">
+      <ion-icon name="document-text-outline" class="mr-2"></ion-icon>
+      <p class="is-size-6 has-text-weight-medium has-text-centered">Data byla zkopírována</p>
+  </div>
+</div>
