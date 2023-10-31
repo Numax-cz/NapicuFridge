@@ -263,4 +263,24 @@ export class CharacteristicController {
     //Vrácení null, pokud není připojené zařízení
     return null;
   }
+
+  //Statický funkce pro uvedení chytré ledničky do továrního nastavení (Pokud se vrátí null, zařízení není připojené)
+  public static factoryRestart(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if (AppComponent.connected_device) {
+      //Převedení stringu do bytes
+      let bytes: Uint8Array = BluetoothLE.stringToBytes("1");
+      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+      //Zapsání charakteristiky
+      return BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_FACTORY_UUID,
+        value: encodedUnicodeString,
+      });
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
 }
