@@ -615,11 +615,6 @@ export class AppComponent {
       return this.fridge_data.char_settings;
   }
 
-    //Statická funkce, která obnoví tovární nastavení
-  public static factory_reset(): void {
-    //TODO přidat komunikaci s ESP32
-  }
-
   //Statická funkce, která vrátí uložená data o spárovaném zařízení
   public static get_paired_device_data_from_storage(): DeviceInfo | null {
     //Získání uložených dat

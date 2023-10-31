@@ -67,12 +67,17 @@ export class DevicePage {
   }
 
   //Funkce, která se spustí po kliknutí na tlačítko "Obnovit tovární nastavení"
-  public on_click_factory_reset(): void {
+  public on_click_factory_reset_button(): void {
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       //Nastavení proměnné na log1
       this.active_alert = true;
     });
+  }
+
+  //Statický funkce pro uvedení chytré ledničky do továrního nastavení
+  public factory_reset(): void {
+    CharacteristicController.factoryRestart();
   }
 
   //Funkce, která vrátí zda došlo v ledničce k problému
@@ -83,11 +88,6 @@ export class DevicePage {
   //Funkce, která vrátí zda došlo v ledničce k vážné poruše
   public get_is_fridge_on_fatal_error(): boolean {
     return AppComponent.get_is_fridge_on_fatal_error();
-  }
-
-  //Tato funkce obnoví tovární nastavení. Funkce se spustí po kliknutí na tlačítko
-  public factory_reset(): void {
-    AppComponent.factory_reset();
   }
 
   //Funkce, která vrátí zda je zařízení připojené

@@ -123,7 +123,7 @@
       <div class="is-size-5">></div>
     </div>
 
-    <div class="is-flex is-clickable is-justify-content-space-between is-align-items-center box info-box has-background-white is-size-4 has-text-weight-bold has-text-dark" (click)="on_click_factory_reset()">
+    <div class="is-flex is-clickable is-justify-content-space-between is-align-items-center box info-box has-background-white is-size-4 has-text-weight-bold has-text-dark" (click)="on_click_factory_reset_button()">
       <div class="is-size-6">
         Obnovit tovární nastavení
       </div>
@@ -145,7 +145,7 @@
   <div class="mt-2 is-flex is-justify-content-space-around is-align-items-center">
     <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="active_alert = false;">ZRUŠIT</div>
     <div class="alert-button-line"></div>
-    <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="active_alert = false;">OBNOVIT</div>
+    <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="active_alert = false; factory_reset()">OBNOVIT</div>
   </div>
 </div>
 
