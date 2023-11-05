@@ -2,7 +2,6 @@ import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {CharacteristicController} from "../../../CharacteristicController";
 import {alert_animations} from "../../Animation";
-import {DEVICE_RENAME_INPUT_REGEX} from "../../../config/configuration";
 
 
 @Component({
