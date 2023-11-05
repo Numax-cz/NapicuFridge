@@ -13,12 +13,12 @@ import {DEVICE_RENAME_INPUT_REGEX} from "../../../config/configuration";
 })
 export class SettingsComponent {
 
-  //Proměnná určující, zda je menu pro přejmenování zařízení aktivní
-  public rename_device_menu_activated: boolean = false;
-  //Proměnná určující, zda input není validní
-  public rename_input_on_error: boolean = false;
-  //Proměnná ukládající aktuální hodnotu v inputu
-  public rename_input_value: string = "NapicuFridge";
+  // //Proměnná určující, zda je menu pro přejmenování zařízení aktivní
+  // public rename_device_menu_activated: boolean = false;
+  // //Proměnná určující, zda input není validní
+  // public rename_input_on_error: boolean = false;
+  // //Proměnná ukládající aktuální hodnotu v inputu
+  // public rename_input_value: string = "NapicuFridge";
 
   constructor(public ngZone: NgZone) { }
 
@@ -55,21 +55,21 @@ export class SettingsComponent {
     });
   }
 
-  //Funkce, která otevře menu pro přejmenování zařízení
-  public open_rename_device_menu(): void {
-    //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => {
-      this.rename_device_menu_activated = true;
-    });
-  }
-
-  //Funkce, která zavře menu pro přejmenování zařízení
-  public close_rename_device_menu(): void {
-    //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => {
-      this.rename_device_menu_activated = false;
-    });
-  }
+  // //Funkce, která otevře menu pro přejmenování zařízení
+  // public open_rename_device_menu(): void {
+  //   //Spuštění funkce uvnitř zóny Angularu
+  //   this.ngZone.run(() => {
+  //     this.rename_device_menu_activated = true;
+  //   });
+  // }
+  //
+  // //Funkce, která zavře menu pro přejmenování zařízení
+  // public close_rename_device_menu(): void {
+  //   //Spuštění funkce uvnitř zóny Angularu
+  //   this.ngZone.run(() => {
+  //     this.rename_device_menu_activated = false;
+  //   });
+  // }
 
   //Funkce pro změnu nastavení piezo při chybě
   public change_buzzing_on_error(event: any): void {
@@ -86,30 +86,30 @@ export class SettingsComponent {
     });
   }
 
-  //Funkce pro přejmenování chytré ledničky (Pokud se vrátí null, zařízení není připojené)
-  public rename_device(): void {
-    //Pokud je zařízení připojené a hodnota inputu je validní provede se následující
-    if(this.get_is_connected() && !this.rename_input_on_error) {
-      //Spuštění funkce pro zavření menu pro přejmenování zařízení
-      this.close_rename_device_menu();
-      //Spuštění funkce pro přejmenování zařízení
-      //Funkce trim odstraní mezery z obou konců stringu a vrátí nový string
-      CharacteristicController.renameDevice(this.rename_input_value.trim())?.then(() => {
-        //Spuštění funkce uvnitř zóny Angularu
-        this.ngZone.run(() => {
-          //Nastavíme nové jméno zařízení pokud je připojené zařízení uložené v proměnné
-          AppComponent.connected_device!.name = this.rename_input_value;
-          //Spuštění funkce pro uložení dat o spárovaném zařízení
-          AppComponent.save_paired_device_to_storage();
-        });
-      });
-    }
-  }
+  // //Funkce pro přejmenování chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  // public rename_device(): void {
+  //   //Pokud je zařízení připojené a hodnota inputu je validní provede se následující
+  //   if(this.get_is_connected() && !this.rename_input_on_error) {
+  //     //Spuštění funkce pro zavření menu pro přejmenování zařízení
+  //     this.close_rename_device_menu();
+  //     //Spuštění funkce pro přejmenování zařízení
+  //     //Funkce trim odstraní mezery z obou konců stringu a vrátí nový string
+  //     CharacteristicController.renameDevice(this.rename_input_value.trim())?.then(() => {
+  //       //Spuštění funkce uvnitř zóny Angularu
+  //       this.ngZone.run(() => {
+  //         //Nastavíme nové jméno zařízení pokud je připojené zařízení uložené v proměnné
+  //         AppComponent.connected_device!.name = this.rename_input_value;
+  //         //Spuštění funkce pro uložení dat o spárovaném zařízení
+  //         AppComponent.save_paired_device_to_storage();
+  //       });
+  //     });
+  //   }
+  // }
 
-  //Funkce, která zkontroluje validaci hodnoty v inputu
-  public check_input_rename_device_name(): void {
-      this.rename_input_on_error = !(DEVICE_RENAME_INPUT_REGEX.test(this.rename_input_value));
-  }
+  // //Funkce, která zkontroluje validaci hodnoty v inputu
+  // public check_input_rename_device_name(): void {
+  //     this.rename_input_on_error = !(DEVICE_RENAME_INPUT_REGEX.test(this.rename_input_value));
+  // }
 
   //Funkce, která vrátí zda je zařízení připojené
   public get_is_connected(): boolean {

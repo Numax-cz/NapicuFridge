@@ -174,8 +174,6 @@ void setup() {
 
 
 
-
-
   // Inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init(DEFAULT_BLE_NAME);
   // BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT);
@@ -284,14 +282,6 @@ void setup() {
   );
                                        
   factoryCharacteristic->setCallbacks(new FactoryResetCharacteristicCallback());
-
-  //Vytvoření BLE komunikačního kanálu pro komunikaci
-  BLECharacteristic *renameCharacteristic = pService->createCharacteristic(
-    CHARACTERISTIC_RENAME_UUID,
-    BLECharacteristic::PROPERTY_WRITE
-  );
-                                       
-  renameCharacteristic->setCallbacks(new FridgeRenameCallBack());
 
   //Spuštění begin funkce DataJSONManageru
   DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  

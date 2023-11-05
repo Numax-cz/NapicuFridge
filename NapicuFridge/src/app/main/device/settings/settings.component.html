@@ -62,17 +62,17 @@
           </div>
         </div>
 
-        <div
-          class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
-          [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">
-          <div class="is-size-6">
-            {{get_paired_device_name()}}
-          </div>
-          <div class="p-3 box info-box has-background-info has-text-white" style="font-size: 0.8rem"
-               [ngClass]="{'is-clickable': get_is_connected()}" (click)="open_rename_device_menu()">
-            Přejmenovat
-          </div>
-        </div>
+<!--        <div-->
+<!--          class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"-->
+<!--          [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">-->
+<!--          <div class="is-size-6">-->
+<!--            {{get_paired_device_name()}}-->
+<!--          </div>-->
+<!--          <div class="p-3 box info-box has-background-info has-text-white" style="font-size: 0.8rem"-->
+<!--               [ngClass]="{'is-clickable': get_is_connected()}" (click)="open_rename_device_menu()">-->
+<!--            Přejmenovat-->
+<!--          </div>-->
+<!--        </div>-->
 
       </div>
     </div>
@@ -80,19 +80,19 @@
 </section>
 
 
-<div @AlertAnimation class="box info-box alert-container alert-container-centered" *ngIf="rename_device_menu_activated">
-  <div class="is-size-5 has-text-weight-bold">Přejmenovat zařízení</div>
+<!--<div @AlertAnimation class="box info-box alert-container alert-container-centered" *ngIf="rename_device_menu_activated">-->
+<!--  <div class="is-size-5 has-text-weight-bold">Přejmenovat zařízení</div>-->
 
-  <div class="mt-5 mb-5 is-flex is-justify-content-space-around is-align-items-center">
-      <input [(ngModel)]="rename_input_value" (ngModelChange)="check_input_rename_device_name()" (keydown.enter)="rename_device()"
-             class="input info-box is-normal has-text-weight-bold" [ngClass]="{'is-danger': rename_input_on_error}" type="text" spellcheck="false" autofocus>
-  </div>
+<!--  <div class="mt-5 mb-5 is-flex is-justify-content-space-around is-align-items-center">-->
+<!--      <input [(ngModel)]="rename_input_value" (ngModelChange)="check_input_rename_device_name()" (keydown.enter)="rename_device()"-->
+<!--             class="input info-box is-normal has-text-weight-bold" [ngClass]="{'is-danger': rename_input_on_error}" type="text" spellcheck="false" autofocus>-->
+<!--  </div>-->
 
-  <div class="p-3 box info-box has-background-info has-text-white has-text-weight-bold has-text-centered" style="font-size: 1rem; width: 70%; margin: auto"
-       [ngClass]="{'is-clickable': !rename_input_on_error}" [ngStyle]="rename_input_on_error ? {'opacity': '0.5'} : null"
-       (click)="rename_device();">
-    Potvrdit
-  </div>
-</div>
+<!--  <div class="p-3 box info-box has-background-info has-text-white has-text-weight-bold has-text-centered" style="font-size: 1rem; width: 70%; margin: auto"-->
+<!--       [ngClass]="{'is-clickable': !rename_input_on_error}" [ngStyle]="rename_input_on_error ? {'opacity': '0.5'} : null"-->
+<!--       (click)="rename_device();">-->
+<!--    Potvrdit-->
+<!--  </div>-->
+<!--</div>-->
 
-<div @AlertAnimationBackground class="alert" *ngIf="rename_device_menu_activated" (click)="close_rename_device_menu()"></div>
+<!--<div @AlertAnimationBackground class="alert" *ngIf="rename_device_menu_activated" (click)="close_rename_device_menu()"></div>-->
