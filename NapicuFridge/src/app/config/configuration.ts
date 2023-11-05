@@ -37,6 +37,9 @@ export const CHAR_COOLER_TEMP_TEXT: string = "Teplota teplota";
 //Definice výchozího formátu času poslední aktualizace grafu
 export const CHAR_LAST_UPDATE_DATE_FORMAT: string = "%dt.%MM.%yyyy %HH:%mm";
 
+//Definice výchozího regexu pro kontrolu vstupů pro přejmenování zařízení
+export const DEVICE_RENAME_INPUT_REGEX: RegExp = /^(?![ ])[A-Za-z0-9-_. ]{1,30}$/;
+
 //Definice výchozí barvy křivky znázorňující vnitřní teplotu
 export const CHAR_IN_TEMP_COLOR: string = "#00a8ff";
 //Definice výchozí barvy křivky znázorňující venkovní teplotu

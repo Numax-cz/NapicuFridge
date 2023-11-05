@@ -2,6 +2,7 @@ import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {CharacteristicController} from "../../../CharacteristicController";
 import {alert_animations} from "../../Animation";
+import {DEVICE_RENAME_INPUT_REGEX} from "../../../config/configuration";
 
 
 @Component({
@@ -107,8 +108,7 @@ export class SettingsComponent {
 
   //Funkce, která zkontroluje validaci hodnoty v inputu
   public check_input_rename_device_name(): void {
-    //TODO DOCUMENTATION + VAR
-      this.rename_input_on_error =  !(/^(?![ ])[A-Za-z0-9-_. ]{1,248}$/.test(this.rename_input_value));
+      this.rename_input_on_error = !(DEVICE_RENAME_INPUT_REGEX.test(this.rename_input_value));
   }
 
   //Funkce, která vrátí zda je zařízení připojené
