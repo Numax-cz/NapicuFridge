@@ -25,9 +25,13 @@
 #include <include/dataJSONManager.h>
 #include <include/uptime.h>
 #include <include/fridgeFactoryReset.h>
+#include <include/fridgeRenameCallBack.h>
 /////////////////////////////////////////////////////////////////////
 
 #define DEV_MODE 1
+
+//Definice výchozího názvu BLE názvu
+#define DEFAULT_BLE_NAME "NapicuFridge"
 
 //Definice propojovacích pinů
 
@@ -110,6 +114,7 @@
 #define CHARACTERISTIC_JSON_DATA_UUID "ddb31e15-aa44-4a42-b3e7-e253f457da2d"
 #define CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0"
 #define CHARACTERISTIC_FACTORY_UUID "a488b067-27fc-47e6-85b2-22416551775d"
+#define CHARACTERISTIC_RENAME_UUID "afdaafe2-4802-431f-a24a-d093d27880a2"
 
 
 //Definice maximální délku datového balíčku
