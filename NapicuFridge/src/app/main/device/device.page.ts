@@ -77,7 +77,7 @@ export class DevicePage {
 
   //Statický funkce pro uvedení chytré ledničky do továrního nastavení
   public factory_reset(): void {
-    CharacteristicController.factoryRestart();
+    AppComponent.factory_reset();
   }
 
   //Funkce, která vrátí zda došlo v ledničce k problému

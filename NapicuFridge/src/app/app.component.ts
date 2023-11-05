@@ -167,9 +167,6 @@ export class AppComponent {
   private static async on_next_connect(device: DeviceInfo): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if(device.status === "connected") {
-        //Uložení adresy spárovaného zaířzení
-        AppComponent.application_settings.setItem("device", JSON.stringify(device));
-
         //Po úspěšném připojení provést následující
         //Nastavit proměnnou pro připojené zařízení
         AppComponent.set_connected_device(device);
@@ -334,6 +331,9 @@ export class AppComponent {
       this.connected_device = value;
       //Zobrazení informačního alertu
       AppComponent.show_connection_alert();
+
+      //Spuštění funkce pro uložení adresy spárovaného zaířzení
+      this.save_paired_device_to_storage();
     });
   }
 
@@ -568,7 +568,7 @@ export class AppComponent {
   //Statická funkce, která vrátí uložený json graf naměřených teplot
   protected static get_json_temp_char_from_storage(): CharTempsData | null{
     //Získání uložených dat
-    let i: string | null = AppComponent.application_settings.getItem("device");
+    let i: string | null = AppComponent.application_settings.getItem("temp_char");
     //Pokud existuje uložená hodnota provede se následující
     if(i) return JSON.parse(i) as CharTempsData;
     //Vrácení výchozích hodnot pokud uložená data neexistují
@@ -615,6 +615,13 @@ export class AppComponent {
       return this.fridge_data.char_settings;
   }
 
+  //Statický funkce pro uvedení chytré ledničky do továrního nastavení
+  public static factory_reset(): void {
+    CharacteristicController.factoryRestart()?.then(() => {
+
+    });
+  }
+
   //Statická funkce, která vrátí uložená data o spárovaném zařízení
   public static get_paired_device_data_from_storage(): DeviceInfo | null {
     //Získání uložených dat
@@ -623,6 +630,15 @@ export class AppComponent {
     if(i) return JSON.parse(i) as DeviceInfo;
     //Vrácení null pokud uložená data neexistují
     return null;
+  }
+
+  //Statická funkce, která uloží data o spárovaném zařízení
+  public static save_paired_device_to_storage(): void {
+    //Pokud je připojené zařízení uložené v proměnné provede se následující
+    if(this.connected_device) {
+      //Uložení adresy spárovaného zařízení
+      AppComponent.application_settings.setItem("device", JSON.stringify(this.connected_device));
+    }
   }
 
   //Statická funkce, která vrátí jméno připojeného zařízení

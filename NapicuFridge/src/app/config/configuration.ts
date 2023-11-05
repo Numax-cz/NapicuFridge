@@ -18,6 +18,7 @@ export namespace Configuration {
   export const CHARACTERISTIC_JSON_DATA_UUID: string = "ddb31e15-aa44-4a42-b3e7-e253f457da2d";
   export const CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID: string = "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0";
   export const CHARACTERISTIC_FACTORY_UUID: string = "a488b067-27fc-47e6-85b2-22416551775d";
+  export const CHARACTERISTIC_RENAME_UUID: string = "afdaafe2-4802-431f-a24a-d093d27880a2";
 }
 
 export const DEFAULT_ALERT_DISPLAY_TIME: number = 3500;
