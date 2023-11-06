@@ -62,6 +62,21 @@
           </div>
         </div>
 
+        <div
+          class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
+          [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">
+          <div class="is-size-6">
+            Pozastavit při otevření
+          </div>
+          <div class="napicu-switch">
+            <label class="toggle">
+              <input class="toggle-checkbox" type="checkbox" (change)="change_door_on_open($event)"
+                     [checked]="get_fridge_stop_on_open_door()" [disabled]="!get_is_connected()">
+              <div class="toggle-switch"></div>
+            </label>
+          </div>
+        </div>
+
 <!--        <div-->
 <!--          class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"-->
 <!--          [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">-->

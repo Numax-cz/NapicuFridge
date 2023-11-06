@@ -284,23 +284,55 @@ export class CharacteristicController {
     return null;
   }
 
-  //Statická funkce pro přejmenování chytré ledničky (Pokud se vrátí null, zařízení není připojené)
-  public static renameDevice(name: string): Promise<OperationResult> | null {
+  //Statická funkce pro změnu chování dveří při otevření dveří (Pokud se vrátí null, zařízení není připojené)
+  public static writeFridgeStopOnDoorOpen(value: boolean): Promise<OperationResult> | null {
     //Kontrola, zda je zařízení spárované
     if (AppComponent.connected_device) {
       //Převedení stringu do bytes
-      let bytes: Uint8Array = BluetoothLE.stringToBytes(name);
+      let bytes: Uint8Array = BluetoothLE.stringToBytes(value ? "1" : "0");
       //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
       let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
       //Zapsání charakteristiky
       return BluetoothLE.write({
         address: AppComponent.connected_device.address,
         service: Configuration.SERVICE_UUID,
-        characteristic: Configuration.CHARACTERISTIC_RENAME_UUID,
+        characteristic: Configuration.CHARACTERISTIC_DOOR_PAUSE_UUID,
         value: encodedUnicodeString,
       });
     }
     //Vrácení null, pokud není připojené zařízení
     return null;
   }
+
+  //Statická funkce, která přečte, zda se má lednička pozastavit při otevřených dveří (Pokud se vrátí null, zařízení není připojené)
+  public static readFridgeStopOnDoorOpen(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Získání režimu piezo při chybě
+      return BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_DOOR_PAUSE_UUID});
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
+
+
+  // //Statická funkce pro přejmenování chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  // protected static renameDevice(name: string): Promise<OperationResult> | null {
+  //   //Kontrola, zda je zařízení spárované
+  //   if (AppComponent.connected_device) {
+  //     //Převedení stringu do bytes
+  //     let bytes: Uint8Array = BluetoothLE.stringToBytes(name);
+  //     //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+  //     let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+  //     //Zapsání charakteristiky
+  //     return BluetoothLE.write({
+  //       address: AppComponent.connected_device.address,
+  //       service: Configuration.SERVICE_UUID,
+  //       characteristic: Configuration.CHARACTERISTIC_RENAME_UUID,
+  //       value: encodedUnicodeString,
+  //     });
+  //   }
+  //   //Vrácení null, pokud není připojené zařízení
+  //   return null;
+  // }
 }

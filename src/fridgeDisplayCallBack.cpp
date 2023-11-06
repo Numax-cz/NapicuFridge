@@ -13,31 +13,24 @@ void DisplayEnableCharacteristicCallback::onRead(BLECharacteristic *pCharacteris
     pCharacteristic->notify();
 }
 
-
 void DisplayEnableCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     //Proměnná pro ukládání přijaté zprávy
-    std::string prijataZprava = pCharacteristic->getValue();
-
-    //Vypsání následujících hodnot do konzole
-    Serial.print("Prijata zprava: ");
-    Serial.print(prijataZprava.c_str());
-    Serial.println();
-
+    std::string msg = pCharacteristic->getValue();
 
     //Kontrola přijaté zprávy
-    //Pokud obsahuje znak 0, vypne se display
-    if (prijataZprava == "0") {
-        //Vypsání hodnoty do konzole
-        Serial.println("Vypnutí displeje");
-        //Zavolání funkce pro vypnutí displeje
-        FridgeDisplay::disable_display();
+    //Pokud obsahuje znak 0, provede se následující 
+    if (msg == "0") {
+        //Zapsání log0 hodnoty do EEPROM
+        EEPROM.write(FRIDGE_PAUSE_ON_DOOR_OPEN_ADDR, 0);
+        //Potvrzení změn
+        EEPROM.commit();
     }
-    //Pokud obsahuje znak 1, zapne se display
-    else if (prijataZprava == "1") {
-        //Vypsání hodnoty do konzole
-        Serial.println("Zapnutí displeje");
-        //Zavolání funkce pro zapnutí displeje
-        FridgeDisplay::enable_display();
+    //Pokud obsahuje znak 1, provede se následující 
+    else if (msg == "1") {
+        //Zapsání log1 hodnoty do EEPROM
+        EEPROM.write(FRIDGE_PAUSE_ON_DOOR_OPEN_ADDR, 1);
+        //Potvrzení změn
+        EEPROM.commit();
     }
 }
 

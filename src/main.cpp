@@ -104,9 +104,11 @@ void setup() {
   pinMode(CONNECTION_LED, OUTPUT);
   //Nastavení piezo pinu jako výstup
   pinMode(PIEZO_PIN, OUTPUT);
+  //Nastavení pinu dveří jako vstup 
+  pinMode(DOOR_PIN, INPUT);
 
 
-    //Inicializace paměti EEPROM
+  //Inicializace paměti EEPROM
   if (!EEPROM.begin(EEPROM_MAX_SIZE)) {
     //Vypsání hodnoty do konzole
     Serial.println("EEPROM inicializace byla neúspěšná");
@@ -283,6 +285,15 @@ void setup() {
                                        
   factoryCharacteristic->setCallbacks(new FactoryResetCharacteristicCallback());
 
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *doorCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_DOOR_PAUSE_UUID,
+    BLECharacteristic::PROPERTY_WRITE |
+    BLECharacteristic::PROPERTY_READ
+  );
+                                       
+  doorCharacteristic->setCallbacks(new DoorCharacteristicCallback());
+
   //Spuštění begin funkce DataJSONManageru
   DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  
 
@@ -335,6 +346,8 @@ void loop() {
 
 
 
+
+
   //Spuštění loop funkce displeje
   FridgeDisplay::loop();
 
@@ -343,6 +356,9 @@ void loop() {
 
   //Spuštění loop funkce piezo manageru 
   PiezoManager::loop();
+
+  //Spuštění loop funkce správce napájení  
+  PowerManager::loop();
 
 
 

@@ -27,7 +27,8 @@ export declare interface FridgeData {
 
     fridge_in_fans: boolean,
 
-    buzzing_on_error: boolean
+    buzzing_on_error: boolean,
+    fridge_stop_on_open_door: boolean
 
 
     fridge_power_mode: FridgePowerMode,

@@ -38,10 +38,13 @@
 #define CONNECTION_LED 19
 //Definice pinu pro PIEZO
 #define PIEZO_PIN 18
+//Definice pinu pro snímání dveří 
+#define DOOR_PIN 13
 //Definice propojovacích pinů veškerých teploměrů 
 #define DHT_TYPE DHT11 //Typ DHT senzoru
 #define DHT_INSIDE 17  // Pin vnitřního DHT senzoru
 #define DHT_OUTSIDE 16 //Pin venkovního DHT senzoru
+
 
 //Definice pinu tlačítka pro reset zařízení
 #define RESET_BUTTON 5
@@ -89,8 +92,11 @@
 //Definice EEPROM pro ukládání zda má piezo upozornit na chybu
 #define PIEZO_ON_ERROR_SIZE 1 //Délka stavu piezo -128 až 127
 #define PIEZO_ON_ERROR_ADDR IN_FANS_EEPROM_ADDR + 1 //Adresa v paměti EEPROM na kterou bude stav piezo ukládat
+//Definice EEPROM pro ukládání zda se má lednička po otevření dveří pozastavit log0/log1
+#define FRIDGE_PAUSE_ON_DOOR_OPEN_SIZE 1 //Délka stavu -128 až 127
+#define FRIDGE_PAUSE_ON_DOOR_OPEN_ADDR PIEZO_ON_ERROR_ADDR + 1 //Adresa v paměti EEPROM na kterou se bude hodnota ukládat
 //Definice celkové délky 
-#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE + PIEZO_ON_ERROR_SIZE
+#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE + PIEZO_ON_ERROR_SIZE + FRIDGE_PAUSE_ON_DOOR_OPEN_SIZE
 
 
 /////////////////////////////////////////////////////////////////////
@@ -113,6 +119,7 @@
 #define CHARACTERISTIC_JSON_DATA_UUID "ddb31e15-aa44-4a42-b3e7-e253f457da2d"
 #define CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0"
 #define CHARACTERISTIC_FACTORY_UUID "a488b067-27fc-47e6-85b2-22416551775d"
+#define CHARACTERISTIC_DOOR_PAUSE_UUID "bd5f15cf-94a7-4d19-b906-64bb570d57be"
 
 
 //Definice maximální délku datového balíčku
@@ -137,6 +144,8 @@
 //Definice, která určuje, po jaké době se mají ukládat data o naměřených hodnot
 #define DEFAULT_JSON_DATA_SAVE_INTERVAL 1000 * 60 //V tomto případě se každou minutu uloží naměřená data do JSON souboru na ESP
 
+//Definice výchozího nastavení, zda se má lednička pozastavit při otevřených dveří
+#define DEFAULT_FRIDGE_PAUSE_ON_DOOR_OPEN 1 //V tomto případě se lednička pozastaví při otevřených dveří
 //Zde následuje několik definicí ke správci dat pro graf (dataJSONManager) 
 
 //Definice názvu souboru pro ukládání dat v grafu

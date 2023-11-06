@@ -85,6 +85,21 @@ export class SettingsComponent {
     });
   }
 
+  //Funkce pro změnu chování dveří při otevření
+  public change_door_on_open(event: any): void {
+    //Uložení event hodnoty do konstantní proměnné
+    const value: boolean = event.currentTarget.checked;
+    //Zavolání funkce pro zapsání chování dveří při otevření dveří
+    CharacteristicController.writeFridgeStopOnDoorOpen(value)?.then(() => {
+      //Až se úspěšně provede zápis charakteristiky provede se následující
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        //Přepsání proměnné v nastavení
+        AppComponent.fridge_data.config.fridge_stop_on_open_door = value;
+      });
+    });
+  }
+
   // //Funkce pro přejmenování chytré ledničky (Pokud se vrátí null, zařízení není připojené)
   // public rename_device(): void {
   //   //Pokud je zařízení připojené a hodnota inputu je validní provede se následující
@@ -140,6 +155,11 @@ export class SettingsComponent {
   //Funkce, která vrátí zda při chybě bude bzučet piezo
   public get_buzzing_on_error(): boolean {
     return AppComponent.fridge_data.config.buzzing_on_error;
+  }
+
+  //Funkce, která vrátí zda při otevření dveří se má lednička pozastavit
+  public get_fridge_stop_on_open_door(): boolean {
+    return AppComponent.get_fridge_stop_on_open_door();
   }
 
   //Statická funkce, která vrátí jméno připojeného zařízení
