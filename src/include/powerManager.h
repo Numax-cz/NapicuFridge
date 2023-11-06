@@ -21,6 +21,8 @@ class FanController;
 class PowerManager {
 
 protected: 
+    //Statická proměnná BLE komunikačního kanálu pro odesílání dat
+    static inline BLECharacteristic *pCharacteristic = NULL;
     //Statická proměnná pro ukládání zda jsou dveře otevřeny
     static inline bool is_door_open = false;
     //Statická funkce pro inicializaci vnitřních ventilátorů
@@ -31,7 +33,6 @@ protected:
     static void turn_on_cooling_fans();
     //Statická funkce pro vypnutí celého chladícího systému
     static void power_off();
-
 public: 
     //Statická proměnná, která určuje zda se lednička pozastaví při otevřených dveří 
     static inline int fridge_pause_on_door_open = -1;

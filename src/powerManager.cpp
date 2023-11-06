@@ -40,8 +40,6 @@ void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
     }
 }
 
-
-
 void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o stavu relátka vnitřních ventilátorů");
@@ -203,10 +201,14 @@ void PowerManager::begin_in_fans() {
 void PowerManager::loop() {
     //Pokud jsou dveře otevřeny provede se následující 
     if(digitalRead(DOOR_PIN) == LOW && PowerManager::fridge_pause_on_door_open) {
-        //Spuštění funkce pro vypnutí celého chladícího systému
-       PowerManager::power_off();
-       //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
-       PowerManager::is_door_open = true;
+        //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log0
+        if(!PowerManager::is_door_open) {
+            //Spuštění funkce pro vypnutí celého chladícího systému
+            PowerManager::power_off();
+            //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
+            PowerManager::is_door_open = true;
+        }
+
     } else { //Pokud jsou dveře zavřené provede se následující 
         //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log1
         if(PowerManager::is_door_open) {
