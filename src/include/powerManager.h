@@ -33,6 +33,8 @@ protected:
     static void turn_on_cooling_fans();
     //Statická funkce pro vypnutí celého chladícího systému
     static void power_off();
+    //Statická funkce, která načte veškerá nastavení z EEPROM
+    static void load_config_from_eeprom();
 public: 
     //Statická proměnná, která určuje zda se lednička pozastaví při otevřených dveří 
     static inline int fridge_pause_on_door_open = -1;

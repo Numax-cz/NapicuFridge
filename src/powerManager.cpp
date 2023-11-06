@@ -116,34 +116,36 @@ void DoorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
 
 //Begin funkce pro PowerManager
 void PowerManager::begin() {
+    //Spuštění funkce pro načtení nastavení 
+    PowerManager::load_config_from_eeprom();
+}
+
+//Funkce, která načte veškerá nastavení z EEPROM
+void PowerManager::load_config_from_eeprom() {
     //Proměnná pro uložení dat z EEPROM
     uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
     //Spuštění begin funkce pro inicializaci chladících ventilátorů 
     cooling_fans_pwm.begin();
-
     //Pokud není uložená hodnota v EEPROM proveď následující 
     if(data == 0xFF) {
+        //Nastavení výchozí hodnoty
         data = DEFAULT_POWER_MODE;
-        //TODO IDK jestli to tu bude 
-        EEPROM.write(POWER_MODE_EEPROM_ADDR, data);
-        EEPROM.commit();
     }
-
     //Spuštění funkce pro nastavení režimu výkonu
     PowerManager::change_power_mode(data);
-
     //Pokud lednička není nastavená na režim vypnuto provede se následující
     if(data != FRIDGE_OFF_POWER) {
         //Spuštění funkce pro inicializaci vnitřních ventilátorů
         PowerManager::begin_in_fans();
     }    
-
     //Získání dat z EEPROM 
     uint8_t door_data = EEPROM.read(FRIDGE_PAUSE_ON_DOOR_OPEN_ADDR);
     //Pokud je uložena hodnota v EEPROM provede se následující 
     if(door_data != 0xFF) {
+        //Nazstavení hodnoty z EEPROM
         PowerManager::fridge_pause_on_door_open = data;
     } else {
+        //Nastavení výchozí hodnoty
         PowerManager::fridge_pause_on_door_open = DEFAULT_FRIDGE_PAUSE_ON_DOOR_OPEN;
     }
 }
@@ -201,7 +203,7 @@ void PowerManager::begin_in_fans() {
 void PowerManager::loop() {
     //Pokud jsou dveře otevřeny provede se následující 
     if(digitalRead(DOOR_PIN) == LOW && PowerManager::fridge_pause_on_door_open) {
-        //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log0
+        //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log
         if(!PowerManager::is_door_open) {
             //Spuštění funkce pro vypnutí celého chladícího systému
             PowerManager::power_off();
@@ -212,8 +214,8 @@ void PowerManager::loop() {
     } else { //Pokud jsou dveře zavřené provede se následující 
         //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log1
         if(PowerManager::is_door_open) {
-            //Spuštění begin funkce PowerManageru
-            PowerManager::begin();
+            //Spuštění funkce proč načtení veškerých nastavení z EEPROM
+            PowerManager::load_config_from_eeprom();
             //Nastavení proměnné, určující, zda jsou dveře otevřeny na log0
             PowerManager::is_door_open = false;
         }
