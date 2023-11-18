@@ -25,6 +25,7 @@
 #include <include/dataJSONManager.h>
 #include <include/uptime.h>
 #include <include/fridgeFactoryReset.h>
+#include <include/digitalPotentiometer.h>
 /////////////////////////////////////////////////////////////////////
 
 #define DEV_MODE 1
@@ -208,6 +209,7 @@ class FridgeTempDHT;
 class ButtonManager;
 class PowerManager;
 class ThermistorManager;
+class DigitalPotentiometer;
 //Proměnná pro uložení BLE serveru
 extern BLEServer* pServer;
 //Proměnná pro uložení DHT senzoru vnitřní teploty
@@ -227,7 +229,7 @@ extern RelayModule* relay_peltier;
 //Proměnná pro uložení třídy relé ovládací režim napájení peltierů
 extern RelayModule* relay_peltier_power_mode;
 //Proměnná pro uložení třídy digitálního potenciometru
-extern DigiPot* digitalPotentiometer;
+extern DigitalPotentiometer* digital_potentiometer;
 //Proměnná pro uložení venkovních chladících PWM ventilátorů
 extern FanController<COOLING_FAN_PWM, COOLING_FAN_TACH> cooling_fans_pwm;
  //Proměnná pro uložení třídy správce napájení

@@ -39,7 +39,7 @@ RelayModule* relay_peltier = NULL;
 //Proměnná pro uložení třídy relé ovládací režim napájení peltierů
 RelayModule* relay_peltier_power_mode = NULL;
 //Proměnná pro uložení třídy digitálního potenciometru
-DigiPot* digitalPotentiometer = NULL;
+DigitalPotentiometer* digital_potentiometer = NULL;
 //Proměnná pro uložení venkovních chladících PWM ventilátorů
 FanController<COOLING_FAN_PWM, COOLING_FAN_TACH> cooling_fans_pwm;
 //Proměnná pro uložení třídy správce napájení
@@ -144,11 +144,11 @@ void setup() {
   //Spuštění funkce begin
   relay_peltier_power_mode->begin();
 
-
   //Vytvoření třídy pro digitální potenciometr
-  digitalPotentiometer = new DigiPot(X9_INC, X9_UD, X9_CS);
+  digital_potentiometer = new DigitalPotentiometer(X9_INC, X9_UD, X9_CS);
 
 
+  digital_potentiometer->set(50);
 
   FridgeDisplay::begin();
 
