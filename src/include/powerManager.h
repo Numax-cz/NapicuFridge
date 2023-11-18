@@ -35,17 +35,25 @@ protected:
     static void power_off();
     //Statická funkce, která načte veškerá nastavení z EEPROM
     static void load_config_from_eeprom();
+    //Statická funkce, která pošle připojenému zařízení aktuální režim napájení + nastavení vnitřních ventilátorů
+    static void notify_power_config();
 public: 
     //Statická proměnná, která určuje zda se lednička pozastaví při otevřených dveří 
     static inline int fridge_pause_on_door_open = -1;
-    //Begin funkce pro PowerManager
-    static void begin();
+    /**
+     * @brief Begin funkce pro PowerManager
+     * 
+     * @param pService BLE služba
+     * @param notify_uuid UUID pro odesílání dat při změně režimu napájení 
+     */
+    static void begin(BLEService* pService, const char* notify_uuid);
     //Statická loop funkce pro PowerManager
     static void loop();
     //Statická funkce pro zapnutí celého chladícího systému
     static void power_on();
     //Statická funkce pro změnu napájecího režimu
     static void change_power_mode(int mode);
+
     //Statická funkce pro vypnutí vnitřních ventilátorů
     static void turn_off_in_fans();
     //Statická funkce pro zapnutí vnitřních ventilátorů

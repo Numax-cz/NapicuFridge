@@ -9,6 +9,8 @@ void PowerManagerCharacteristicCallback::onRead(BLECharacteristic *pCharacterist
     Serial.println("Odeslání informací o režimu napájení");
     //Získání dat o režimu napájení z EEPROM 
     uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
+    //TODO IF???
+
     //Nastavení hodnoty charakteristiky 
     pCharacteristic->setValue(String(data).c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -40,7 +42,10 @@ void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
     }
 }
 
-void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
+
+//TODO MOŽNÁ SMAZAT
+//TODO MOŽNÁ SMAZAT
+void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) { //TODO MOŽNÁ SMAZAT
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o stavu relátka vnitřních ventilátorů");
 
@@ -115,9 +120,39 @@ void DoorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
 }
 
 //Begin funkce pro PowerManager
-void PowerManager::begin() {
+void PowerManager::begin(BLEService* pService, const char* notify_uuid) {
     //Spuštění funkce pro načtení nastavení 
     PowerManager::load_config_from_eeprom();
+
+    // vytvoření BLE komunikačního kanálu pro odesílání (TX)
+    PowerManager::pCharacteristic = pService->createCharacteristic(
+        notify_uuid,
+        BLECharacteristic::PROPERTY_INDICATE |
+        BLECharacteristic::PROPERTY_NOTIFY |
+        BLECharacteristic::PROPERTY_READ
+    );
+    //Přiřazení deskriptoru k této charakteristice.
+    PowerManager::pCharacteristic->addDescriptor(new BLE2902());
+}
+
+//Statická funkce, která pošle připojenému zařízení aktuální režim napájení + nastavení vnitřních ventilátorů
+void PowerManager::notify_power_config() {
+    //Vypsání hodnoty do konzole
+    Serial.println("Odeslání informací o režimu napájení");
+
+        //Vypsání hodnoty do konzole
+    Serial.println("Odeslání informací o stavu relátka vnitřních ventilátorů");
+
+    //Získání dat o stavu relátek pro vnitřní ventilátory
+    int relay_in_fans_value = relay_in_fans->get_is_open() ? 1 : 0;
+
+    //Získání dat o režimu napájení z EEPROM 
+    uint8_t power_mode = EEPROM.read(POWER_MODE_EEPROM_ADDR);
+    //TODO IF???
+    //Nastavení hodnoty charakteristiky 
+    PowerManager::pCharacteristic->setValue((String(power_mode) + String(relay_in_fans_value)).c_str());
+    //Odeslání zprávy skrze BLE do připojeného zařízení
+    PowerManager::pCharacteristic->notify();
 }
 
 //Funkce, která načte veškerá nastavení z EEPROM

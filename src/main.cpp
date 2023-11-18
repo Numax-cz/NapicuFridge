@@ -298,7 +298,7 @@ void setup() {
   DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  
 
   //Spuštění begin funkce PowerManageru
-  PowerManager::begin();
+  PowerManager::begin(pService, CHARACTERISTIC_POWER_MODE_CHANGE_UUID);
 
   //Spuštění begin funkce ErrorCheckeru
   ErrorChecker::begin();
