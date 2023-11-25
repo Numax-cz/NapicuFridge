@@ -9,3 +9,5 @@ data
 *.docx
 *.tmp
 *.ai
+*.xlsx
+*.pdf

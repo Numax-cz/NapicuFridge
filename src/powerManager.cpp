@@ -121,6 +121,7 @@ void DoorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
 
 //Begin funkce pro PowerManager
 void PowerManager::begin(BLEService* pService, const char* notify_uuid) {
+    digital_potentiometer->set(100);
     //Spuštění funkce pro načtení nastavení 
     PowerManager::load_config_from_eeprom();
 

@@ -148,7 +148,7 @@ void setup() {
   digital_potentiometer = new DigitalPotentiometer(X9_INC, X9_UD, X9_CS);
 
 
-  digital_potentiometer->set(50);
+  
 
   FridgeDisplay::begin();
 

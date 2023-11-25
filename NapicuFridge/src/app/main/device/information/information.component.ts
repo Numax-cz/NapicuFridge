@@ -23,8 +23,9 @@ export class InformationComponent implements ViewDidLeave {
     clearInterval(this.interval_id);
   }
 
+  //Funkce pro přečtení doby od spuštění chytré ledničky
   public read_uptime = (): void => {
-    console.log("update");
+    //Spuštění funkce charakteristiky pro čtení doby od spuštění chytré ledničky
     CharacteristicController.readUptime()?.then((data: OperationResult) => {
       //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
       let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
