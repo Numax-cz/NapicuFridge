@@ -25,6 +25,8 @@ protected:
     static inline BLECharacteristic *pCharacteristic = NULL;
     //Statická proměnná pro ukládání zda jsou dveře otevřeny
     static inline bool is_door_open = false;
+    //Statická proměnná, která ukládá aktuální zvolený napájecí režim 
+    static inline int selected_mode = -1;
     //Statická funkce pro inicializaci vnitřních ventilátorů
     static void begin_in_fans();
     //Statická funkce pro vypnutí chladících ventilátorů
@@ -51,7 +53,11 @@ public:
     static void loop();
     //Statická funkce pro zapnutí celého chladícího systému
     static void power_on();
-    //Statická funkce pro změnu napájecího režimu
+    /**
+     * @brief Statická funkce pro změnu napájecího režimu
+     * 
+     * @param mode Režim napájení který se nastaví
+     */
     static void change_power_mode(int mode);
 
     //Statická funkce pro vypnutí vnitřních ventilátorů

@@ -2,6 +2,7 @@ import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {CharacteristicController} from "../../../CharacteristicController";
 import {alert_animations} from "../../Animation";
+import {FridgePowerMode} from "../../../interface/Enums";
 
 
 @Component({
@@ -23,7 +24,7 @@ export class SettingsComponent {
 
   //Funkce pro změnu režimu napájení
   public change_power_mode(value: number): void {
-    if(!this.get_is_connected() || this.get_power_mode() === 0) return;
+    if(!this.get_is_connected() || this.get_is_fridge_on_fatal_error() || this.get_power_mode() === 0 || this.get_is_fridge_paused()) return;
     //Zavolání funkce pro zapsání režimu napájení
     CharacteristicController.writePowerMode(value)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
@@ -130,6 +131,11 @@ export class SettingsComponent {
     return AppComponent.is_connected();
   }
 
+  //Funkce, která vrátí zda je systém ledničky pozastaven
+  public get_is_fridge_paused(): boolean {
+    return AppComponent.get_is_fridge_paused();
+  }
+
   //Funkce, která vrátí zda došlo v ledničce k vážné poruše
   public get_is_fridge_on_fatal_error(): boolean {
     return AppComponent.get_is_fridge_on_fatal_error();
@@ -144,7 +150,7 @@ export class SettingsComponent {
   //Funkce, která vrátí který napájecí režim je zapnutý
   public get_selected_power_mode(): number {
     //Podmínka pokud není zařízení připojené nastaví se předchozí hodnota, pokud je, nastaví se aktuální nastavená hodnota
-    return (!this.get_is_connected() || AppComponent.get_power_mode() == 0) ? AppComponent.get_previous_power_mode() : AppComponent.get_power_mode();
+    return (!this.get_is_connected() || AppComponent.get_power_mode() == 0 || this.get_is_fridge_paused()) ? AppComponent.get_previous_power_mode() : AppComponent.get_power_mode();
   }
 
   //Funkce, která vrátí režim napájení ledničky

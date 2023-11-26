@@ -175,6 +175,7 @@ typedef enum {
     FRIDGE_MAX_POWER,
     FRIDGE_NORMAL_POWER,
     FRIDGE_ECO_POWER,
+    FRIDGE_PAUSED,
 
 
 } fridge_power_mode;

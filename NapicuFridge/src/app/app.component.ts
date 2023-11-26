@@ -190,6 +190,8 @@ export class AppComponent {
             AppComponent.subscribe_cooler_temp();
             //Spuštění funkce pro přihlášení se k odběru charakteristiky JSON dat
             AppComponent.subscribe_json_data();
+            //Spuštění funkce pro přihlášení se k odběru charakteristiky napájecího režimu
+            AppComponent.subscribe_power_mode();
             //Spuštění funkce pro vynucení naměřených JSON dat z chytré ledničky
             AppComponent.force_json_data();
             //Spuštění resolve funkce Promisu
@@ -531,6 +533,40 @@ export class AppComponent {
       });
   }
 
+  //Statická funkce pro přihlášení se k odběru pro získávání změň napájecího režimu z chytré ledničky
+  private static subscribe_power_mode(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      CharacteristicController.subscribePowerMode()?.subscribe(
+        {
+          next: (data: OperationResult) => {
+            //Po získání dat z bluetooth charakteristiky provést následující
+            if(data.value) {
+              //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+              let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+              //Převést bytes na string
+              let value: string = BluetoothLE.bytesToString(bytes);
+              //Spuštění funkce uvnitř zóny Angularu
+              this.ngZone.run(() => {
+                //Převedení string na number a následné nastavení proměnné na hodnotu získaných dat
+                this.fridge_data.config.fridge_power_mode = Number(value[0]);
+                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+                this.fridge_data.config.fridge_in_fans = Boolean(Number(value[1]));
+              });
+              //Spuštění resolve funkce Promisu
+              resolve();
+            }
+          },
+          error: (e) => {
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error" + JSON.stringify(e));
+            //Spuštění reject funkce Promisu
+             reject();
+          }
+        }
+      );
+    })
+  }
+
   //Statická funkce pro vynucení naměřených JSON dat z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
   private static force_json_data(): void {
     //Spuštění funkce pro vynucení naměřených JSON dat z chytré ledničky
@@ -732,6 +768,11 @@ export class AppComponent {
   //Statická funkce, která vrátí režim napájení ledničky
   public static get_power_mode(): FridgePowerMode {
     return AppComponent.fridge_data.config.fridge_power_mode;
+  }
+
+  //Statická funkce, která vrátí zda je systém ledničky pozastaven
+  public static get_is_fridge_paused(): boolean {
+    return AppComponent.get_power_mode() == FridgePowerMode.FRIDGE_PAUSED;
   }
 
   //Statická funkce, která nastaví předchozí napájecí režim ledničky

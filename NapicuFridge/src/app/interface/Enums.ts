@@ -11,4 +11,5 @@ export const enum FridgePowerMode {
   FRIDGE_MAX_POWER,
   FRIDGE_NORMAL_POWER,
   FRIDGE_ECO_POWER,
+  FRIDGE_PAUSED
 }

@@ -122,8 +122,6 @@ void DoorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
 //Begin funkce pro PowerManager
 void PowerManager::begin(BLEService* pService, const char* notify_uuid) {
     digital_potentiometer->set(100);
-    //Spuštění funkce pro načtení nastavení 
-    PowerManager::load_config_from_eeprom();
 
     // vytvoření BLE komunikačního kanálu pro odesílání (TX)
     PowerManager::pCharacteristic = pService->createCharacteristic(
@@ -134,24 +132,23 @@ void PowerManager::begin(BLEService* pService, const char* notify_uuid) {
     );
     //Přiřazení deskriptoru k této charakteristice.
     PowerManager::pCharacteristic->addDescriptor(new BLE2902());
+
+    //Spuštění begin funkce pro inicializaci chladících ventilátorů 
+    cooling_fans_pwm.begin();
+    //Spuštění funkce pro načtení nastavení 
+    PowerManager::load_config_from_eeprom();
 }
 
 //Statická funkce, která pošle připojenému zařízení aktuální režim napájení + nastavení vnitřních ventilátorů
 void PowerManager::notify_power_config() {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o režimu napájení");
-
-        //Vypsání hodnoty do konzole
+    //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o stavu relátka vnitřních ventilátorů");
-
     //Získání dat o stavu relátek pro vnitřní ventilátory
     int relay_in_fans_value = relay_in_fans->get_is_open() ? 1 : 0;
-
-    //Získání dat o režimu napájení z EEPROM 
-    uint8_t power_mode = EEPROM.read(POWER_MODE_EEPROM_ADDR);
-    //TODO IF???
     //Nastavení hodnoty charakteristiky 
-    PowerManager::pCharacteristic->setValue((String(power_mode) + String(relay_in_fans_value)).c_str());
+    PowerManager::pCharacteristic->setValue((String(PowerManager::selected_mode) + String(relay_in_fans_value)).c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
     PowerManager::pCharacteristic->notify();
 }
@@ -160,8 +157,6 @@ void PowerManager::notify_power_config() {
 void PowerManager::load_config_from_eeprom() {
     //Proměnná pro uložení dat z EEPROM
     uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
-    //Spuštění begin funkce pro inicializaci chladících ventilátorů 
-    cooling_fans_pwm.begin();
     //Pokud není uložená hodnota v EEPROM proveď následující 
     if(data == 0xFF) {
         //Nastavení výchozí hodnoty
@@ -179,18 +174,22 @@ void PowerManager::load_config_from_eeprom() {
     //Pokud je uložena hodnota v EEPROM provede se následující 
     if(door_data != 0xFF) {
         //Nazstavení hodnoty z EEPROM
-        PowerManager::fridge_pause_on_door_open = data;
+        PowerManager::fridge_pause_on_door_open = door_data;
     } else {
         //Nastavení výchozí hodnoty
         PowerManager::fridge_pause_on_door_open = DEFAULT_FRIDGE_PAUSE_ON_DOOR_OPEN;
     }
 }
 
-//Statická funkce pro změnu napájecího režimu
+/**
+ * @brief Statická funkce pro změnu napájecího režimu
+ * 
+ * @param mode Režim napájení který se nastaví
+ */
 void PowerManager::change_power_mode(int mode) {
     
     //Zkontroluje, zda převedené číslo odpovídá některé hodnotě enumerace
-    if (mode == FRIDGE_OFF_POWER) {
+    if (mode == FRIDGE_OFF_POWER || mode == FRIDGE_PAUSED) {
         PowerManager::power_off();
     } else if (mode == FRIDGE_MAX_POWER) {
         relay_peltier_power_mode->close();
@@ -209,10 +208,13 @@ void PowerManager::change_power_mode(int mode) {
     }
 
     //TODO IF 
-    //Zapsání režimu do EEPROM
-    EEPROM.write(POWER_MODE_EEPROM_ADDR, mode);
-    //Potvrezní zmeň
-    EEPROM.commit();
+    PowerManager::selected_mode = mode;
+    if(mode != FRIDGE_PAUSED) {
+        //Zapsání režimu do EEPROM
+        EEPROM.write(POWER_MODE_EEPROM_ADDR, mode);
+        //Potvrezní zmeň
+        EEPROM.commit();
+    }
 }
 
 //Funkce pro inicializaci vnitřních ventilátorů
@@ -241,8 +243,10 @@ void PowerManager::loop() {
     if(digitalRead(DOOR_PIN) == LOW && PowerManager::fridge_pause_on_door_open) {
         //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log
         if(!PowerManager::is_door_open) {
-            //Spuštění funkce pro vypnutí celého chladícího systému
-            PowerManager::power_off();
+            //Spuštění funkce pro přepnutí napájecího režimu na stav "vypnuto"
+            PowerManager::change_power_mode(FRIDGE_PAUSED);
+            //TODO DOC
+            PowerManager::notify_power_config();
             //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
             PowerManager::is_door_open = true;
         }
@@ -252,6 +256,8 @@ void PowerManager::loop() {
         if(PowerManager::is_door_open) {
             //Spuštění funkce proč načtení veškerých nastavení z EEPROM
             PowerManager::load_config_from_eeprom();
+            //TODO DOC
+            PowerManager::notify_power_config();
             //Nastavení proměnné, určující, zda jsou dveře otevřeny na log0
             PowerManager::is_door_open = false;
         }
@@ -268,10 +274,6 @@ void PowerManager::power_off() {
     relay_in_fans->close();
     //Spuštění funkce pro vypnutí chladících ventilátorů
     PowerManager::turn_off_cooling_fans();
-    // //Zapsání hodnoty do EEPROM
-    // EEPROM.write(POWER_MODE_EEPROM_ADDR, FRIDGE_OFF_POWER);
-    // //Potvrezní zmeň
-    // EEPROM.commit();
 }
 
 //Funkce pro zapnutí celého chladícího systému

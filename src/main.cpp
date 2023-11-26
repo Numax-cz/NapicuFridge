@@ -194,7 +194,7 @@ void setup() {
 
   pServer->setCallbacks(new ServerCallBack());
   // Vytvoření BLE služby
-  BLEService *pService = pServer->createService(BLEUUID(SERVICE_UUID), 30, 0);
+  BLEService *pService = pServer->createService(BLEUUID(SERVICE_UUID), 40, 0);
 
 
 

@@ -3,7 +3,6 @@ import {AppComponent} from "../../app.component";
 import {alert_animations, show_box_animations} from "../Animation";
 import {FridgePowerMode} from "../../interface/Enums";
 import {CharacteristicController} from "../../CharacteristicController";
-import {DEFAULT_IN_FANS_ON_SWITCH, DEFAULT_POWER_MODE_ON_SWITCH} from "../../config/configuration";
 
 
 @Component({
@@ -83,6 +82,11 @@ export class DevicePage {
   //Funkce, která vrátí zda došlo v ledničce k problému
   public get_is_fridge_on_error(): boolean {
     return AppComponent.get_is_fridge_on_error();
+  }
+
+  //Funkce, která vrátí zda je systém ledničky pozastaven
+  public get_is_fridge_paused(): boolean {
+    return AppComponent.get_is_fridge_paused();
   }
 
   //Funkce, která vrátí zda došlo v ledničce k vážné poruše
