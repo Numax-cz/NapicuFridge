@@ -48,7 +48,6 @@ export class HomePage {
   //Proměnná která uchovává stav
   public loading: boolean = true;
 
-
   constructor(private router: Router, private ngZone: NgZone) {
     //Spuštění hlavní funkce
     this.init();
@@ -56,10 +55,8 @@ export class HomePage {
 
   //Funkce, která se spustí při spuštění aplikace
   public init(): void {
-
     //Inicializace BluetoothLE
     BluetoothLE.initialize({statusReceiver: true, request: true}).subscribe(async () => {
-
       //Funkce pro zjištění práv bluetooth skenování
       await BluetoothLE.hasPermissionBtScan().then(async (status: {hasPermission: boolean}) => {
         if(!status.hasPermission) await BluetoothLE.requestPermissionBtScan(); //TODO Při nepovolení => povolte BT
@@ -69,7 +66,6 @@ export class HomePage {
       await BluetoothLE.hasPermissionBtConnect().then(async (status: {hasPermission: boolean}) => {
         if(!status.hasPermission) await BluetoothLE.requestPermissionBtConnect(); //TODO Při nepovolení => povolte BT
       });
-
 
       //Získání adresy z lokálního uložiště
       let i: DeviceInfo | null = AppComponent.get_paired_device_data_from_storage();
@@ -92,10 +88,8 @@ export class HomePage {
     });
   }
 
-
   //Funkce pro zahájení skenování NapicuFridge zařízení
   public scan(): void {
-
     //Nastavit stav skenování na log1
     this.scanning = true;
 
@@ -116,7 +110,7 @@ export class HomePage {
           this.devices.push(data);
         });
       }
-    })
+    });
   }
 
   //Funkce pro stopnutí skenování
@@ -159,7 +153,6 @@ export class HomePage {
       BluetoothLE.bond({address: address}).subscribe((data: DeviceInfo) => {
         //Když se zařízení páruje
         if(data.status === "bonding") {
-
           //Vypsání hodnoty do vývojářské konzole
           console.log("Bonding...");
         }
@@ -198,5 +191,4 @@ export class HomePage {
   public get_app_version(): string {
     return `${AppComponent.application_name} ${AppComponent.application_version_code}`;
   }
-
 }
