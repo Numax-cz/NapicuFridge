@@ -27,10 +27,7 @@
           </div>
         </div>
       </div>
-
       <div class="settings-container">
-
-
         <div
           class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
           [ngStyle]="!get_is_connected() || get_is_fridge_on_fatal_error() || get_power_mode() === 0 || get_is_fridge_paused() ? {'opacity': '0.5'} : null">
@@ -46,7 +43,6 @@
             </label>
           </div>
         </div>
-
         <div
           class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
           [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">
@@ -61,7 +57,6 @@
             </label>
           </div>
         </div>
-
         <div
           class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"
           [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">
@@ -76,19 +71,11 @@
             </label>
           </div>
         </div>
-
-<!--        <div-->
-<!--          class="is-flex is-justify-content-space-between is-align-items-center box info-box is-size-4 has-text-weight-bold has-text-centered"-->
-<!--          [ngStyle]="!get_is_connected() ? {'opacity': '0.5'} : null">-->
-<!--          <div class="is-size-6">-->
-<!--            {{get_paired_device_name()}}-->
-<!--          </div>-->
-<!--          <div class="p-3 box info-box has-background-info has-text-white" style="font-size: 0.8rem"-->
-<!--               [ngClass]="{'is-clickable': get_is_connected()}" (click)="open_rename_device_menu()">-->
-<!--            Přejmenovat-->
-<!--          </div>-->
-<!--        </div>-->
-
+      </div>
+      <div *ngIf="get_is_fridge_paused()" class="error-red-color is-size-5 has-text-weight-bold">
+        <div>
+          *Dveře jsou otevřené
+        </div>
       </div>
     </div>
   </section>
