@@ -1,4 +1,3 @@
-
 /**
  * @file digitalPotenciometer.h
  * @author Marcel Mikoláš

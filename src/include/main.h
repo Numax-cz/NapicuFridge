@@ -26,6 +26,7 @@
 #include <include/uptime.h>
 #include <include/fridgeFactoryReset.h>
 #include <include/digitalPotentiometer.h>
+#include <include/rgbManager.h>
 /////////////////////////////////////////////////////////////////////
 
 #define DEV_MODE 1
@@ -46,6 +47,10 @@
 #define DHT_INSIDE 17  // Pin vnitřního DHT senzoru
 #define DHT_OUTSIDE 16 //Pin venkovního DHT senzoru
 
+//Definice pinu pro RGB osvětlení 
+#define RGB_PIN 19
+//Definice počtů led na RGB osvětlení
+#define RGB_LED_COUNT 12
 
 //Definice pinu tlačítka pro reset zařízení
 #define RESET_BUTTON 5
@@ -211,6 +216,7 @@ class ButtonManager;
 class PowerManager;
 class ThermistorManager;
 class DigitalPotentiometer;
+class RGBManager;
 //Proměnná pro uložení BLE serveru
 extern BLEServer* pServer;
 //Proměnná pro uložení DHT senzoru vnitřní teploty
@@ -233,8 +239,10 @@ extern RelayModule* relay_peltier_power_mode;
 extern DigitalPotentiometer* digital_potentiometer;
 //Proměnná pro uložení venkovních chladících PWM ventilátorů
 extern FanController<COOLING_FAN_PWM, COOLING_FAN_TACH> cooling_fans_pwm;
- //Proměnná pro uložení třídy správce napájení
+//Proměnná pro uložení třídy správce napájení
 extern PowerManager* fridge_power_manager;
+//Proměnná pro uložení třídy RGB světla
+extern RGBManager* fridge_rgb;
 
 /////////////////////////////////////////////////////////////////////
 

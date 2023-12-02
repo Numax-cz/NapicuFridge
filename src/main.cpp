@@ -1,4 +1,3 @@
-
 /**
  * @file main.cpp
  * @author Marcel Mikoláš
@@ -10,7 +9,7 @@
  * 
 */
 
-//Připojení hlavní knohovny 
+//Připojení hlavní knihovny 
 #include <include/main.h>
 //Proměnná pro ukládání zda je zařízení připojené
 bool devicePaired = false;
@@ -44,6 +43,9 @@ DigitalPotentiometer* digital_potentiometer = NULL;
 FanController<COOLING_FAN_PWM, COOLING_FAN_TACH> cooling_fans_pwm;
 //Proměnná pro uložení třídy správce napájení
 PowerManager* fridge_power_manager = NULL;
+//Proměnná pro uložení třídy RGB světla
+RGBManager* fridge_rgb = NULL;
+
 
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
@@ -98,7 +100,6 @@ void setup() {
   // Zahájení komunikace po sériové lince
   // Rychlostí 9600 baud
   Serial.begin(9600);
-
 
   //Nastavení LED diod jako výstup
   pinMode(CONNECTION_LED, OUTPUT);
@@ -303,7 +304,12 @@ void setup() {
   //Spuštění begin funkce ErrorCheckeru
   ErrorChecker::begin();
 
+  //Vytvoření nové třídy pro RGB světlo 
+  fridge_rgb = new RGBManager(RGB_LED_COUNT, RGB_PIN);
+  //Spuštění begin funkce RGBManageru
+  fridge_rgb->begin();
 
+  fridge_rgb->setColor(255, 255, 255);
 
   // Zahájení BLE služby
   pService->start();
@@ -344,10 +350,6 @@ void loop() {
   //Uložíme aktuální čas běhu do konstantní proměnné time 
   const unsigned long time = millis();
 
-
-
-
-
   //Spuštění loop funkce displeje
   FridgeDisplay::loop();
 
@@ -359,6 +361,9 @@ void loop() {
 
   //Spuštění loop funkce správce napájení  
   PowerManager::loop();
+
+  //Spuštění loop funkce rgb osvětlení 
+  fridge_rgb->loop();
 
 
 
