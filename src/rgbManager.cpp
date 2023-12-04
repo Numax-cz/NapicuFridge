@@ -16,7 +16,7 @@
  * @param leds Počet led 
  * @param pin Pin RGB 
  */
-RGBManager::RGBManager(uint16_t leds, int16_t pin) {
+RGBManager::RGBManager(uint16_t leds, int16_t pin) : leds(leds) {
     this->rgbWS = new Adafruit_NeoPixel(leds, pin, NEO_GRB + NEO_KHZ800);
 }
 
@@ -27,10 +27,12 @@ void RGBManager::begin() {
 
 //Loop funkce pro RGB světlo
 void RGBManager::loop() {
-    //Nastavení barvy pro danou LED diodu,
-    //Číslo má pořadí od nuly
-    this->rgbWS->setPixelColor(0, rgb);
-    //Aktualizace barev na všech modulech
+    //Loop, který nastavý barvu všem LED diodám 
+    for (int i = 0; i < this->leds; i++) {
+        //Nastavení barvy pro danou LED diodu podle indexu (i)
+        this->rgbWS->setPixelColor(i, rgb);
+    }
+    //Spuštění funkce pro aktualizaci barev na všech modulech
     this->rgbWS->show();
 }
 

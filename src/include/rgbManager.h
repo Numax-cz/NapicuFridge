@@ -22,6 +22,8 @@ private:
     Adafruit_NeoPixel* rgbWS = NULL;
     //Proměnná pro uložení aktuálního nastavení RGB
     uint32_t rgb = 0;
+    //Konstantní proměnná pro uložení počtů LED
+    const uint16_t leds;
 public:
     /**
      * @brief Konstruktor pro vytvoření nové třídy pro RGB světlo 
