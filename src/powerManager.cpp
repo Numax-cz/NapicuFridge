@@ -240,15 +240,20 @@ void PowerManager::begin_in_fans() {
 //Statická loop funkce pro PowerManager
 void PowerManager::loop() {
     //Pokud jsou dveře otevřeny provede se následující 
-    if(digitalRead(DOOR_PIN) == LOW && PowerManager::fridge_pause_on_door_open) {
+    if(digitalRead(DOOR_PIN) == LOW) {
         //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log
         if(!PowerManager::is_door_open) {
-            //Spuštění funkce pro přepnutí napájecího režimu na stav "vypnuto"
-            PowerManager::change_power_mode(FRIDGE_PAUSED);
-            //TODO DOC
-            PowerManager::notify_power_config();
-            //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
-            PowerManager::is_door_open = true;
+            //Pokud je povolena pauza chladícího systému při otevření provede se následující 
+            if(PowerManager::fridge_pause_on_door_open) {
+                //Spuštění funkce pro přepnutí napájecího režimu na stav "vypnuto"
+                PowerManager::change_power_mode(FRIDGE_PAUSED);
+                //Spuštění funkce pro oznámení o změně chladícího systému připojenému zařízení 
+                PowerManager::notify_power_config();
+                //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
+                PowerManager::is_door_open = true;
+            }
+            //Spuštění funkce pro zapnutí RGB světla
+            fridge_rgb->turn_on();
         }
 
     } else { //Pokud jsou dveře zavřené provede se následující 
@@ -260,6 +265,8 @@ void PowerManager::loop() {
             PowerManager::notify_power_config();
             //Nastavení proměnné, určující, zda jsou dveře otevřeny na log0
             PowerManager::is_door_open = false;
+            //Spuštění funkce pro vypnutí RGB světla
+            fridge_rgb->turn_off();
         }
     }
 }

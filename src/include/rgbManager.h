@@ -36,6 +36,10 @@ public:
     void begin();
     //Definice loop funkce pro RGB světlo
     void loop();
+    //Definice funkce pro zapnutí RGB světla
+    void turn_on();
+    //Definice funkce pro vypnutí RGB světla
+    void turn_off();
     /**
      * @brief Definice funkce pro nastavení RGB 
      * 

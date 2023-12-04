@@ -311,6 +311,7 @@ void setup() {
 
   fridge_rgb->setColor(255, 255, 255);
 
+
   // Zahájení BLE služby
   pService->start();
 

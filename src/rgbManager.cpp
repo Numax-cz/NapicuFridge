@@ -23,6 +23,8 @@ RGBManager::RGBManager(uint16_t leds, int16_t pin) : leds(leds) {
 //Funkce pro inicializace RGB světla
 void RGBManager::begin() {
     this->rgbWS->begin();
+    //Spuštění funkce pro RGB světla
+    this->turn_off();
 }
 
 //Loop funkce pro RGB světlo
@@ -34,6 +36,16 @@ void RGBManager::loop() {
     }
     //Spuštění funkce pro aktualizaci barev na všech modulech
     this->rgbWS->show();
+}
+
+//Definice funkce pro zapnutí RGB světla
+void RGBManager::turn_on() {
+    this->rgbWS->setBrightness(255); //TODO BY EEprom + documentation
+}
+
+//Definice funkce pro vypnutí RGB světla
+void RGBManager::turn_off() {
+    this->rgbWS->setBrightness(0);
 }
 
 /**
