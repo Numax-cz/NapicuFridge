@@ -18,6 +18,7 @@ import {NgSelectModule} from "@ng-select/ng-select";
 import {NapicuOptionTemplateComponent} from "./napicu-option-template/napicu-option-template.component";
 import {LightingComponent} from "./lighting/lighting.component";
 import {NgxSliderModule} from "ngx-slider-v2";
+import {ColorSketchModule} from "ngx-color/sketch";
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import {NgxSliderModule} from "ngx-slider-v2";
     LineChartModule,
     NgSelectModule,
     FormsModule,
-    NgxSliderModule
+    NgxSliderModule,
+    ColorSketchModule
   ],
   declarations: [DevicePage, InformationComponent, SettingsComponent, DisplayComponent, ChartsComponent, LightingComponent ,NapicuSettingsTemplateComponent, NapicuOptionTemplateComponent]
 })

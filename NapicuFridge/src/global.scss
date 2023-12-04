@@ -64,6 +64,28 @@ $color2: #3e8ed0;
 
 }
 
+.ColorPicker {
+
+  .saturation-circle {
+    width: 10px !important;
+    height: 10px !important;
+    box-shadow: 0 0 0 3px #fff, inset 0 0 1px 1px #0000004d, 0 0 1px 2px #0006 !important;;
+  }
+  .sketch-hue {
+    height: 30px !important;
+  }
+  .color-hue-slider{
+    height: 28px !important;
+  }
+  .sketch-picker {
+    width: -webkit-fill-available !important;
+  }
+  .sketch-fields-container{
+    display: none !important;;
+  }
+}
+
+
 .alert {
   position: absolute;
   width: 100vw;

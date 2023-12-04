@@ -1,4 +1,4 @@
-<section class="section">
+<section class="section" style="overflow: auto">
   <app-napicu-settings-template>Nastavení světla</app-napicu-settings-template>
   <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
     <div class="pb-2 pt-2 is-flex is-justify-content-space-between is-align-items-center" >
@@ -18,12 +18,23 @@
 
 
   <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
+
+    <div class=" is-size-5 has-text-weight-bold">
+      Jas
+    </div>
+    <div class="Slider mt-2">
+      <ngx-slider [(value)]="value" [options]="options"></ngx-slider>
+    </div>
+
+  </div>
+
+  <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
     <div class="pb-2 pt-2" >
-      <div class="is-size-6">
-        Jas
+      <div class=" is-size-5 has-text-weight-bold">
+        Barva
       </div>
-      <div class="Slider">
-        <ngx-slider [(value)]="value" [options]="options"></ngx-slider>
+      <div class="ColorPicker">
+        <color-sketch [disableAlpha]="true" [presetColors]="[]" color="#fff" ></color-sketch>
       </div>
     </div>
   </div>
