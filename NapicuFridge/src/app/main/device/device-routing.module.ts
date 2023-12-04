@@ -4,6 +4,7 @@ import {InformationComponent} from "./information/information.component";
 import {SettingsComponent} from "./settings/settings.component";
 import {DisplayComponent} from "./display/display.component";
 import {ChartsComponent} from "./charts/charts.component";
+import {LightingComponent} from "./lighting/lighting.component";
 
 
 
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: "device-data",
     component: ChartsComponent,
+  },
+  {
+    path: "device-led",
+    component: LightingComponent,
   }
 ];
 

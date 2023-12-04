@@ -29,12 +29,39 @@
 
 @import "@ng-select/ng-select/themes/default.theme.css";
 
+$color1: #ffffff;
+$color2: #3e8ed0;
+
 .error-red-background {
   background-color: #ed441d !important;
 }
 
 .error-red-color {
   color: #ed441d !important;
+}
+
+
+.Slider {
+
+
+  .ngx-slider .ngx-slider-pointer {
+    background-color: $color2 !important;
+  }
+  .ngx-slider .ngx-slider-pointer:after {
+    background-color: $color2 !important;
+  }
+
+  .ngx-slider .ngx-slider-bar {
+    background-color: $color2 !important;
+  }
+
+  .ngx-slider .ngx-slider-selection {
+    background-color: #d8e0f3 !important;
+  }
+
+
+
+
 }
 
 .alert {
@@ -91,8 +118,7 @@
   }
 }
 
-$color1: #ffffff;
-$color2: #3e8ed0;
+
 
 .napicu-switch {
   .toggle {
