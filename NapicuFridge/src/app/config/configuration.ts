@@ -19,6 +19,9 @@ export namespace Configuration {
   export const CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID: string = "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0";
   export const CHARACTERISTIC_FACTORY_UUID: string = "a488b067-27fc-47e6-85b2-22416551775d";
   export const CHARACTERISTIC_DOOR_PAUSE_UUID: string = "bd5f15cf-94a7-4d19-b906-64bb570d57be";
+  export const CHARACTERISTIC_LED_ENABLE_UUID: string = "27537e3a-92d1-11ee-b9d1-0242ac120002";
+  export const CHARACTERISTIC_LED_COLOR_UUID: string = "27538114-92d1-11ee-b9d1-0242ac120002";
+  export const CHARACTERISTIC_LED_BRIGHTNESS_UUID: string = "2753827c-92d1-11ee-b9d1-0242ac120002";
 }
 
 export const DEFAULT_ALERT_DISPLAY_TIME: number = 3500;

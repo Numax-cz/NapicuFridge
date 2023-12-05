@@ -1,6 +1,7 @@
 import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {LabelType, Options} from "ngx-slider-v2";
+import {CharacteristicController} from "../../../CharacteristicController";
 
 
 @Component({
@@ -34,7 +35,16 @@ export class LightingComponent  {
 
   //Funkce, která se spustí po změně inputu
   public led_input_change(event: any): void {
-
+    const i: boolean = event.currentTarget.checked;
+    //Spuštění funkce pro zápis charakteristiky na stav LED osvětlení
+    CharacteristicController.writeLEDEnable(i)?.then(() => {
+      //Až se úspěšně provede zápis charakteristiky provede se následující
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        //Zapíšeme aktuální dostupnost LED osvětlení
+        AppComponent.fridge_data.config.fridge_led_enable = i;
+      });
+    });
   }
 
   //Funkce, která vrátí zda je zařízení připojené
@@ -42,5 +52,9 @@ export class LightingComponent  {
     return AppComponent.is_connected();
   }
 
+  //Funkce, která vrátí zda se má LED osvětlení zapnout při otevřených dveří
+  public get_fridge_led_enable(): boolean {
+    return AppComponent.get_fridge_led_enable();
+  }
 
 }

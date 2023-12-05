@@ -23,6 +23,27 @@ RGBManager::RGBManager(uint16_t leds, int16_t pin) : leds(leds) {
 //Funkce pro inicializace RGB světla
 void RGBManager::begin() {
     this->rgbWS->begin();
+
+    //Proměnná pro uložení hodnoty červené barvy
+    uint8_t R = EEPROM.read(LED_COLOR_EEPROM_ADDR);
+    //Proměnná pro uložení hodnoty zelené barvy
+    uint8_t G = EEPROM.read(LED_COLOR_EEPROM_ADDR + 1);
+    //Proměnná pro uložení hodnoty modré barvy
+    uint8_t B = EEPROM.read(LED_COLOR_EEPROM_ADDR + 2);
+    //Proměnná pro uložení hodnoty jasu
+    uint8_t Brightness = EEPROM.read(LED_BRIGHTNESS_EEPROM_ADDR);
+
+    //Pokud se hodnota rovná 255 (neexistuje) provede se následující 
+    if(Brightness == 0xFF) {
+        //Nastavení výchozí hodnoty
+        Brightness = DEFAULT_LED_BRIGHTNESS;
+    }
+
+    //Spuštění funkce pro nastavení barvy LED osvětlení 
+    fridge_rgb->setColor(R, G, B);
+
+    //Spuštění funkce pro nastavení jasu LED osvětlení 
+    fridge_rgb->setBrightness(Brightness);
     //Spuštění funkce pro RGB světla
     this->turn_off();
 }
@@ -63,11 +84,11 @@ void RGBManager::setColor(uint8_t r, uint8_t g, uint8_t b) {
 /**
  * @brief Definice funkce pro nastavení jasu RGB světla
  * 
- * @param brightness Hodnota jasu (0-255)
+ * @param brightness Hodnota jasu (0-100)
  */
 void RGBManager::setBrightness(uint8_t brightness) {
     //Spuštění funkce pro nastavení jasu
-    this->rgbWS->setBrightness(brightness);
+    this->rgbWS->setBrightness(2.55 * brightness);
 }
 
 //Destruktor pro RGB světlo

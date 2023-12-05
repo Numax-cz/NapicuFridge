@@ -8,7 +8,7 @@
       <div class="is-size-6 has-text-weight-light">
         <div class="napicu-switch">
           <label class="toggle">
-            <input class="toggle-checkbox" type="checkbox"  (change)="led_input_change($event)" [checked]="get_is_connected()" [disabled]="!get_is_connected()" >
+            <input class="toggle-checkbox" type="checkbox"  (change)="led_input_change($event)" [checked]="get_is_connected() && get_fridge_led_enable()" [disabled]="!get_is_connected()" >
             <div class="toggle-switch"></div>
           </label>
         </div>

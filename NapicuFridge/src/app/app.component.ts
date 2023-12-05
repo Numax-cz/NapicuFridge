@@ -80,7 +80,10 @@ export class AppComponent {
       fridge_in_fans: false,
       buzzing_on_error: true,
       fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
-      fridge_stop_on_open_door: true
+      fridge_stop_on_open_door: true,
+      fridge_led_enable: true,
+      fridge_led_rgb: -1,
+      fridge_led_brightness: -1
     },
     errors: {
       fridge_out_temp: false,
@@ -326,6 +329,20 @@ export class AppComponent {
         let value: string = BluetoothLE.bytesToString(bytes);
         //Nastavení proměnné na hodnotu podle získaných dat
         this.fridge_data.config.fridge_stop_on_open_door = (value == "1");
+      }).catch((e) => {
+        //Vypsání hodnoty do vývojářské konzole
+        console.error("error_discovered" + JSON.stringify(e));
+      });
+
+    //Získání stavu, zda se má LED osvětlení zapnout při otevřených dveří
+    await CharacteristicController.readLEDEnable()
+      ?.then((data: OperationResult) => {
+        //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+        let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+        //Převést bytes na string
+        let value: string = BluetoothLE.bytesToString(bytes);
+        //Nastavení proměnné na hodnotu podle získaných dat
+        this.fridge_data.config.fridge_led_enable = (value == "1");
       }).catch((e) => {
         //Vypsání hodnoty do vývojářské konzole
         console.error("error_discovered" + JSON.stringify(e));
@@ -926,6 +943,11 @@ export class AppComponent {
   //Statická funkce, která vrátí zda se má lednička pozastavit při otevřených dveří
   public static get_fridge_stop_on_open_door(): boolean {
     return this.fridge_data.config.fridge_stop_on_open_door;
+  }
+
+  //Statická funkce, která vrátí zda se má LED osvětlení zapnout při otevřených dveří
+  public static get_fridge_led_enable(): boolean {
+    return this.fridge_data.config.fridge_led_enable;
   }
 
   //Statická funkce, která vymaže data zobrazující se v grafu

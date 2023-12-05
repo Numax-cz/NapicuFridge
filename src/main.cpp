@@ -295,6 +295,15 @@ void setup() {
                                        
   doorCharacteristic->setCallbacks(new DoorCharacteristicCallback());
 
+    //Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *rgbEnableCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_LED_ENABLE_UUID,
+    BLECharacteristic::PROPERTY_WRITE |
+    BLECharacteristic::PROPERTY_READ
+  );
+                                       
+  rgbEnableCharacteristic->setCallbacks(new RGBEnableCharacteristicCallback());
+
   //Spuštění begin funkce DataJSONManageru
   DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  
 
@@ -308,8 +317,6 @@ void setup() {
   fridge_rgb = new RGBManager(RGB_LED_COUNT, RGB_PIN);
   //Spuštění begin funkce RGBManageru
   fridge_rgb->begin();
-
-  fridge_rgb->setColor(255, 255, 255);
 
 
   // Zahájení BLE služby

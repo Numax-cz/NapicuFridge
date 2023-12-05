@@ -101,8 +101,19 @@
 //Definice EEPROM pro ukládání zda se má lednička po otevření dveří pozastavit log0/log1
 #define FRIDGE_PAUSE_ON_DOOR_OPEN_SIZE 1 //Délka stavu -128 až 127
 #define FRIDGE_PAUSE_ON_DOOR_OPEN_ADDR PIEZO_ON_ERROR_ADDR + 1 //Adresa v paměti EEPROM na kterou se bude hodnota ukládat
+//Definice EEPROM pro ukládání zda má být světlo povoleno při otevření dveří 
+#define LED_AVAILABLE_EEPROM_SIZE 1
+#define LED_AVAILABLE_EEPROM_ADDR FRIDGE_PAUSE_ON_DOOR_OPEN_ADDR + 1
+//Definice EEPROM pro ukládání barvy LED osvětlení 
+#define LED_COLOR_EEPROM_SIZE 3
+#define LED_COLOR_EEPROM_ADDR LED_AVAILABLE_EEPROM_ADDR + 3
+//Definice EEPROM pro ukládání jasu LED osvětlení 
+#define LED_BRIGHTNESS_EEPROM_SIZE 1
+#define LED_BRIGHTNESS_EEPROM_ADDR LED_COLOR_EEPROM_ADDR + 1
+
+
 //Definice celkové délky 
-#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE + PIEZO_ON_ERROR_SIZE + FRIDGE_PAUSE_ON_DOOR_OPEN_SIZE
+#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE + PIEZO_ON_ERROR_SIZE + FRIDGE_PAUSE_ON_DOOR_OPEN_SIZE + LED_AVAILABLE_EEPROM_SIZE + LED_COLOR_EEPROM_SIZE + LED_BRIGHTNESS_EEPROM_SIZE
 
 
 /////////////////////////////////////////////////////////////////////
@@ -127,6 +138,9 @@
 #define CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0"
 #define CHARACTERISTIC_FACTORY_UUID "a488b067-27fc-47e6-85b2-22416551775d"
 #define CHARACTERISTIC_DOOR_PAUSE_UUID "bd5f15cf-94a7-4d19-b906-64bb570d57be"
+#define CHARACTERISTIC_LED_ENABLE_UUID "27537e3a-92d1-11ee-b9d1-0242ac120002"
+#define CHARACTERISTIC_LED_COLOR_UUID "27538114-92d1-11ee-b9d1-0242ac120002"
+#define CHARACTERISTIC_LED_BRIGHTNESS_UUID "2753827c-92d1-11ee-b9d1-0242ac120002"
 
 
 //Definice maximální délku datového balíčku
@@ -154,6 +168,11 @@
 //Definice výchozího nastavení, zda se má lednička pozastavit při otevřených dveří
 #define DEFAULT_FRIDGE_PAUSE_ON_DOOR_OPEN 1 //V tomto případě se lednička pozastaví při otevřených dveří
 //Zde následuje několik definicí ke správci dat pro graf (dataJSONManager) 
+
+//Definice výchozího nastavení LED osvětlení 
+#define DEFAULT_LED_ENABLE 1 //V tomto případě se LED osvětlení rozsvítí při otevření dveří 
+//Definice výchozího jasu LED osvětlení 
+#define DEFAULT_LED_BRIGHTNESS 100 //V tomto případě je jas nastaven na 100%
 
 //Definice názvu souboru pro ukládání dat v grafu
 #define DEFAULT_JSON_DATA_FILE_NAME "/fridge_data.json" 

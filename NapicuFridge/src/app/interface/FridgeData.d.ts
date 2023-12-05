@@ -32,6 +32,10 @@ export declare interface FridgeData {
 
 
     fridge_power_mode: FridgePowerMode,
+
+    fridge_led_enable: boolean,
+    fridge_led_rgb: number,
+    fridge_led_brightness: number
   }
 
   errors: {

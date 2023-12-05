@@ -42,6 +42,8 @@ protected:
 public: 
     //Statická proměnná, která určuje zda se lednička pozastaví při otevřených dveří 
     static inline int fridge_pause_on_door_open = -1;
+    //Statická proměnná, která určuje zda se má LED osvětlení zapnout při otevřených dveří
+    static inline int fridge_led_enable_on_door_open = -1;
     /**
      * @brief Begin funkce pro PowerManager
      * 

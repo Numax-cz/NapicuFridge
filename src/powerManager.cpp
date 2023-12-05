@@ -154,7 +154,7 @@ void PowerManager::notify_power_config() {
 }
 
 //Funkce, která načte veškerá nastavení z EEPROM
-void PowerManager::load_config_from_eeprom() {
+void PowerManager::load_config_from_eeprom() { //TODO Optimalizovat 
     //Proměnná pro uložení dat z EEPROM
     uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
     //Pokud není uložená hodnota v EEPROM proveď následující 
@@ -178,6 +178,17 @@ void PowerManager::load_config_from_eeprom() {
     } else {
         //Nastavení výchozí hodnoty
         PowerManager::fridge_pause_on_door_open = DEFAULT_FRIDGE_PAUSE_ON_DOOR_OPEN;
+    }
+
+    //Získání dat z EEPROM 
+    uint8_t led_data = EEPROM.read(LED_AVAILABLE_EEPROM_ADDR);
+    //Pokud je uložena hodnota v EEPROM provede se následující 
+    if(led_data != 0xFF) {
+        //Nazstavení hodnoty z EEPROM
+        PowerManager::fridge_led_enable_on_door_open = led_data;
+    } else {
+        //Nastavení výchozí hodnoty
+        PowerManager::fridge_led_enable_on_door_open = DEFAULT_LED_ENABLE;
     }
 }
 
@@ -241,7 +252,7 @@ void PowerManager::begin_in_fans() {
 void PowerManager::loop() {
     //Pokud jsou dveře otevřeny provede se následující 
     if(digitalRead(DOOR_PIN) == LOW) {
-        //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log
+        //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log1
         if(!PowerManager::is_door_open) {
             //Pokud je povolena pauza chladícího systému při otevření provede se následující 
             if(PowerManager::fridge_pause_on_door_open) {
@@ -252,8 +263,12 @@ void PowerManager::loop() {
                 //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
                 PowerManager::is_door_open = true;
             }
-            //Spuštění funkce pro zapnutí RGB světla
-            fridge_rgb->turn_on();
+
+            //Pokud je proměnná určující, zda se má LED osvětlení zapnout při otevření dveří nastavena na log1
+            if(PowerManager::fridge_led_enable_on_door_open) {
+                //Spuštění funkce pro zapnutí RGB světla
+                fridge_rgb->turn_on();
+            }
         }
 
     } else { //Pokud jsou dveře zavřené provede se následující 

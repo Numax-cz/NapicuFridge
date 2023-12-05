@@ -9,8 +9,8 @@
 
 //Zabráníme několikanásobnému zahrnutí knihoven 
 #pragma once
-// //Připojení main knihovny
-// #include "main.h"
+//Připojení main knihovny
+#include "main.h"
 //Připojení potřebných knihoven 
 #include <Adafruit_NeoPixel.h>
 
@@ -56,5 +56,32 @@ public:
     void setBrightness(uint8_t brightness);
     //Destruktor pro RGB světlo
     ~RGBManager();
+};
+
+//Definice třídy pro vypnutí/zapnutí RGB osvětlení při otevření dveří
+class RGBEnableCharacteristicCallback : public BLECharacteristicCallbacks {
+public: 
+    //Definice funkce, která se spustí při čtení charakteristiky
+    void onWrite(BLECharacteristic *pCharacteristic);
+    //Definice funkce, která se spustí při zápisu charakteristiky
+    void onRead(BLECharacteristic *pCharacteristic);
+};
+
+//Definice třídy pro změnu barvy RGB osvětlení
+class RGBColorCharacteristicCallback : public BLECharacteristicCallbacks {
+public: 
+    //Definice funkce, která se spustí při čtení charakteristiky
+    void onWrite(BLECharacteristic *pCharacteristic);
+    //Definice funkce, která se spustí při zápisu charakteristiky
+    void onRead(BLECharacteristic *pCharacteristic);
+};
+
+//Definice třídy pro změnu jasu RGB osvětlení
+class RGBBrightnessCharacteristicCallback : public BLECharacteristicCallbacks {
+public: 
+    //Definice funkce, která se spustí při čtení charakteristiky
+    void onWrite(BLECharacteristic *pCharacteristic);
+    //Definice funkce, která se spustí při zápisu charakteristiky
+    void onRead(BLECharacteristic *pCharacteristic);
 };
 
