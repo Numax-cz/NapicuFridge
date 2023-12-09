@@ -33,9 +33,27 @@
       <div class=" is-size-5 has-text-weight-bold">
         Barva
       </div>
-      <div class="ColorPicker">
-        <color-sketch [disableAlpha]="true" [presetColors]="[]" color="#fff" ></color-sketch>
+      <div class="ColorPicker mt-2">
+        <color-sketch [disableAlpha]="true" [presetColors]="[]" (onChangeComplete)="change_color($event)" [color]="color" ></color-sketch>
+
+        <div class="color-picker-fw-color">
+          <div *ngFor="let i of get_user_favorites_colors()"  >
+            <div class="color" [style]="{'background-color': i}" (click)="color = i">
+
+            </div>
+          </div>
+
+          <div class="add color" (click)="add_user_favorite_color()">
+            <ion-icon name="add-circle-outline" style="width: 95%;height: 95%;"></ion-icon>
+          </div>
+        </div>
+        {{color}}
       </div>
+
+
+<!--      <div class="mt-6 p-3 info-box has-background-info has-text-white has-text-centered is-clickable">-->
+<!--        <div>Uložit</div>-->
+<!--      </div>-->
     </div>
   </div>
 

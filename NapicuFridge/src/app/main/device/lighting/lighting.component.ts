@@ -2,6 +2,7 @@ import {Component, NgZone} from '@angular/core';
 import {AppComponent} from "../../../app.component";
 import {LabelType, Options} from "ngx-slider-v2";
 import {CharacteristicController} from "../../../CharacteristicController";
+import {ColorEvent} from "ngx-color";
 
 
 @Component({
@@ -10,6 +11,8 @@ import {CharacteristicController} from "../../../CharacteristicController";
   styleUrls: ['./lighting.component.scss', "../../main.page.scss"],
 })
 export class LightingComponent  {
+
+  public color: string = "#fff";
 
   value: number = 50;
   options: Options = {
@@ -33,6 +36,12 @@ export class LightingComponent  {
   constructor(public ngZone: NgZone) {
   }
 
+  //Funkce, která se spustí při změně barvy v color pickeru
+  public change_color(event: ColorEvent): void {
+    console.log(event);
+    this.color = event.color.hex;
+  }
+
   //Funkce, která se spustí po změně inputu
   public led_input_change(event: any): void {
     const i: boolean = event.currentTarget.checked;
@@ -47,6 +56,11 @@ export class LightingComponent  {
     });
   }
 
+  //Funkce, která přidá barvu do oblíbených barev osvětlení
+  public add_user_favorite_color(): void {
+    AppComponent.add_user_favorite_color(this.color);
+  }
+
   //Funkce, která vrátí zda je zařízení připojené
   public get_is_connected(): boolean {
     return AppComponent.is_connected();
@@ -55,6 +69,11 @@ export class LightingComponent  {
   //Funkce, která vrátí zda se má LED osvětlení zapnout při otevřených dveří
   public get_fridge_led_enable(): boolean {
     return AppComponent.get_fridge_led_enable();
+  }
+
+  //Funkce, která vrátí oblíbené barvy
+  public get_user_favorites_colors(): string[] {
+    return AppComponent.get_user_favorites_colors();
   }
 
 }

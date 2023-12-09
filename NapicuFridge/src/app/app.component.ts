@@ -24,9 +24,8 @@ import {
   DEFAULT_IN_FANS_ON_SWITCH,
   DEFAULT_POWER_MODE_ON_SWITCH,
   CHAR_VIEW_RESOLUTION_OPTIONS,
-  CHAR_COOLER_TEMP_COLOR,
   DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
-  DEFAULT_ALERT_DISPLAY_TIME
+  DEFAULT_ALERT_DISPLAY_TIME, DEFAULT_FAVOURITES_COLOURS_LED
 } from "./config/configuration";
 import {CharTempsData} from "./interface/CharData";
 import {NapicuDate} from "napicuformatter";
@@ -83,7 +82,7 @@ export class AppComponent {
       fridge_stop_on_open_door: true,
       fridge_led_enable: true,
       fridge_led_rgb: -1,
-      fridge_led_brightness: -1
+      fridge_led_brightness: -1,
     },
     errors: {
       fridge_out_temp: false,
@@ -893,6 +892,12 @@ export class AppComponent {
     this.update_char_view_data()
   }
 
+  //Statická funkce, která přidá barvu do oblíbených barev osvětlení
+  public static add_user_favorite_color(hex: string): void {
+    //Uložení nastavení
+    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(hex));
+  }
+
   //Statická funkce, která vrátí zda při chybě bude bzučet piezo
   public static get_buzzing_on_error(): boolean {
     return this.fridge_data.config.buzzing_on_error;
@@ -948,6 +953,16 @@ export class AppComponent {
   //Statická funkce, která vrátí zda se má LED osvětlení zapnout při otevřených dveří
   public static get_fridge_led_enable(): boolean {
     return this.fridge_data.config.fridge_led_enable;
+  }
+
+  //Statická funkce, která vrátí oblíbené barvy
+  public static get_user_favorites_colors(): string[] {
+    //Získání uložených dat
+    let colours: string | null = AppComponent.application_settings.getItem("favourites_colors_led");
+    //Pokud existuje uložená hodnota provede se následující
+    if(colours) return JSON.parse(colours) as string[];
+    //Vrácení výchozího nastavení
+    return DEFAULT_FAVOURITES_COLOURS_LED;
   }
 
   //Statická funkce, která vymaže data zobrazující se v grafu

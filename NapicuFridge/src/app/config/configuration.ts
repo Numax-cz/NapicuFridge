@@ -59,6 +59,9 @@ export const CHAR_VIEW_RESOLUTION_OPTIONS: number[] = [
   60,
 ]
 
+//Definice výchozích oblíbených barev, které se nastavují v color pickeru
+export const DEFAULT_FAVOURITES_COLOURS_LED: string[] = ['#fff', '#ffa407', '#ff996b']
+
 //Definice proměnné výchozích dat pro graf, když je aplikace spuštěna ve vývojovém režimu
 export const DEFAULT_CHAR_VIEW_DATA_FOR_DEV: CharTempsData = [
   {name: CHAR_IN_TEMP_TEXT, series: [
