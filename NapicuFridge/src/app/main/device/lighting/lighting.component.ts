@@ -3,6 +3,7 @@ import {AppComponent} from "../../../app.component";
 import {LabelType, Options} from "ngx-slider-v2";
 import {CharacteristicController} from "../../../CharacteristicController";
 import {ColorEvent} from "ngx-color";
+import {RGBA} from "ngx-color/helpers/color.interfaces";
 
 
 @Component({
@@ -12,7 +13,6 @@ import {ColorEvent} from "ngx-color";
 })
 export class LightingComponent  {
 
-  public color: string = "#fff";
 
   value: number = 50;
   options: Options = {
@@ -38,8 +38,20 @@ export class LightingComponent  {
 
   //Funkce, která se spustí při změně barvy v color pickeru
   public change_color(event: ColorEvent): void {
-    console.log(event);
-    this.color = event.color.hex;
+    //Spuštění funkce pro zápis charakteristiky na změnu barvy LED osvětlení
+    CharacteristicController.writeLEDEColor(event.color.rgb.r, event.color.rgb.g, event.color.rgb.b)?.then(() => {
+      //Až se úspěšně provede zápis charakteristiky provede se následující
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        //Zapíšeme aktuální barvu LED osvětlení
+        AppComponent.fridge_data.config.fridge_led_rgb = {
+          r: event.color.rgb.r,
+          g: event.color.rgb.g,
+          b: event.color.rgb.b,
+          a: 255
+        }
+      });
+    });
   }
 
   //Funkce, která se spustí po změně inputu
@@ -58,7 +70,12 @@ export class LightingComponent  {
 
   //Funkce, která přidá barvu do oblíbených barev osvětlení
   public add_user_favorite_color(): void {
-    AppComponent.add_user_favorite_color(this.color);
+
+  }
+
+  //Statická funkce, která vrátí barvu LED osvětlení
+  public get_led_color(): RGBA{
+    return AppComponent.get_led_color();
   }
 
   //Funkce, která vrátí zda je zařízení připojené
@@ -72,8 +89,8 @@ export class LightingComponent  {
   }
 
   //Funkce, která vrátí oblíbené barvy
-  public get_user_favorites_colors(): string[] {
-    return AppComponent.get_user_favorites_colors();
+  public get_user_favorites_colors(): any {
+
   }
 
 }

@@ -32,6 +32,8 @@ import {NapicuDate} from "napicuformatter";
 import {CopyArray} from "./main/CopyArray";
 import { Clipboard } from '@capacitor/clipboard';
 import {NapicuOptionsData} from "./interface/NapicuOption";
+import {shadeRGBColor} from "@swimlane/ngx-charts";
+import {RGB, RGBA} from "ngx-color/helpers/color.interfaces";
 
 @Component({
   selector: 'app-root',
@@ -81,7 +83,7 @@ export class AppComponent {
       fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
       fridge_stop_on_open_door: true,
       fridge_led_enable: true,
-      fridge_led_rgb: -1,
+      fridge_led_rgb: {r: 0, g: 0, b: 0, a: 255},
       fridge_led_brightness: -1,
     },
     errors: {
@@ -346,6 +348,38 @@ export class AppComponent {
         //Vypsání hodnoty do vývojářské konzole
         console.error("error_discovered" + JSON.stringify(e));
       });
+
+    //Získání nastavené barvy LED osvětlení
+    await CharacteristicController.readLEDColor()
+      ?.then((data: OperationResult) => {
+        //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+        let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+        //Převést bytes na string
+        let value: string = BluetoothLE.bytesToString(bytes);
+
+  
+
+        // Rozdělení řetězce podle čárky a odstranění bílých znaků
+        const values: number[] = value.split(',').map(d => parseInt(d.trim(), 10));
+
+        // Ověření, zda jsou k dispozici tři hodnoty
+        if (values.length === 3 && values.every(d => !isNaN(d))) {
+          //Získání hodnoty červené barvy ze stringu
+          let R: number = values[0];
+          //Získání hodnoty zelené barvy ze stringu
+          let G: number = values[1];
+          //Získání hodnoty modré barvy ze stringu
+          let B: number = values[2];
+
+          //Nastavení proměnné na hodnotu podle získaných dat
+          this.fridge_data.config.fridge_led_rgb = {
+            r: R,
+            g: G,
+            b: B,
+            a: 255
+          }
+        }
+    });
   }
 
   //Statická funkce, která načte uložené hodnoty
@@ -892,10 +926,9 @@ export class AppComponent {
     this.update_char_view_data()
   }
 
-  //Statická funkce, která přidá barvu do oblíbených barev osvětlení
-  public static add_user_favorite_color(hex: string): void {
-    //Uložení nastavení
-    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(hex));
+  //Statická funkce, která vrátí barvu LED osvětlení
+  public static get_led_color(): RGBA {
+    return this.fridge_data.config.fridge_led_rgb;
   }
 
   //Statická funkce, která vrátí zda při chybě bude bzučet piezo
@@ -955,15 +988,21 @@ export class AppComponent {
     return this.fridge_data.config.fridge_led_enable;
   }
 
-  //Statická funkce, která vrátí oblíbené barvy
-  public static get_user_favorites_colors(): string[] {
-    //Získání uložených dat
-    let colours: string | null = AppComponent.application_settings.getItem("favourites_colors_led");
-    //Pokud existuje uložená hodnota provede se následující
-    if(colours) return JSON.parse(colours) as string[];
-    //Vrácení výchozího nastavení
-    return DEFAULT_FAVOURITES_COLOURS_LED;
-  }
+  // //Statická funkce, která přidá barvu do oblíbených barev osvětlení
+  // public static add_user_favorite_color(color: RGBA): void {
+  //     //Uložení nastavení
+  //     AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(`${color.r}${color.g}${color.b}`));
+  // }
+  //
+  // //Statická funkce, která vrátí oblíbené barvy
+  // public static get_user_favorites_colors(): RGBA[] {
+  //   //Získání uložených dat
+  //   let colours: string | null = AppComponent.application_settings.getItem("favourites_colors_led");
+  //   //Pokud existuje uložená hodnota provede se následující
+  //   if(colours) return JSON.parse(colours);
+  //   //Vrácení výchozího nastavení
+  //   return DEFAULT_FAVOURITES_COLOURS_LED;
+  // }
 
   //Statická funkce, která vymaže data zobrazující se v grafu
   public static clear_char_view_data(): void {

@@ -10,6 +10,7 @@
 #include <Wire.h>
 #include <Thermistor.h>
 #include <NTC_Thermistor.h>
+#include <sstream>
 
 //Připojení potřebných knihoven z include
 #include <include/serverCallBack.h>

@@ -1,6 +1,7 @@
 import {FridgeDisplayState, FridgePowerMode} from "./Enums";
 import {CharTempsData} from "./CharData";
 import {NapicuOptionsData} from "./NapicuOption";
+import {RGBA} from "ngx-color/helpers/color.interfaces";
 
 
 export declare interface FridgeJSONData {
@@ -15,6 +16,8 @@ export declare interface CharSettings {
   display_cooler_temp: boolean,
   display_resolution: number
 }
+
+
 
 export declare interface FridgeData {
   in_temp: string,
@@ -34,7 +37,7 @@ export declare interface FridgeData {
     fridge_power_mode: FridgePowerMode,
 
     fridge_led_enable: boolean,
-    fridge_led_rgb: number,
+    fridge_led_rgb: RGBA,
     fridge_led_brightness: number
   }
 

@@ -295,7 +295,7 @@ void setup() {
                                        
   doorCharacteristic->setCallbacks(new DoorCharacteristicCallback());
 
-    //Vytvoření BLE komunikačního kanálu pro komunikaci
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *rgbEnableCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_LED_ENABLE_UUID,
     BLECharacteristic::PROPERTY_WRITE |
@@ -303,6 +303,16 @@ void setup() {
   );
                                        
   rgbEnableCharacteristic->setCallbacks(new RGBEnableCharacteristicCallback());
+
+
+  //Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *rgbColorCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_LED_COLOR_UUID,
+    BLECharacteristic::PROPERTY_WRITE |
+    BLECharacteristic::PROPERTY_READ
+  );
+
+  rgbColorCharacteristic->setCallbacks(new RGBColorCharacteristicCallback());
 
   //Spuštění begin funkce DataJSONManageru
   DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  

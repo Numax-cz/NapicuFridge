@@ -46,5 +46,5 @@ void FridgeTempDHT::sendTemperature() {
     //Odeslání zprávy skrze BLE do připojeného zařízení
     this->pCharacteristic->notify();
     //Vytištění odeslané zprávy po sériové lince
-    Serial.println(this->value);
+    // Serial.println(this->value);
 }

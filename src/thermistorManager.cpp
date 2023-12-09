@@ -50,6 +50,6 @@ void ThermistorManager::sendTemperature() {
     this->pCharacteristic->setValue(this->value.c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
     this->pCharacteristic->notify();
-    //Vytištění odeslané zprávy po sériové lince
-    Serial.println(this->value);
+    // //Vytištění odeslané zprávy po sériové lince
+    // Serial.println(this->value);
 }
