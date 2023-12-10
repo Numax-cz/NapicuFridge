@@ -1,7 +1,7 @@
 /**
  * @file rgbCallBack.cpp
  * @author Marcel Mikoláš
- * @version 0.1
+ * @version 0.3
  * @date 2023-4-12
  * 
  * @copyright Copyright (c) 2023
@@ -51,7 +51,6 @@ void RGBEnableCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic
     }
 }
 
-
 void RGBColorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o barvy LED osvětlení");
@@ -63,6 +62,7 @@ void RGBColorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) 
     uint8_t B = EEPROM.read(LED_COLOR_EEPROM_ADDR + 2);
     //Sjednocení veškerých hodnot
     String color = String(R) + "," + String(G) + "," + String(B);
+
     //Nastavení hodnoty charakteristiky 
     pCharacteristic->setValue(color.c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -99,7 +99,8 @@ void RGBColorCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic)
     EEPROM.write(LED_COLOR_EEPROM_ADDR + 1, g);
     //Uložení hodnoty modré barvy do EEPROM
     EEPROM.write(LED_COLOR_EEPROM_ADDR + 2, b);
-
     //Nastavení barvy led osvětlení
     fridge_rgb->setColor(r, g, b);
+    //Potvrzení změň
+    EEPROM.commit();
 }

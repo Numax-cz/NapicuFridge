@@ -357,10 +357,14 @@ export class AppComponent {
         //Převést bytes na string
         let value: string = BluetoothLE.bytesToString(bytes);
 
-  
+
 
         // Rozdělení řetězce podle čárky a odstranění bílých znaků
         const values: number[] = value.split(',').map(d => parseInt(d.trim(), 10));
+
+        console.log(value);
+        console.log(values);
+
 
         // Ověření, zda jsou k dispozici tři hodnoty
         if (values.length === 3 && values.every(d => !isNaN(d))) {
@@ -370,6 +374,8 @@ export class AppComponent {
           let G: number = values[1];
           //Získání hodnoty modré barvy ze stringu
           let B: number = values[2];
+
+
 
           //Nastavení proměnné na hodnotu podle získaných dat
           this.fridge_data.config.fridge_led_rgb = {
