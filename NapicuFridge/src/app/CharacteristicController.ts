@@ -361,7 +361,12 @@ export class CharacteristicController {
   }
 
 
-  //Statická funkce pro změnu barvy LED osvětlení (Pokud se vrátí null, zařízení není připojené)
+  /**
+   * Statická funkce pro změnu barvy LED osvětlení (Pokud se vrátí null, zařízení není připojené)
+   * @param r Hodnota červené barvy (0-255)
+   * @param g Hodnota zelené barvy (0-255)
+   * @param b Hodnota modré barvy (0-255)
+   */
   public static writeLEDEColor(r: number, g: number, b: number): Promise<OperationResult> | null {
     //Kontrola, zda je zařízení spárované
     if (AppComponent.connected_device) {
@@ -392,6 +397,39 @@ export class CharacteristicController {
     return null;
   }
 
+  /**
+   * Statická funkce, která zapíše hodnotu jasu LED osvětlení (Pokud se vrátí null, zařízení není připojené)
+   * @param value Hodnota jasu (0-100)
+   */
+  public static writeLEDBrightness(value: number): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if (AppComponent.connected_device) {
+      //Převedení stringu do bytes
+      let bytes: Uint8Array = BluetoothLE.stringToBytes(`${value}`);
+      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+      //Zapsání charakteristiky
+      return BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_LED_BRIGHTNESS_UUID,
+        value: encodedUnicodeString,
+      });
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
+
+  //Statická funkce, která přečte hodnotu jasu LED osvětlení (Pokud se vrátí null, zařízení není připojené)
+  public static readLEDBrightness(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Získání dat
+      return BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_LED_BRIGHTNESS_UUID});
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
 
   // //Statická funkce pro přejmenování chytré ledničky (Pokud se vrátí null, zařízení není připojené)
   // protected static renameDevice(name: string): Promise<OperationResult> | null {

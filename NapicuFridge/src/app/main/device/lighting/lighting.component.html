@@ -23,7 +23,7 @@
       Jas
     </div>
     <div class="Slider mt-2">
-      <ngx-slider [(value)]="value" [options]="options"></ngx-slider>
+      <ngx-slider [value]="get_fridge_led_brightness()" (userChangeEnd)="write_brightness_value($event)" (valueChange)="on_brightness_slider_change($event)"  [options]="options"></ngx-slider>
     </div>
 
   </div>

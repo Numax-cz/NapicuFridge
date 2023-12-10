@@ -314,6 +314,15 @@ void setup() {
 
   rgbColorCharacteristic->setCallbacks(new RGBColorCharacteristicCallback());
 
+    //Vytvoření BLE komunikačního kanálu pro komunikaci
+  BLECharacteristic *rgbBrightnessCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_LED_BRIGHTNESS_UUID,
+    BLECharacteristic::PROPERTY_WRITE |
+    BLECharacteristic::PROPERTY_READ
+  );
+
+  rgbBrightnessCharacteristic->setCallbacks(new RGBBrightnessCharacteristicCallback());
+
   //Spuštění begin funkce DataJSONManageru
   DataJSONManager::begin(pService, CHARACTERISTIC_JSON_DATA_UUID, CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID);  
 

@@ -4,6 +4,7 @@ import {LabelType, Options} from "ngx-slider-v2";
 import {CharacteristicController} from "../../../CharacteristicController";
 import {ColorEvent} from "ngx-color";
 import {RGBA} from "ngx-color/helpers/color.interfaces";
+import {ChangeContext} from "ngx-slider-v2/change-context";
 
 
 @Component({
@@ -38,19 +39,20 @@ export class LightingComponent  {
 
   //Funkce, která se spustí při změně barvy v color pickeru
   public change_color(event: ColorEvent): void {
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() => {
+      //Zapíšeme aktuální barvu LED osvětlení
+      AppComponent.fridge_data.config.fridge_led_rgb = {
+        r: event.color.rgb.r,
+        g: event.color.rgb.g,
+        b: event.color.rgb.b,
+        a: 255
+      }
+    });
+
     //Spuštění funkce pro zápis charakteristiky na změnu barvy LED osvětlení
     CharacteristicController.writeLEDEColor(event.color.rgb.r, event.color.rgb.g, event.color.rgb.b)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
-      //Spuštění funkce uvnitř zóny Angularu
-      this.ngZone.run(() => {
-        //Zapíšeme aktuální barvu LED osvětlení
-        AppComponent.fridge_data.config.fridge_led_rgb = {
-          r: event.color.rgb.r,
-          g: event.color.rgb.g,
-          b: event.color.rgb.b,
-          a: 255
-        }
-      });
     });
   }
 
@@ -65,6 +67,24 @@ export class LightingComponent  {
         //Zapíšeme aktuální dostupnost LED osvětlení
         AppComponent.fridge_data.config.fridge_led_enable = i;
       });
+    });
+  }
+
+  //Funkce, která se spustí, když se změní hodnota slideru
+  public on_brightness_slider_change(value: number): void {
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() => {
+      //Zapíšeme aktuální dostupnost LED osvětlení
+      AppComponent.fridge_data.config.fridge_led_brightness = value;
+    });
+
+
+  }
+
+  public write_brightness_value(event: ChangeContext): void {
+    //Spuštění funkce pro zápis charakteristiky na změnu hodnoty jasu LED osvětlení
+    CharacteristicController.writeLEDBrightness(event.value)?.then(() => {
+      //Až se úspěšně provede zápis charakteristiky provede se následující
     });
   }
 
@@ -86,6 +106,10 @@ export class LightingComponent  {
   //Funkce, která vrátí zda se má LED osvětlení zapnout při otevřených dveří
   public get_fridge_led_enable(): boolean {
     return AppComponent.get_fridge_led_enable();
+  }
+  //Funkce, která vrátí hodnotu jasu LED osvětlení (0-100)
+  public get_fridge_led_brightness(): number {
+    return AppComponent.get_fridge_led_brightness();
   }
 
   //Funkce, která vrátí oblíbené barvy

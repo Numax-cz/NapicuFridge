@@ -51,7 +51,7 @@ public:
     /**
      * @brief Definice funkce pro nastavení jasu RGB světla
      * 
-     * @param brightness Hodnota jasu (0-255)
+     * @param brightness Hodnota jasu (0-100)
      */
     void setBrightness(uint8_t brightness);
     //Destruktor pro RGB světlo

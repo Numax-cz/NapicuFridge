@@ -104,3 +104,27 @@ void RGBColorCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic)
     //Potvrzení změň
     EEPROM.commit();
 }
+
+void RGBBrightnessCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
+    //Vypsání hodnoty do konzole
+    Serial.println("Odeslání informací o hodnotě jasu LED osvětlení");
+    //Získání dat o jasu LED světla z EEPROM 
+    uint8_t data = EEPROM.read(LED_BRIGHTNESS_EEPROM_ADDR);
+    //Nastavení hodnoty charakteristiky 
+    pCharacteristic->setValue(String(data).c_str());
+    //Odeslání zprávy skrze BLE do připojeného zařízení
+    pCharacteristic->notify();
+}
+
+void RGBBrightnessCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
+    //Proměnná pro ukládání přijaté zprávy
+    std::string msg = pCharacteristic->getValue();
+    //Převod ze string na uint8_t
+    uint8_t value = std::stoi(msg);
+    //Spuštění funkce pro nastavení jasu LED světla 
+    fridge_rgb->setBrightness(value);
+    //Uložení hodnoty jasu do EEPROM
+    EEPROM.write(LED_BRIGHTNESS_EEPROM_ADDR, value);
+    //Potvrzení změň
+    EEPROM.commit();
+}
