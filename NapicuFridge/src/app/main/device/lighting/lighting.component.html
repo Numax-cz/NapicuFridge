@@ -23,7 +23,10 @@
       Jas
     </div>
     <div class="Slider mt-2">
-      <ngx-slider [value]="get_fridge_led_brightness()" (userChangeEnd)="write_brightness_value($event)" (valueChange)="on_brightness_slider_change($event)"  [options]="options"></ngx-slider>
+      <ngx-slider [value]="get_fridge_led_brightness()"
+                  (userChangeEnd)="write_brightness_value($event)"
+                  (valueChange)="on_brightness_input_change($event)"
+                  [options]="options"></ngx-slider>
     </div>
 
   </div>
@@ -34,7 +37,10 @@
         Barva
       </div>
       <div class="ColorPicker mt-2">
-        <color-sketch  [disableAlpha]="true" [presetColors]="[]" (onChangeComplete)="change_color($event)" [color]="get_led_color()" ></color-sketch>
+        <color-sketch  [disableAlpha]="true" [presetColors]="[]"
+                       (onChangeComplete)="write_color_value($event)"
+                       (onChange)="on_color_input_change($event)"
+                       [color]="get_led_color()" ></color-sketch>
 
 <!--        <div class="color-picker-fw-color">-->
 <!--          <div *ngFor="let i of get_user_favorites_colors()"  >-->

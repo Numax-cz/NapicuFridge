@@ -37,25 +37,6 @@ export class LightingComponent  {
   constructor(public ngZone: NgZone) {
   }
 
-  //Funkce, která se spustí při změně barvy v color pickeru
-  public change_color(event: ColorEvent): void {
-    //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => {
-      //Zapíšeme aktuální barvu LED osvětlení
-      AppComponent.fridge_data.config.fridge_led_rgb = {
-        r: event.color.rgb.r,
-        g: event.color.rgb.g,
-        b: event.color.rgb.b,
-        a: 255
-      }
-    });
-
-    //Spuštění funkce pro zápis charakteristiky na změnu barvy LED osvětlení
-    CharacteristicController.writeLEDEColor(event.color.rgb.r, event.color.rgb.g, event.color.rgb.b)?.then(() => {
-      //Až se úspěšně provede zápis charakteristiky provede se následující
-    });
-  }
-
   //Funkce, která se spustí po změně inputu
   public led_input_change(event: any): void {
     const i: boolean = event.currentTarget.checked;
@@ -70,17 +51,38 @@ export class LightingComponent  {
     });
   }
 
-  //Funkce, která se spustí, když se změní hodnota slideru
-  public on_brightness_slider_change(value: number): void {
+  //Funkce, která se spustí při změně barvy v color pickeru
+  public on_color_input_change(event: ColorEvent): void {
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() => {
+      //Zapíšeme aktuální barvu LED osvětlení
+      AppComponent.fridge_data.config.fridge_led_rgb = {
+        r: event.color.rgb.r,
+        g: event.color.rgb.g,
+        b: event.color.rgb.b,
+        a: 255
+      }
+    });
+  }
+
+  //Funkce, která se spustí po výběru barvy v color pickeru
+  public write_color_value(event: ColorEvent): void {
+    //Spuštění funkce pro zápis charakteristiky na změnu barvy LED osvětlení
+    CharacteristicController.writeLEDEColor(event.color.rgb.r, event.color.rgb.g, event.color.rgb.b)?.then(() => {
+      //Až se úspěšně provede zápis charakteristiky provede se následující
+    });
+  }
+
+  //Funkce, která se spustí při změně hodnoty v inputu
+  public on_brightness_input_change(value: number): void {
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       //Zapíšeme aktuální dostupnost LED osvětlení
       AppComponent.fridge_data.config.fridge_led_brightness = value;
     });
-
-
   }
 
+  //Funkce, která se spustí při výběru hodnoty v inputu
   public write_brightness_value(event: ChangeContext): void {
     //Spuštění funkce pro zápis charakteristiky na změnu hodnoty jasu LED osvětlení
     CharacteristicController.writeLEDBrightness(event.value)?.then(() => {
