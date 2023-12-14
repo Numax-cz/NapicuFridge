@@ -5,6 +5,7 @@ import {CharacteristicController} from "../../../CharacteristicController";
 import {ColorEvent} from "ngx-color";
 import {RGBA} from "ngx-color/helpers/color.interfaces";
 import {ChangeContext} from "ngx-slider-v2/change-context";
+import {MIN_BRIGHTNESS_SLIDER_VALUE} from "../../../config/configuration";
 
 
 @Component({
@@ -13,11 +14,9 @@ import {ChangeContext} from "ngx-slider-v2/change-context";
   styleUrls: ['./lighting.component.scss', "../../main.page.scss"],
 })
 export class LightingComponent  {
-
-
-  value: number = 50;
-  options: Options = {
-    floor: 0,
+  //Proměnná pro nastavení slideru
+  public readonly options: Options = {
+    floor: MIN_BRIGHTNESS_SLIDER_VALUE,
     ceil: 100,
       showSelectionBarEnd: true,
       animate: false,
