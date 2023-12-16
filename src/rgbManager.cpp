@@ -61,7 +61,9 @@ void RGBManager::loop() {
 
 //Definice funkce pro zapnutí RGB světla
 void RGBManager::turn_on() {
-    this->rgbWS->setBrightness(255); //TODO BY EEprom + documentation
+    //Spuštění funkce pro nastavení jasu
+    this->rgbWS->setBrightness(this->brightness);
+    //this->rgbWS->setBrightness(255); //TODO BY EEprom + documentation
 }
 
 //Definice funkce pro vypnutí RGB světla
@@ -87,8 +89,7 @@ void RGBManager::setColor(uint8_t r, uint8_t g, uint8_t b) {
  * @param brightness Hodnota jasu (0-100)
  */
 void RGBManager::setBrightness(uint8_t brightness) {
-    //Spuštění funkce pro nastavení jasu
-    this->rgbWS->setBrightness(2.55 * brightness);
+    this->brightness = 2.55 * brightness;
 }
 
 //Destruktor pro RGB světlo

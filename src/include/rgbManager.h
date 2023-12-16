@@ -22,6 +22,8 @@ private:
     Adafruit_NeoPixel* rgbWS = NULL;
     //Proměnná pro uložení aktuálního nastavení RGB
     uint32_t rgb = 0;
+    //Proměnná pro uložení aktuální hodnoty jasu 
+    uint8_t brightness = 0;
     //Konstantní proměnná pro uložení počtů LED
     const uint16_t leds;
 public:
