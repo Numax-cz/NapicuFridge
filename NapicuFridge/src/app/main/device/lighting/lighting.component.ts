@@ -16,8 +16,7 @@ import {alert_animations, favourite_color_animations} from "../../Animation";
   animations: [favourite_color_animations, alert_animations]
 })
 export class LightingComponent  {
-  //Proměnná ukládající čas aktuálního držení oblíbené barvy
-  public timeoutHandler: number | undefined = undefined;
+
 
   //Proměnná pro nastavení slideru
   public readonly options: Options = {
@@ -25,32 +24,22 @@ export class LightingComponent  {
     ceil: 100,
       showSelectionBarEnd: true,
       animate: false,
-
-    // translate: (value: number, label: LabelType): string => {
-    //   switch (label) {
-    //     case LabelType.Low:
-    //       return value + "%";
-    //     case LabelType.High:
-    //       return value + "%";
-    //     default:
-    //       return value.toString();
-    //   }
-    // }
   };
+
+  //Proměnná ukládající čas aktuálního držení oblíbené barvy
+  public timeoutHandler: number | undefined = undefined;
+  //Proměnná ukládající stav animace
   public trigger: boolean = true;
-
+  //Porměnná ukládající index držící barvy
   public holding_color: number = -1;
-
+  //Proměnná ukládající interval animace držící barvy
   public shaking_color_interval: number = -1;
-
+  //Proměnná pro uložení, zda je aktivován odstraňovací režim oblíbených barev
   public delete_color_mode: boolean = false;
-
   //Proměnná pro uložení stavu alertu
   public hint_alert: boolean = false;
 
-  constructor(public ngZone: NgZone) {
-
-  }
+  constructor(public ngZone: NgZone) { }
 
   //Funkce, která se spustí po změně inputu
   public led_input_change(event: any): void {
@@ -125,17 +114,23 @@ export class LightingComponent  {
 
   //Funkce, která se spustí po okamžitém kliknutí na oblíbenou barvu
   public on_touch_favorite_color(event: Event, element_index: number): void {
+    //Nastavení indexu držící barvy
     this.holding_color = element_index;
-      this.timeoutHandler = setTimeout(() => {
-        if(!this.delete_color_mode) {
-          this.shaking_color_interval = setInterval(() => (this.trigger = !this.trigger),200);
-          setTimeout(() => {this.holding_color = -1}, 150);
-          this.delete_color_mode = true;
-        } else {
-          this.holding_color = -1;
-        }
-        event.preventDefault();
-      }, 600);
+    //Uložení timout
+    this.timeoutHandler = setTimeout(() => {
+      //Pokud není aktivován režim odstraňování oblíbených barev provede se následující
+      if(!this.delete_color_mode) {
+        //Uložení intervalu do proměnné
+        this.shaking_color_interval = setInterval(() => (this.trigger = !this.trigger),200);
+        //Spuštění Timout funkce, následně nastavení držící barvy na -1
+        setTimeout(() => {this.holding_color = -1}, 150);
+        //Nastavení proměnné na log1
+        this.delete_color_mode = true;
+      } else {
+        this.holding_color = -1;
+      }
+      event.preventDefault();
+    }, 600);
   }
 
   //Funkce, která vrátí z typu RGB formát pro css styl ve formátu string
@@ -178,6 +173,7 @@ export class LightingComponent  {
   public get_fridge_led_enable(): boolean {
     return AppComponent.get_fridge_led_enable();
   }
+
   //Funkce, která vrátí hodnotu jasu LED osvětlení (0-100)
   public get_fridge_led_brightness(): number {
     return AppComponent.get_fridge_led_brightness();
