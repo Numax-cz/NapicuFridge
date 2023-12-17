@@ -97,6 +97,7 @@ export class AppComponent {
       display_cooler_temp: true,
       display_resolution: CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
     },
+    user_favorites_colors: DEFAULT_FAVOURITES_COLOURS_LED,
     json_graph_chars_format: environment.production ? null : DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
     json_graph_chars_format_view: null,
     json_graph_resolution_view: []
@@ -117,6 +118,8 @@ export class AppComponent {
 
     //Deklarace funkce, která se spustí po přípravě platformy
     platform.ready().then(() => {
+      //Spuštění funkce pro načtení uložených hodnot v zařízení
+      AppComponent.load_config_from_storage();
       //Kontrola zda je zařízení typu android
       if (platform.is('android')) {
         //Nastavení barvy textu horního status baru v mobilní aplikaci
@@ -182,8 +185,6 @@ export class AppComponent {
         //nebo zda došlo k chybě, pokud nebylo inicializováno nebo není připojeno k zařízení.
         BluetoothLE.discover({address: device.address, clearCache: true})
           .then(async (d: Device) => {
-            //Spuštění funkce pro načtení uložených hodnot v zařízení
-            AppComponent.load_config_from_storage();
             //Synchronizování nastavení na ESP32
             await AppComponent.update_config_from_esp();
             //Spuštění funkce pro přihlášení se k odběru charakteristiky vnitřní teploty
@@ -397,6 +398,8 @@ export class AppComponent {
     this.fridge_data.json_graph_chars_format = this.get_json_temp_char_from_storage();
     //Uložení a získání nastavení grafu
     this.fridge_data.char_settings = this.get_char_settings_from_storage();
+
+    this.fridge_data.user_favorites_colors = this.get_user_favorites_colors_from_storage();
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
@@ -690,7 +693,7 @@ export class AppComponent {
     return this.fridge_data.json_graph_chars_format;
   }
 
-  //Statická funkce, která vrátí uložé nastavení grafů
+  //Statická funkce, která vrátí uložené nastavení grafů
   protected static get_char_settings_from_storage(): CharSettings {
       //Získání uložených dat
       let i: string | null = AppComponent.application_settings.getItem("char_settings");
@@ -1004,32 +1007,33 @@ export class AppComponent {
 
   //Statická funkce, která přidá barvu do oblíbených barev osvětlení
   public static add_user_favorite_color(color: RGBA): void {
-    //Získání aktuálních uložených barev;
-    const user_favorites_colors: RGB[] = this.get_user_favorites_colors();
     //Přidání nové barvy do pole uložených barev
-    user_favorites_colors.push(color);
+    this.fridge_data.user_favorites_colors.push(color)
     //Uložení nastavení
-    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(user_favorites_colors));
+    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(this.fridge_data.user_favorites_colors));
+  }
+
+  //Statická funkce, která vrátí uložené oblíbené barvy
+  protected static get_user_favorites_colors_from_storage(): RGB[] {
+    //Získání uložených dat
+    let i: string | null = AppComponent.application_settings.getItem("favourites_colors_led");
+    //Pokud existuje uložená hodnota provede se následující
+    if(i) return JSON.parse(i) as RGB[];
+    //Vrácení výchozích hodnot pokud uložená data neexistují
+    return this.fridge_data.user_favorites_colors;
   }
 
   //Statická funkce, která odebere oblíbenou barvu osvětlení podle indexu
   public static remove_user_favorite_color(index: number): void {
-    //Získání aktuálních uložených barev;
-    const user_favorites_colors: RGB[] = this.get_user_favorites_colors();
     //Vymazání hodnoty z objektu
-    user_favorites_colors.splice(index, 1);
+    this.fridge_data.user_favorites_colors.splice(index, 1);
     //Uložení nastavení
-    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(user_favorites_colors));
+    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(this.fridge_data.user_favorites_colors));
   }
 
   //Statická funkce, která vrátí oblíbené barvy
   public static get_user_favorites_colors(): RGB[] {
-    //Získání uložených dat
-    let colours: string | null = AppComponent.application_settings.getItem("favourites_colors_led");
-    //Pokud existuje uložená hodnota provede se následující
-    if(colours) return JSON.parse(colours) as RGB[];
-    //Vrácení výchozího nastavení
-    return DEFAULT_FAVOURITES_COLOURS_LED;
+    return this.fridge_data.user_favorites_colors;
   }
 
   //Statická funkce, která vymaže data zobrazující se v grafu

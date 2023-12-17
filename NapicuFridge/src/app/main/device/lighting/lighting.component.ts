@@ -139,7 +139,7 @@ export class LightingComponent  {
 
   //Funkce, která odebere oblíbenou barvu osvětlení podle indexu
   public remove_user_favorite_color(index: number): void {
-    AppComponent.remove_user_favorite_color(index);
+    AppComponent.fridge_data.user_favorites_colors.splice(index, 1);
   }
 
   //Statická funkce, která vrátí barvu LED osvětlení
