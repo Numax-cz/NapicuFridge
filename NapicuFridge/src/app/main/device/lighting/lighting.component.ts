@@ -16,8 +16,6 @@ import {alert_animations, favourite_color_animations} from "../../Animation";
   animations: [favourite_color_animations, alert_animations]
 })
 export class LightingComponent  {
-
-
   //Proměnná pro nastavení slideru
   public readonly options: Options = {
     floor: MIN_BRIGHTNESS_SLIDER_VALUE,
