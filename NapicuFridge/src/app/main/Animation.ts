@@ -109,7 +109,7 @@ export const arrows_expand_animations: any[] = [
 export const favourite_color_animations: any[] = [
   //Programování animací skrze Angular
     trigger('FavouriteColorDeleteAnimation', [
-    transition('* => *', [
+    transition('true => false, false => true', [
       animate(
         300,
         keyframes([
