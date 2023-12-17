@@ -19,20 +19,22 @@ import {NapicuOptionTemplateComponent} from "./napicu-option-template/napicu-opt
 import {LightingComponent} from "./lighting/lighting.component";
 import {NgxSliderModule} from "ngx-slider-v2";
 import {ColorSketchModule} from "ngx-color/sketch";
+import {ColorHueModule} from "ngx-color/hue";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    DevicePageRoutingModule,
-    BrowserAnimationsModule,
-    LineChartModule,
-    NgSelectModule,
-    FormsModule,
-    NgxSliderModule,
-    ColorSketchModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        DevicePageRoutingModule,
+        BrowserAnimationsModule,
+        LineChartModule,
+        NgSelectModule,
+        FormsModule,
+        NgxSliderModule,
+        ColorSketchModule,
+        ColorHueModule
+    ],
   declarations: [DevicePage, InformationComponent, SettingsComponent, DisplayComponent, ChartsComponent, LightingComponent ,NapicuSettingsTemplateComponent, NapicuOptionTemplateComponent]
 })
 export class DevicePageModule {}

@@ -1,5 +1,5 @@
 import {AnimationController} from "@ionic/angular";
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {animate, keyframes, state, style, transition, trigger} from "@angular/animations";
 
 const animationCtrl = new AnimationController();
 
@@ -102,7 +102,38 @@ export const arrows_expand_animations: any[] = [
     transition(':enter', [
       animate(150, style({ transform: 'rotate(90deg)'}))
     ]),
-
   ]),
 
 ]
+
+export const favourite_color_animations: any[] = [
+  //Programování animací skrze Angular
+    trigger('FavouriteColorDeleteAnimation', [
+    transition('* => *', [
+      animate(
+        300,
+        keyframes([
+          style({ rotate: '0deg' }),
+          style({
+            rotate: '3.5deg',
+
+          }),
+
+          style({
+            rotate: '-3.5deg',
+          }),
+
+          style({ rotate: '0deg' }),
+        ])
+      ),
+    ]),
+  ]),
+
+  trigger('FavouriteColorScale', [
+    state('false', style({ scale: '1' })),
+    state('true', style({ scale: '1.25' })),
+    transition('true => false', animate('150ms ease-out')),
+    transition('false => true', animate('150ms ease-in'))
+  ])
+]
+

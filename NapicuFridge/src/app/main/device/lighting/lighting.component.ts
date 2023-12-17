@@ -3,17 +3,22 @@ import {AppComponent} from "../../../app.component";
 import {LabelType, Options} from "ngx-slider-v2";
 import {CharacteristicController} from "../../../CharacteristicController";
 import {ColorEvent} from "ngx-color";
-import {RGBA} from "ngx-color/helpers/color.interfaces";
+import {RGB, RGBA} from "ngx-color/helpers/color.interfaces";
 import {ChangeContext} from "ngx-slider-v2/change-context";
 import {MIN_BRIGHTNESS_SLIDER_VALUE} from "../../../config/configuration";
+import {favourite_color_animations} from "../../Animation";
 
 
 @Component({
   selector: 'app-information',
   templateUrl: './lighting.component.html',
   styleUrls: ['./lighting.component.scss', "../../main.page.scss"],
+  animations: favourite_color_animations
 })
 export class LightingComponent  {
+  //Proměnná ukládající čas aktuálního držení oblíbené barvy
+  public timeoutHandler: number | undefined = undefined;
+
   //Proměnná pro nastavení slideru
   public readonly options: Options = {
     floor: MIN_BRIGHTNESS_SLIDER_VALUE,
@@ -32,8 +37,14 @@ export class LightingComponent  {
     //   }
     // }
   };
+  public trigger: boolean = true;
+
+  public holding_color: number = -1;
+
+  public delete_color_mode: boolean = false;
 
   constructor(public ngZone: NgZone) {
+
   }
 
   //Funkce, která se spustí po změně inputu
@@ -51,23 +62,23 @@ export class LightingComponent  {
   }
 
   //Funkce, která se spustí při změně barvy v color pickeru
-  public on_color_input_change(event: ColorEvent): void {
+  public on_color_input_change(color: RGBA): void {
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       //Zapíšeme aktuální barvu LED osvětlení
       AppComponent.fridge_data.config.fridge_led_rgb = {
-        r: event.color.rgb.r,
-        g: event.color.rgb.g,
-        b: event.color.rgb.b,
+        r: color.r,
+        g: color.g,
+        b: color.b,
         a: 255
       }
     });
   }
 
   //Funkce, která se spustí po výběru barvy v color pickeru
-  public write_color_value(event: ColorEvent): void {
+  public write_color_value(color: RGBA): void {
     //Spuštění funkce pro zápis charakteristiky na změnu barvy LED osvětlení
-    CharacteristicController.writeLEDEColor(event.color.rgb.r, event.color.rgb.g, event.color.rgb.b)?.then(() => {
+    CharacteristicController.writeLEDEColor(color.r, color.g, color.b)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
     });
   }
@@ -89,9 +100,46 @@ export class LightingComponent  {
     });
   }
 
+  //Funkce, která přidá barvu do oblíbených barev osvětlení. Tato funkce se spustí po kliknutí na oblíbenou barvu
+  public on_click_favorite_color(color: RGB): void {
+    this.holding_color = -1;
+    clearTimeout(this.timeoutHandler);
+    if(!this.delete_color_mode) {
+      //Spuštění funkce pro změnu barvy
+      this.on_color_input_change({...color, a: 255});
+      //Spuštění funkce pro zápis barvy do ESP
+      this.write_color_value({...color, a: 255});
+    }
+  }
+
+  //Funkce, která se spustí po okamžitém kliknutí na oblíbenou barvu
+  public on_touch_favorite_color(event: Event, element_index: number): void {
+    this.holding_color = element_index;
+      this.timeoutHandler = setTimeout(() => {
+        if(!this.delete_color_mode) {
+          setInterval(() => (this.trigger = !this.trigger),200);
+          setTimeout(() => {this.holding_color = -1}, 150);
+          this.delete_color_mode = true;
+        } else {
+          this.holding_color = -1;
+        }
+        event.preventDefault();
+      }, 600);
+  }
+
+  //Funkce, která vrátí z typu RGB formát pro css styl ve formátu string
+  public get_css_color_format(color: RGB): string {
+    return `rgb(${color.r}, ${color.g}, ${color.b})`
+  }
+
   //Funkce, která přidá barvu do oblíbených barev osvětlení
   public add_user_favorite_color(): void {
+    AppComponent.add_user_favorite_color(AppComponent.fridge_data.config.fridge_led_rgb);
+  }
 
+  //Funkce, která odebere oblíbenou barvu osvětlení podle indexu
+  public remove_user_favorite_color(index: number): void {
+    AppComponent.remove_user_favorite_color(index);
   }
 
   //Statická funkce, která vrátí barvu LED osvětlení
@@ -114,8 +162,7 @@ export class LightingComponent  {
   }
 
   //Funkce, která vrátí oblíbené barvy
-  public get_user_favorites_colors(): any {
-
+  public get_user_favorites_colors(): RGB[] {
+    return AppComponent.get_user_favorites_colors();
   }
-
 }

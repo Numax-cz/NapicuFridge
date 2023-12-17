@@ -37,28 +37,44 @@
         Barva
       </div>
       <div class="ColorPicker mt-2">
-        <color-sketch  [disableAlpha]="true" [presetColors]="[]"
-                       (onChangeComplete)="write_color_value($event)"
-                       (onChange)="on_color_input_change($event)"
-                       [color]="get_led_color()" ></color-sketch>
+        <div class="ColorPickerColor color-picker-fw-color">
+          <div class="color" [style]="{'background-color': get_css_color_format(get_led_color())}"></div>
+        </div>
 
-<!--        <div class="color-picker-fw-color">-->
-<!--          <div *ngFor="let i of get_user_favorites_colors()"  >-->
-<!--            <div class="color" [style]="{'background-color': i}" (click)="color = i">-->
+        <div class="mt-3 mb-3">
+          <color-hue-picker
+                         (onChangeComplete)="write_color_value($event.color.rgb)"
+                         (onChange)="on_color_input_change($event.color.rgb)"
+                         [color]="get_led_color()" ></color-hue-picker>
+        </div>
 
-<!--            </div>-->
-<!--          </div>-->
+        <div class="color-picker-fw-color">
+          <div *ngFor="let i of get_user_favorites_colors(); let index = index" class="is-relative"
+               [@FavouriteColorDeleteAnimation]="trigger"
+               [@FavouriteColorScale]="index === holding_color">
+            <div class="color" [style]="{'background-color': get_css_color_format(i)}"
+                 (touchstart)="on_touch_favorite_color($event, index)"
+                 (mouseup)="on_click_favorite_color(i)"
 
-<!--          <div class="add color" (click)="add_user_favorite_color()">-->
-<!--            <ion-icon name="add-circle-outline" style="width: 95%;height: 95%;"></ion-icon>-->
-<!--          </div>-->
-<!--        </div>-->
+            >
+            </div>
+            <ng-container *ngIf="delete_color_mode">
+              <div class="delete-fw-color-icon error-red-color" (click)="remove_user_favorite_color(index)">
+                <ion-icon name="close-circle"></ion-icon>
+              </div>
+            </ng-container>
+          </div>
+
+          <ng-container *ngIf="!delete_color_mode">
+            <div class="add color" (click)="add_user_favorite_color()">
+              <ion-icon name="add-circle-outline" style="width: 95%;height: 95%;"></ion-icon>
+            </div>
+          </ng-container>
+        </div>
 
       </div>
-
-
-<!--      <div class="mt-6 p-3 info-box has-background-info has-text-white has-text-centered is-clickable">-->
-<!--        <div>Uložit</div>-->
+<!--      <div class="is-size-5 mt-6 p-3 info-box has-background-info has-text-white has-text-centered is-clickable">-->
+<!--        <div>Přidat do oblíbených</div>-->
 <!--      </div>-->
     </div>
   </div>

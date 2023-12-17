@@ -1,5 +1,6 @@
 import {FridgePowerMode} from "../interface/Enums";
 import {CharTempsData} from "../interface/CharData";
+import {RGB, RGBA} from "ngx-color/helpers/color.interfaces";
 
 export namespace Configuration {
 
@@ -62,7 +63,23 @@ export const CHAR_VIEW_RESOLUTION_OPTIONS: number[] = [
 ]
 
 //Definice výchozích oblíbených barev, které se nastavují v color pickeru
-export const DEFAULT_FAVOURITES_COLOURS_LED: string[] = ['#fff', '#ffa407', '#ff996b']
+export const DEFAULT_FAVOURITES_COLOURS_LED: RGB[] = [
+  {
+    r: 255,
+    g: 255,
+    b: 255
+  },
+  {
+    r: 255,
+    g: 164,
+    b: 7
+  },
+  {
+    r: 255,
+    g: 153,
+    b: 107
+  },
+]
 
 //Definice proměnné výchozích dat pro graf, když je aplikace spuštěna ve vývojovém režimu
 export const DEFAULT_CHAR_VIEW_DATA_FOR_DEV: CharTempsData = [

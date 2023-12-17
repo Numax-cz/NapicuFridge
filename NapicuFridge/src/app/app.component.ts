@@ -1002,21 +1002,35 @@ export class AppComponent {
     return this.fridge_data.config.fridge_led_brightness;
   }
 
-  // //Statická funkce, která přidá barvu do oblíbených barev osvětlení
-  // public static add_user_favorite_color(color: RGBA): void {
-  //     //Uložení nastavení
-  //     AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(`${color.r}${color.g}${color.b}`));
-  // }
-  //
-  // //Statická funkce, která vrátí oblíbené barvy
-  // public static get_user_favorites_colors(): RGBA[] {
-  //   //Získání uložených dat
-  //   let colours: string | null = AppComponent.application_settings.getItem("favourites_colors_led");
-  //   //Pokud existuje uložená hodnota provede se následující
-  //   if(colours) return JSON.parse(colours);
-  //   //Vrácení výchozího nastavení
-  //   return DEFAULT_FAVOURITES_COLOURS_LED;
-  // }
+  //Statická funkce, která přidá barvu do oblíbených barev osvětlení
+  public static add_user_favorite_color(color: RGBA): void {
+    //Získání aktuálních uložených barev;
+    const user_favorites_colors: RGB[] = this.get_user_favorites_colors();
+    //Přidání nové barvy do pole uložených barev
+    user_favorites_colors.push(color);
+    //Uložení nastavení
+    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(user_favorites_colors));
+  }
+
+  //Statická funkce, která odebere oblíbenou barvu osvětlení podle indexu
+  public static remove_user_favorite_color(index: number): void {
+    //Získání aktuálních uložených barev;
+    const user_favorites_colors: RGB[] = this.get_user_favorites_colors();
+    //Vymazání hodnoty z objektu
+    user_favorites_colors.splice(index, 1);
+    //Uložení nastavení
+    AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(user_favorites_colors));
+  }
+
+  //Statická funkce, která vrátí oblíbené barvy
+  public static get_user_favorites_colors(): RGB[] {
+    //Získání uložených dat
+    let colours: string | null = AppComponent.application_settings.getItem("favourites_colors_led");
+    //Pokud existuje uložená hodnota provede se následující
+    if(colours) return JSON.parse(colours) as RGB[];
+    //Vrácení výchozího nastavení
+    return DEFAULT_FAVOURITES_COLOURS_LED;
+  }
 
   //Statická funkce, která vymaže data zobrazující se v grafu
   public static clear_char_view_data(): void {

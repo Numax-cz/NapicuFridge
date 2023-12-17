@@ -6,7 +6,7 @@
   padding: 10px 0 0 10px;
 
   >div{
-    margin: 0 10px 10px 0;
+    margin: 0 14px 10px 0;
   }
 
   .color{
@@ -24,3 +24,15 @@
     box-shadow: none !important;
   }
 }
+
+
+.delete-fw-color-icon{
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  font-size: 1.85rem;
+  z-index: 100;
+}
+
+
