@@ -54,11 +54,9 @@
                [@FavouriteColorScale]="index === holding_color">
             <div class="color" [style]="{'background-color': get_css_color_format(i)}"
                  (touchstart)="on_touch_favorite_color($event, index)"
-                 (mouseup)="on_click_favorite_color(i)"
-
-            >
+                 (mouseup)="on_click_favorite_color(i)">
             </div>
-            <ng-container *ngIf="delete_color_mode">
+            <ng-container *ngIf="delete_color_mode && !(i.r === 255 && i.g === 255 && i.b === 255)">
               <div class="delete-fw-color-icon error-red-color">
                 <ion-icon name="close-circle" (click)="remove_user_favorite_color(index)"></ion-icon>
               </div>
@@ -80,13 +78,15 @@
       </ng-container>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
 </section>
+
+<div @AlertAnimation class="box info-box alert-container" *ngIf="hint_alert">
+  <div class="is-size-5 has-text-weight-bold">Smazání oblíbené barvy</div>
+  <p class="is-size-6">Oblíbenou barvu můžete smazat podržením prstem na barvu</p>
+  <div class="mt-2 is-flex is-justify-content-space-around is-align-items-center">
+    <div class="p-2 is-clickable has-text-info has-text-weight-medium" (click)="hint_alert = false; disable_favorites_colors_hint()">OK</div>
+  </div>
+</div>
+
+<div @AlertAnimationBackground class="alert" *ngIf="hint_alert" (click)="hint_alert = false; disable_favorites_colors_hint()"></div>
+

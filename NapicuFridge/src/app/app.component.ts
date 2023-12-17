@@ -25,7 +25,7 @@ import {
   DEFAULT_POWER_MODE_ON_SWITCH,
   CHAR_VIEW_RESOLUTION_OPTIONS,
   DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
-  DEFAULT_ALERT_DISPLAY_TIME, DEFAULT_FAVOURITES_COLOURS_LED
+  DEFAULT_ALERT_DISPLAY_TIME, DEFAULT_FAVOURITES_COLOURS_LED, DEFAULT_DELETE_COLOR_HINT
 } from "./config/configuration";
 import {CharTempsData} from "./interface/CharData";
 import {NapicuDate} from "napicuformatter";
@@ -98,6 +98,7 @@ export class AppComponent {
       display_resolution: CHAR_DEFAULT_VIEW_RESOLUTION_INDEX
     },
     user_favorites_colors: DEFAULT_FAVOURITES_COLOURS_LED,
+    user_delete_color_hint: DEFAULT_DELETE_COLOR_HINT,
     json_graph_chars_format: environment.production ? null : DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
     json_graph_chars_format_view: null,
     json_graph_resolution_view: []
@@ -398,8 +399,10 @@ export class AppComponent {
     this.fridge_data.json_graph_chars_format = this.get_json_temp_char_from_storage();
     //Uložení a získání nastavení grafu
     this.fridge_data.char_settings = this.get_char_settings_from_storage();
-
+    //Uložení a získání uložených barev v seznamu oblíbených z uložiště
     this.fridge_data.user_favorites_colors = this.get_user_favorites_colors_from_storage();
+    //Uložení a získání informací o nápovědě
+    this.fridge_data.user_delete_color_hint = this.get_is_delete_color_hint_enabled_from_storage();
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
@@ -1029,6 +1032,29 @@ export class AppComponent {
     this.fridge_data.user_favorites_colors.splice(index, 1);
     //Uložení nastavení
     AppComponent.application_settings.setItem("favourites_colors_led", JSON.stringify(this.fridge_data.user_favorites_colors));
+  }
+
+  //Statická funkce, která vrátí zda se má nápověda k odstranění oblíbené barvy zobrazit
+  protected static get_is_delete_color_hint_enabled_from_storage(): boolean {
+    //Získání uložených dat
+    let i: string | null = AppComponent.application_settings.getItem("favourites_colors_led_hint");
+    //Pokud existuje uložená hodnota provede se následující
+    if(i) return JSON.parse(i) as boolean;
+    //Vrácení výchozích hodnot pokud uložená data neexistují
+    return this.fridge_data.user_delete_color_hint;
+  }
+
+  //Statická funkce, která vypne zobrazování nápovědy k odstranění oblíbené barvy
+  public static disable_favorites_colors_hint(): void {
+    //Nastavení proměnné pro zobrazování nápovědy na log0
+    this.fridge_data.user_delete_color_hint = false;
+    //Uložení nastavení
+    AppComponent.application_settings.setItem("favourites_colors_led_hint", "false");
+  }
+
+  //Statická funkce, která vrátí zda se má nápověda k odstranění oblíbené barvy zobrazit
+  public static get_is_delete_color_hint_enabled(): boolean {
+    return this.fridge_data.user_delete_color_hint;
   }
 
   //Statická funkce, která vrátí oblíbené barvy

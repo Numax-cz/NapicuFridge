@@ -6,14 +6,14 @@ import {ColorEvent} from "ngx-color";
 import {RGB, RGBA} from "ngx-color/helpers/color.interfaces";
 import {ChangeContext} from "ngx-slider-v2/change-context";
 import {MIN_BRIGHTNESS_SLIDER_VALUE} from "../../../config/configuration";
-import {favourite_color_animations} from "../../Animation";
+import {alert_animations, favourite_color_animations} from "../../Animation";
 
 
 @Component({
   selector: 'app-information',
   templateUrl: './lighting.component.html',
   styleUrls: ['./lighting.component.scss', "../../main.page.scss"],
-  animations: favourite_color_animations
+  animations: [favourite_color_animations, alert_animations]
 })
 export class LightingComponent  {
   //Proměnná ukládající čas aktuálního držení oblíbené barvy
@@ -44,6 +44,9 @@ export class LightingComponent  {
   public shaking_color_interval: number = -1;
 
   public delete_color_mode: boolean = false;
+
+  //Proměnná pro uložení stavu alertu
+  public hint_alert: boolean = false;
 
   constructor(public ngZone: NgZone) {
 
@@ -142,7 +145,18 @@ export class LightingComponent  {
 
   //Funkce, která přidá barvu do oblíbených barev osvětlení
   public add_user_favorite_color(): void {
+    //Přidání oblíbené barvy do seznamu oblíbených
     AppComponent.add_user_favorite_color(AppComponent.fridge_data.config.fridge_led_rgb);
+    //Pokud je povoleno zobrazování nápovědy provede se následující
+    if(AppComponent.get_is_delete_color_hint_enabled()) {
+      //Nastavení proměnné pro zobrazení nápovědy na log1
+      this.hint_alert = true;
+    }
+  }
+
+  //Funkce, která vypne zobrazování nápovědy k odstranění oblíbené barvy
+  public disable_favorites_colors_hint(): void {
+    AppComponent.disable_favorites_colors_hint();
   }
 
   //Funkce, která odebere oblíbenou barvu osvětlení podle indexu
