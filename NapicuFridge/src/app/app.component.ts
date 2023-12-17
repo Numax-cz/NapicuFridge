@@ -83,7 +83,7 @@ export class AppComponent {
       fridge_power_mode: FridgePowerMode.FRIDGE_OFF_POWER,
       fridge_stop_on_open_door: true,
       fridge_led_enable: true,
-      fridge_led_rgb: {r: 0, g: 0, b: 0, a: 255},
+      fridge_led_rgb: {r: 255, g: 255, b: 255, a: 255},
       fridge_led_brightness: -1,
     },
     errors: {
