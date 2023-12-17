@@ -109,24 +109,31 @@ export const arrows_expand_animations: any[] = [
 export const favourite_color_animations: any[] = [
   //Programování animací skrze Angular
     trigger('FavouriteColorDeleteAnimation', [
-    transition('true => false, false => true', [
-      animate(
-        300,
-        keyframes([
-          style({ rotate: '0deg' }),
-          style({
-            rotate: '3.5deg',
+      transition('true => false, false => true', [
+        animate(
+          300,
+          keyframes([
+            style({ rotate: '0deg' }),
+            style({
+              rotate: '3.5deg',
 
-          }),
+            }),
 
-          style({
-            rotate: '-3.5deg',
-          }),
+            style({
+              rotate: '-3.5deg',
+            }),
 
-          style({ rotate: '0deg' }),
-        ])
-      ),
-    ]),
+            style({ rotate: '0deg' }),
+          ])
+        ),
+      ]),
+      state('void', style({opacity: 0, transform: "translateY(-100%)"})),
+      transition(':enter', [
+        animate(150, style({opacity: 1,  transform: "translateY(0)" }))
+      ]),
+      transition(':leave', [
+        animate(150, style({ opacity: 0, transform: "translateY(-50%)" }))
+      ]),
   ]),
 
   trigger('FavouriteColorScale', [
