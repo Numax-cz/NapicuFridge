@@ -41,6 +41,8 @@ export class LightingComponent  {
 
   public holding_color: number = -1;
 
+  public shaking_color_interval: number = -1;
+
   public delete_color_mode: boolean = false;
 
   constructor(public ngZone: NgZone) {
@@ -112,12 +114,18 @@ export class LightingComponent  {
     }
   }
 
+  //Funkce, která ukončí mazací režim oblíbených barev
+  public exit_delete_mode(): void {
+    clearInterval(this.shaking_color_interval);
+    this.delete_color_mode = false;
+  }
+
   //Funkce, která se spustí po okamžitém kliknutí na oblíbenou barvu
   public on_touch_favorite_color(event: Event, element_index: number): void {
     this.holding_color = element_index;
       this.timeoutHandler = setTimeout(() => {
         if(!this.delete_color_mode) {
-          setInterval(() => (this.trigger = !this.trigger),200);
+          this.shaking_color_interval = setInterval(() => (this.trigger = !this.trigger),200);
           setTimeout(() => {this.holding_color = -1}, 150);
           this.delete_color_mode = true;
         } else {
