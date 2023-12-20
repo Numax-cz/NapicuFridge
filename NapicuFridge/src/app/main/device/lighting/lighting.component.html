@@ -16,22 +16,22 @@
     </div>
   </div>
 
-
-  <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
-
+  <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark"
+       [ngStyle]="!get_is_connected() || !get_fridge_led_enable() ? {'opacity': '0.5'} : null">
     <div class=" is-size-5 has-text-weight-bold">
       Jas
     </div>
     <div class="Slider mt-2">
-      <ngx-slider [value]="get_fridge_led_brightness()"
+      <ngx-slider
+                  [value]="get_fridge_led_brightness()"
                   (userChangeEnd)="write_brightness_value($event)"
                   (valueChange)="on_brightness_input_change($event)"
-                  [options]="options"></ngx-slider>
+                  [options]="options" ></ngx-slider>
     </div>
-
   </div>
 
-  <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark">
+  <div class="box mt-5 info-box has-background-white is-size-4 has-text-weight-bold has-text-dark"
+       [ngStyle]="!get_is_connected() || !get_fridge_led_enable() ? {'opacity': '0.5'} : null">
     <div class="pb-2 pt-2" >
       <div class=" is-size-5 has-text-weight-bold">
         Barva
@@ -40,14 +40,12 @@
         <div class="ColorPickerColor color-picker-fw-color">
           <div class="color" [style]="{'background-color': get_css_color_format(get_led_color())}"></div>
         </div>
-
-        <div class="mt-3 mb-3">
+        <div class="mt-3 mb-3" [ngClass]="{'ColorHuePickerWithoutSlider': !get_fridge_led_enable()}">
           <color-hue-picker
                          (onChangeComplete)="write_color_value($event.color.rgb)"
                          (onChange)="on_color_input_change($event.color.rgb)"
-                         [color]="get_led_color()" ></color-hue-picker>
+                         [color]="get_led_color()"></color-hue-picker>
         </div>
-
         <div class="color-picker-fw-color">
           <div *ngFor="let i of get_user_favorites_colors(); let index = index" class="is-relative"
                [@FavouriteColorDeleteAnimation]="trigger"
@@ -62,14 +60,12 @@
               </div>
             </ng-container>
           </div>
-
           <ng-container *ngIf="!delete_color_mode">
             <div class="add color" (click)="add_user_favorite_color()">
               <ion-icon name="add-circle-outline" style="width: 95%;height: 95%;"></ion-icon>
             </div>
           </ng-container>
         </div>
-
       </div>
       <ng-container *ngIf="delete_color_mode">
         <div class="is-size-5 mt-3 p-3 info-box has-background-info has-text-white has-text-centered is-clickable" (click)="exit_delete_mode()">

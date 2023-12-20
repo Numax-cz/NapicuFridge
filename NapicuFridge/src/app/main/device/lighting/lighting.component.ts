@@ -17,7 +17,8 @@ import {alert_animations, favourite_color_animations} from "../../Animation";
 })
 export class LightingComponent  {
   //Proměnná pro nastavení slideru
-  public readonly options: Options = {
+  public options: Options = {
+    disabled: !AppComponent.get_fridge_led_enable(),
     floor: MIN_BRIGHTNESS_SLIDER_VALUE,
     ceil: 100,
       showSelectionBarEnd: true,
@@ -42,6 +43,8 @@ export class LightingComponent  {
   //Funkce, která se spustí po změně inputu
   public led_input_change(event: any): void {
     const i: boolean = event.currentTarget.checked;
+    //Aktualizování nastavení slideru
+    this.options = Object.assign({}, this.options, {disabled: !i});
     //Spuštění funkce pro zápis charakteristiky na stav LED osvětlení
     CharacteristicController.writeLEDEnable(i)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
@@ -55,6 +58,7 @@ export class LightingComponent  {
 
   //Funkce, která se spustí při změně barvy v color pickeru
   public on_color_input_change(color: RGBA): void {
+    if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       //Zapíšeme aktuální barvu LED osvětlení
@@ -86,6 +90,7 @@ export class LightingComponent  {
 
   //Funkce, která se spustí při výběru hodnoty v inputu
   public write_brightness_value(event: ChangeContext): void {
+    if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     //Spuštění funkce pro zápis charakteristiky na změnu hodnoty jasu LED osvětlení
     CharacteristicController.writeLEDBrightness(event.value)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující
@@ -94,6 +99,7 @@ export class LightingComponent  {
 
   //Funkce, která přidá barvu do oblíbených barev osvětlení. Tato funkce se spustí po kliknutí na oblíbenou barvu
   public on_click_favorite_color(color: RGB): void {
+    if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     this.holding_color = -1;
     clearTimeout(this.timeoutHandler);
     if(!this.delete_color_mode) {
@@ -112,6 +118,7 @@ export class LightingComponent  {
 
   //Funkce, která se spustí po okamžitém kliknutí na oblíbenou barvu
   public on_touch_favorite_color(event: Event, element_index: number): void {
+    if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     //Nastavení indexu držící barvy
     this.holding_color = element_index;
     //Uložení timout
@@ -138,6 +145,7 @@ export class LightingComponent  {
 
   //Funkce, která přidá barvu do oblíbených barev osvětlení
   public add_user_favorite_color(): void {
+    if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     //Přidání oblíbené barvy do seznamu oblíbených
     AppComponent.add_user_favorite_color(AppComponent.fridge_data.config.fridge_led_rgb);
     //Pokud je povoleno zobrazování nápovědy provede se následující
