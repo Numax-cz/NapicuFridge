@@ -13,18 +13,16 @@ import {CharTempsData} from "../../../interface/CharData";
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.scss', '../../main.page.scss'],
   animations: [
-
-    //Programování animací skrze Angular
-    trigger('ContentAnimation', [
-      state('void', style({ opacity: 0, transform: 'translateY(50%)' })),
-      transition(':enter', [
-        animate(150, style({ opacity: 1, transform: 'translateY(0%)' }))
-      ]),
-      transition(':leave', [
-        animate(150, style({ opacity: 0, transform: 'translateY(50%)' }))
-      ]),
-    ]),
-
+    // //Programování animací skrze Angular
+    // trigger('ContentAnimation', [
+    //   state('void', style({ opacity: 0, transform: 'translateY(50%)' })),
+    //   transition(':enter', [
+    //     animate(150, style({ opacity: 1, transform: 'translateY(0%)' }))
+    //   ]),
+    //   transition(':leave', [
+    //     animate(150, style({ opacity: 0, transform: 'translateY(50%)' }))
+    //   ]),
+    // ]),
   ],
 })
 export class DisplayComponent {
@@ -43,6 +41,8 @@ export class DisplayComponent {
 
   //Funkce pro změnu stavu displeje
   public change_input_display_state(value: number): void {
+    //Pokud zařízení není připojené, nebo display není povolen provede se následující 
+    if(!this.get_is_connected() || !this.get_is_display_available()) return;
     //Zavolání funkce pro zapsání stavu displeje
     CharacteristicController.writeDisplayState(value)?.then(() => {
       //Až se úspěšně provede zápis charakteristiky provede se následující

@@ -16,13 +16,9 @@
     </div>
   </div>
 
-  <section @ContentAnimation *ngIf="get_is_display_available() && get_is_connected()" class="mt-5">
-
-
-
+  <section [ngStyle]="!get_is_connected() || !get_is_display_available() ? {'opacity': '0.5'} : null" class="mt-5">
     <div class="container">
       <div class="box info-box" [ngStyle]="!get_is_connected() || get_is_fridge_on_fatal_error() ? {'opacity': '0.5'} : null">
-
         <div class="box info-box has-background-info is-size-2 has-text-weight-bold has-text-centered has-text-white">
           <div class="display">
             <div>
@@ -30,8 +26,6 @@
             </div>
           </div>
         </div>
-
-
         <div class="is-flex is-flex-direction-column">
           <div class="mt-2 p-4 info-box"
                [ngClass]="{'has-background-info has-text-white': selected_item === 1}"
@@ -46,8 +40,5 @@
         </div>
       </div>
     </div>
-
-
-
   </section>
 </section>
