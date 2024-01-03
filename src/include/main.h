@@ -64,8 +64,8 @@
 //Definice pinů termistoru
 #define COOLER_NTC_SENSOR_PIN             4 //Pin pro příjem dat
 #define COOLER_NTC_REFERENCE_RESISTANCE    9830 // Referenční hodnota rezistoru 
-#define COOLER_NTC_NOMINAL_RESISTANCE     7400 // Nominální odpor
-#define COOLER_NTC_NOMINAL_TEMPERATURE    26 //Nominální teplota 
+#define COOLER_NTC_NOMINAL_RESISTANCE     10000 // Nominální odpor
+#define COOLER_NTC_NOMINAL_TEMPERATURE    25 //Nominální teplota 
 #define COOLER_NTC_B_VALUE                3950 //beta hodnota 
 #define COOLER_NTC_STM32_ANALOG_RESOLUTION 4095 //Analogové Rozlišení 
 
