@@ -60,7 +60,7 @@
               </div>
             </ng-container>
           </div>
-          <ng-container *ngIf="!delete_color_mode">
+          <ng-container *ngIf="!delete_color_mode && (!(get_led_color().r === 255 && get_led_color().g === 255 && get_led_color().b === 255))">
             <div class="add color" (click)="add_user_favorite_color()">
               <ion-icon name="add-circle-outline" style="width: 95%;height: 95%;"></ion-icon>
             </div>
