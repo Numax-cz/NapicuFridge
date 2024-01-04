@@ -41,6 +41,8 @@ public:
     static void send();
     //Statická funkce, která nastaví proměnnou, která určuje zda jsou data připravená k odeslání do připojeného zařízení na log1
     static void set_ready_to_send() {DataJSONManager::ready_to_send = true;}
+    //Statická funkce pro smazání souboru ukládající naměřené hodnoty
+    static void delete_file();
 };
 
 class DataJSONReadySendCharacteristicCallback : public BLECharacteristicCallbacks {

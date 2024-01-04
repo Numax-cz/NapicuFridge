@@ -403,6 +403,8 @@ export class AppComponent {
     this.fridge_data.user_favorites_colors = this.get_user_favorites_colors_from_storage();
     //Uložení a získání informací o nápovědě
     this.fridge_data.user_delete_color_hint = this.get_is_delete_color_hint_enabled_from_storage();
+
+    this.json_graph_last_update_date = this.get_json_graph_last_update_time_from_storage();
   }
 
   //Statická funkce, která nastaví hodnotu proměnné connected_device. Bez udání parametru je hodnota nastavená na null => zařízení není připojené
@@ -707,7 +709,7 @@ export class AppComponent {
   }
 
   //Statická funkce, která vrátí uložený čas poslední aktualizace grafu naměřených hodnot
-  protected static get_json_graph_last_update_date_from_storage(): number {
+  protected static get_json_graph_last_update_time_from_storage(): number {
     //Získání uložených dat
     let i: string | null = AppComponent.application_settings.getItem("char_last_update");
     //Pokud existuje uložená hodnota provede se následující

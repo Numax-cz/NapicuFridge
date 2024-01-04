@@ -221,3 +221,11 @@ void DataJSONManager::send() {
     doc.clear();
     /////////////////////////////////////////////////////////////////////
 }
+
+//Funkce pro smazání souboru ukládající naměřené hodnoty
+void DataJSONManager::delete_file() {
+    //Spuštění funkce pro smazání souboru 
+    SPIFFS.remove(DEFAULT_JSON_DATA_FILE_NAME);
+    //Nastavení proměnné určující zda je zařízení připraveno k odeslání dat k připojenému zařízení na log1 
+    DataJSONManager::ready_to_send = true;
+}

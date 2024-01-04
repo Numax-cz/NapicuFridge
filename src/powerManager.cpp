@@ -198,11 +198,17 @@ void PowerManager::load_config_from_eeprom() { //TODO Optimalizovat
  * @param mode Režim napájení který se nastaví
  */
 void PowerManager::change_power_mode(int mode) {
-    
     //Zkontroluje, zda převedené číslo odpovídá některé hodnotě enumerace
-    if (mode == FRIDGE_OFF_POWER || mode == FRIDGE_PAUSED) {
+    if (mode == FRIDGE_OFF_POWER) {
+        //Spuštění funkce pro smazání souboru ukládající naměřené hodnoty
+        DataJSONManager::delete_file();
+        //Spuštění funkce pro vypnutí chlazení 
         PowerManager::power_off();
-    } else if (mode == FRIDGE_MAX_POWER) {
+    } 
+    else if (mode == FRIDGE_PAUSED) {
+        PowerManager::power_off();
+    }
+    else if (mode == FRIDGE_MAX_POWER) {
         relay_peltier_power_mode->close();
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
