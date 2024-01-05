@@ -33,13 +33,21 @@ export class ChartsComponent implements ViewWillLeave{
     ]
   };
 
+
+  //TODO DOC
   public expanded = false;
 
+  //TODO DOC
   public copy_alert_display: boolean = false;
 
+  //Proměnná pro uložení stavu alertu
+  public hint_alert: boolean = true;
 
 
   constructor(private ngZone: NgZone) {
+    //Získání informace, zda se má nápověda zobrazit
+    this.hint_alert = AppComponent.get_is_charts_hint_enabled()
+
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
       //Spuštění funkce pro aktualizovaní dat, které se mají zobrazit v grafu
@@ -123,6 +131,10 @@ export class ChartsComponent implements ViewWillLeave{
     });
   }
 
+  //Funkce, která vypne zobrazování nápovědy ke grafu
+  public disable_charts_hint(): void {
+    AppComponent.disable_charts_hint();
+  }
 
   //Funkce, která vrátí nastavení grafu
   public get_char_settings(): CharSettings {

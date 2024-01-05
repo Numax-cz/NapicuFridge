@@ -49,6 +49,7 @@ export declare interface FridgeData {
 
   user_favorites_colors: RGB[],
   user_delete_color_hint: boolean
+  user_char_hint: boolean,
   char_settings: CharSettings,
   json_graph_chars_format: CharTempsData | null,
   json_graph_chars_format_view: CharTempsData |null,

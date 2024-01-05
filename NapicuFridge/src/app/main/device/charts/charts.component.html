@@ -81,3 +81,14 @@
       <p class="is-size-6 has-text-weight-medium has-text-centered">Data byla zkopírována</p>
   </div>
 </div>
+
+
+<div @AlertAnimation class="box info-box alert-container" *ngIf="hint_alert">
+  <div class="is-size-5 has-text-weight-bold">Smazání grafu</div>
+  <p class="is-size-6">Graf naměřených hodnot se smaže pokaždé, když vypnete chlazení, nebo vypnete ledničku z elektrické sítě.</p>
+  <div class="mt-4 is-flex is-justify-content-space-around is-align-items-center">
+    <div class="is-clickable has-text-white has-background-info has-text-weight-medium button-box" (click)="hint_alert = false; disable_charts_hint()">OK</div>
+  </div>
+</div>
+
+<div @AlertAnimationBackground class="alert" *ngIf="hint_alert" (click)="hint_alert = false; disable_charts_hint()"></div>

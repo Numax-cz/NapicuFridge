@@ -44,6 +44,8 @@ export const CHAR_LAST_UPDATE_DATE_FORMAT: string = "%dt.%MM.%yyyy %HH:%mm";
 export const MIN_BRIGHTNESS_SLIDER_VALUE: number = 10;
 //Definice, výchozí hodnoty, zda se má zobrazovat nápověda pro vymazání oblíbené barvy
 export const DEFAULT_DELETE_COLOR_HINT: boolean = true;
+//Definice, výchozí hodnoty, zda se má zobrazovat nápověda grafu naměřených hodnot
+export const DEFAULT_CHARTS_HINT: boolean = true;
 
 // //Definice výchozího regexu pro kontrolu vstupů pro přejmenování zařízení
 // export const DEVICE_RENAME_INPUT_REGEX: RegExp = /^(?![ ])[A-Za-z0-9-_. ]{1,30}$/;
