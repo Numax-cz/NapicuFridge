@@ -18,9 +18,9 @@
   </div>
 
   <div class="section has-text-centered pb-0">
-    <a ion-button block class="button SearchButton mb-5" [ngClass]="{'is-danger': scanning, 'is-info': !scanning}" (click)="scanning ? stop_scan() : scan()">
+    <div class="is-block is-clickable has-text-white has-background-info has-text-weight-medium button-box mb-5" [ngClass]="{'has-background-danger': scanning, 'has-background-info': !scanning}" (click)="scanning ? stop_scan() : scan()">
       {{!scanning ? 'Vyhledat zařízení' : 'Zastavit'}}
-    </a>
+    </div>
     <div class="pb-2" style="color: #00000047;">{{get_app_version()}}</div>
   </div>
 </ng-container>
