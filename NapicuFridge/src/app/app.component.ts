@@ -17,22 +17,24 @@ import {environment} from "../environments/environment";
 import {CharacteristicController} from "./CharacteristicController";
 import {
   CHAR_COOLER_TEMP_TEXT,
+  CHAR_DEFAULT_VIEW_RESOLUTION_INDEX,
   CHAR_IN_TEMP_TEXT,
   CHAR_LAST_UPDATE_DATE_FORMAT,
-  CHAR_DEFAULT_VIEW_RESOLUTION_INDEX,
   CHAR_OUT_TEMP_TEXT,
-  DEFAULT_IN_FANS_ON_SWITCH,
-  DEFAULT_POWER_MODE_ON_SWITCH,
   CHAR_VIEW_RESOLUTION_OPTIONS,
+  DEFAULT_ALERT_DISPLAY_TIME,
   DEFAULT_CHAR_VIEW_DATA_FOR_DEV,
-  DEFAULT_ALERT_DISPLAY_TIME, DEFAULT_FAVOURITES_COLOURS_LED, DEFAULT_DELETE_COLOR_HINT, DEFAULT_CHARTS_HINT
+  DEFAULT_CHARTS_HINT,
+  DEFAULT_DELETE_COLOR_HINT,
+  DEFAULT_FAVOURITES_COLOURS_LED,
+  DEFAULT_IN_FANS_ON_SWITCH,
+  DEFAULT_POWER_MODE_ON_SWITCH
 } from "./config/configuration";
 import {CharTempsData} from "./interface/CharData";
 import {NapicuDate} from "napicuformatter";
 import {CopyArray} from "./main/CopyArray";
-import { Clipboard } from '@capacitor/clipboard';
+import {Clipboard} from '@capacitor/clipboard';
 import {NapicuOptionsData} from "./interface/NapicuOption";
-import {shadeRGBColor} from "@swimlane/ngx-charts";
 import {RGB, RGBA} from "ngx-color/helpers/color.interfaces";
 
 @Component({
@@ -651,6 +653,8 @@ export class AppComponent {
         return AppComponent.fridge_data.in_temp;
       case FridgeDisplayState.FRIDGE_DISPLAY_OUT_TEMP_1:
         return AppComponent.fridge_data.out_temp;
+      case FridgeDisplayState.FRIDGE_DISPLAY_COOLER_TEMP:
+        return AppComponent.fridge_data.cooler_temp
       default:
         return null;
     }
