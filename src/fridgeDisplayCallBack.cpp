@@ -1,6 +1,5 @@
 #include <include/fridgeDisplay.h>
 
-
 void DisplayEnableCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o stavu displeje");
@@ -38,7 +37,6 @@ void DisplayEnableCharacteristicCallback::onWrite(BLECharacteristic *pCharacteri
     }
 }
 
-
 void DisplayStateCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.print("Odeslání informací o stavu displeje");
@@ -58,6 +56,5 @@ void DisplayStateCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
         //Statické castování intu na fridge_display_state a následení nastavení stavu displeje
         FridgeDisplay::change_display_state(static_cast<fridge_display_state>(value_number));
     }
-
 }
 

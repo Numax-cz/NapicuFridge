@@ -52,7 +52,7 @@ const int data_send_period = 1000;
 //Proměnná aktuální doby v komunikací s bluetooth
 unsigned long data_send_time_now = 0;
 
-void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t* param) {
+void ble_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t* param) {
   switch(event) {
       // Proveď následující po ověření zařízení
       case ESP_GAP_BLE_AUTH_CMPL_EVT: {
@@ -76,8 +76,6 @@ void my_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t*
             EEPROM.commit();
           } 
 
-
-           
           if(FridgeDisplay::get_display_state() == FRIDGE_DISPLAY_PAIR_TEXT) {
             FridgeDisplay::change_display_state(FRIDGE_DISPLAY_IN_TEMP_1);
           }
@@ -108,7 +106,6 @@ void setup() {
   //Nastavení pinu dveří jako vstup 
   pinMode(DOOR_PIN, INPUT);
 
-
   //Inicializace paměti EEPROM
   if (!EEPROM.begin(EEPROM_MAX_SIZE)) {
     //Vypsání hodnoty do konzole
@@ -118,7 +115,6 @@ void setup() {
     //Vypsání hodnoty do konzole
     Serial.println("EEPROM je dostupné");
   }
-
 
   //Vytvoření třídy pro tlačítko 
   resetButton = new ButtonManager(RESET_BUTTON);
@@ -148,22 +144,21 @@ void setup() {
   //Vytvoření třídy pro digitální potenciometr
   digital_potentiometer = new DigitalPotentiometer(X9_INC, X9_UD, X9_CS);
 
-
-  
-
+  //Spuštění begin funkce displeje 
   FridgeDisplay::begin();
 
-
-
-
+  //Uložení a získání uložené mac adresy
   BLEAddress* data_from_eeprom = read_paired_device_mac_address_from_eeprom();
 
   //Když je adresa uložená v paměti EEPROM provede se následující
   if(data_from_eeprom) {
-    //Vypsání hodnoty do konzole
-    Serial.println("MAC adresa je uložená v EEPROM.");
-    //Vypsání hodnoty z EEPROM do konzole
-    Serial.println(data_from_eeprom->toString().c_str());  
+    //Pokud je zapnutý vývojářký režim, provede se následující 
+    if(DEV_MODE) {
+      //Vypsání hodnoty do konzole
+      Serial.println("MAC adresa je uložená v EEPROM.");
+      //Vypsání hodnoty z EEPROM do konzole
+      Serial.println(data_from_eeprom->toString().c_str());  
+    }
     //Nastavení proměnné
     FridgeData.paired_device_address = data_from_eeprom;
     //Změna displeje
@@ -173,32 +168,20 @@ void setup() {
     FridgeDisplay::change_display_state(FRIDGE_DISPLAY_PAIR_TEXT);
   }
 
-
-
-
-
   // Inicializace Bluetooth s nastavením jména zařízení
   BLEDevice::init(DEFAULT_BLE_NAME);
   // BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT);
   BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT_MITM);
-
-  BLEDevice::setCustomGapHandler(my_gap_event_handler);
-
+  //Nastavení vlastní obslužné funkce událostí pro Bluetooth GAP
+  BLEDevice::setCustomGapHandler(ble_gap_event_handler);
 
   // Vytvoření BLE serveru
   pServer = BLEDevice::createServer();
 
-
-
-
-
-
+  //Nastavení zpětného volání pro server
   pServer->setCallbacks(new ServerCallBack());
   // Vytvoření BLE služby
   BLEService *pService = pServer->createService(BLEUUID(SERVICE_UUID), 40, 0);
-
-
-
 
   // Vytvoření teploměru pro vnitřní zaznamenávání teploty
   inside_temp_dht = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_UUID, pService, FridgeData.in_temp);
@@ -229,7 +212,8 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE | 
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                      
   fridgeEnableCharacteristic->setCallbacks(new DisplayEnableCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -238,7 +222,8 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE | 
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                                                       
   fridgeStateCharacteristic->setCallbacks(new DisplayStateCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -247,7 +232,8 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE | 
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                                                     
   fridgeInFansCharacteristic->setCallbacks(new InFansCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -256,7 +242,8 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE | 
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                                                         
   powerModeCharacteristic->setCallbacks(new PowerManagerCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -265,7 +252,8 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE | 
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                      
   buzzingOnErrorCharacteristic->setCallbacks(new BuzzingOnErrorCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -275,7 +263,8 @@ void setup() {
     BLECharacteristic::PROPERTY_NOTIFY |
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                      
   uptimeCharacteristic->setCallbacks(new FridgeUpTimeCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -283,7 +272,8 @@ void setup() {
     CHARACTERISTIC_FACTORY_UUID,
     BLECharacteristic::PROPERTY_WRITE
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                                                        
   factoryCharacteristic->setCallbacks(new FactoryResetCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -292,7 +282,8 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE |
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                                                         
   doorCharacteristic->setCallbacks(new DoorCharacteristicCallback());
 
   //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -301,7 +292,8 @@ void setup() {
     BLECharacteristic::PROPERTY_WRITE |
     BLECharacteristic::PROPERTY_READ
   );
-                                       
+
+  //Nastavení zpětného volání pro danou charakteristiku                      
   rgbEnableCharacteristic->setCallbacks(new RGBEnableCharacteristicCallback());
 
 
@@ -312,6 +304,7 @@ void setup() {
     BLECharacteristic::PROPERTY_READ
   );
 
+  //Nastavení zpětného volání pro danou charakteristiku                      
   rgbColorCharacteristic->setCallbacks(new RGBColorCharacteristicCallback());
 
     //Vytvoření BLE komunikačního kanálu pro komunikaci
@@ -321,6 +314,7 @@ void setup() {
     BLECharacteristic::PROPERTY_READ
   );
 
+  //Nastavení zpětného volání pro danou charakteristiku                      
   rgbBrightnessCharacteristic->setCallbacks(new RGBBrightnessCharacteristicCallback());
 
   //Spuštění begin funkce DataJSONManageru
@@ -337,22 +331,25 @@ void setup() {
   //Spuštění begin funkce RGBManageru
   fridge_rgb->begin();
 
-
   // Zahájení BLE služby
   pService->start();
 
-
+  //Povolení soukromí na vzdáleném zařízení 
   esp_ble_gap_config_local_privacy(true);
 
+  //Vytvoření zabezpečení
   BLESecurity *pSecurity = new BLESecurity();
+  //Nastavení režimu zabezpečení (párování)
   pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
+  //Nastavení schopnosti - žádný vstup, žádný výstup
   pSecurity->setCapability(ESP_IO_CAP_NONE);
+  //Inicializace šifrovacího klíče serverem
   pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
 
-
-
+  //Uložení advertising do proměnné
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  //Nastavení adversting
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(true);
   pAdvertising->setMinPreferred(0x06); 
@@ -361,14 +358,10 @@ void setup() {
   // Zapnutí viditelnosti BLE 
   BLEDevice::startAdvertising();
 
-
-  Serial.println("BLE nastaveno, ceka na pripojeni..");
-
-
-
-
-
- 
+  //Pokud je zapnutý vývojářký režim, provede se následující 
+  if(DEV_MODE) {
+    Serial.println("BLE nastaveno, ceka na pripojeni..");
+  }
 }
 
 int per = 0;
@@ -391,8 +384,6 @@ void loop() {
 
   //Spuštění loop funkce rgb osvětlení 
   fridge_rgb->loop();
-
-
 
   //Spuštění loop funkce ventilátoru
   // cooling_fans_pwm.loop();  

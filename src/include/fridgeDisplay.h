@@ -11,7 +11,7 @@ typedef enum {
 
     FRIDGE_DISPLAY_IN_TEMP_1,
     FRIDGE_DISPLAY_OUT_TEMP_1,
-
+    FRIDGE_DISPLAY_COOLER_TEMP, 
 } fridge_display_state;
 
 class FridgeDisplay {

@@ -55,26 +55,38 @@ void FridgeDisplay::disable_display() {
 }
 
 void FridgeDisplay::loop() {
-
-
     if(FridgeDisplay::display_state == FRIDGE_DISPLAY_PAIR_TEXT) {
+        //Spuštění funkce pro vypsání textu pro párování
         FridgeDisplay::print_pair_text();
     }
     else if (FridgeDisplay::display_state == FRIDGE_DISPLAY_IN_TEMP_1) {
+        //Uložení vnitřní teploty do proměnné
         String temp = FridgeData.in_temp;
+        //Přidání k proměnné znak stupně 
         temp += (char)247;
+        //Přidání znaku
         temp += "C";
         FridgeDisplay::print_centered_text(temp, 2);
     }
     else if (FridgeDisplay::display_state == FRIDGE_DISPLAY_OUT_TEMP_1) {
+        //Uložení venkovní teploty do proměnné
         String temp = FridgeData.out_temp;
+        //Přidání k proměnné znak stupně 
         temp += (char)247;
+        //Přidání znaku
+        temp += "C";
+        FridgeDisplay::print_centered_text(temp, 2);
+    }
+    else if (FridgeDisplay::display_state == FRIDGE_DISPLAY_COOLER_TEMP) {
+        //Uložení teploty chladiče do proměnné
+        String temp = FridgeData.cooler_temp;
+        //Přidání k proměnné znak stupně 
+        temp += (char)247;
+        //Přidání znaku
         temp += "C";
         FridgeDisplay::print_centered_text(temp, 2);
     }
 }
-
-
 
 void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t x) {
     //Nastavení veškerých pixelů na log0
@@ -97,12 +109,9 @@ void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t 
     FridgeDisplay::display->display();
 }
 
-
-
 void FridgeDisplay::print_pair_text() {
 
     FridgeDisplay::print_centered_text(message, 2, x);
-
    //Změna pozice, číslo vyjadřuje rychlost posunu v px  
    x=x-1; 
    if(x < minX) x= FridgeDisplay::display->width();
