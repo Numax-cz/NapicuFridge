@@ -1,35 +1,37 @@
 #include <include/fridgeDisplay.h>
 #include <Fonts/FreeMonoBold9pt7b.h>
 
-
+//Funkce pro inicializaci displeje
 void FridgeDisplay::begin() {
+    //Vytvoření nové třídy displeje
     FridgeDisplay::display = new Adafruit_SSD1306(DISPLAY_W, DISPLAY_H, &Wire, -1);
+    //Spuštění funkce pro inicializaci displeje
     FridgeDisplay::display->begin(SSD1306_SWITCHCAPVCC, 0x3C);
-
+    //Získání dat z EEPROM 
     uint8_t data = EEPROM.read(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR);
 
+    //Pokud není uložena hodnota v EEPROM provede se následující 
     if(data == 0xFF) {
+        //Nastavení výchozí hodnoty
         data = DISPLAY_DEFAULT_AVAILABLE;
     } 
 
+    //Pokud jsou uložená data rovny log1 provede se následující
     if(data == 1) {
+        //Povolení displeje
         FridgeDisplay::enable_display();
     } else {
+        //Zakázání displeje
         FridgeDisplay::disable_display();
     }
 
-
-
-
-    FridgeDisplay::display->setTextSize(2);
-    FridgeDisplay::display->setTextColor(WHITE);
-    FridgeDisplay::display->setTextWrap(false);
+    //Nastavení pozice
     FridgeDisplay::x = FridgeDisplay::display->width();
+    //Nastavení min pozice
     FridgeDisplay::minX = -12 * strlen(message);
-
 }
 
-
+//Funkce pro povolení displeje
 void FridgeDisplay::enable_display() {
     //Zapsání log1 hodnoty do EEPROM
     EEPROM.write(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR, 1);
@@ -41,6 +43,7 @@ void FridgeDisplay::enable_display() {
     EEPROM.commit();
 }
 
+//Funkce pro zakázání displeje
 void FridgeDisplay::disable_display() {
     //Zapsání log0 hodnoty do EEPROM
     EEPROM.write(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR, 0);
@@ -54,6 +57,7 @@ void FridgeDisplay::disable_display() {
     EEPROM.commit();
 }
 
+//Funkce pro aktualizaci 
 void FridgeDisplay::loop() {
     if(FridgeDisplay::display_state == FRIDGE_DISPLAY_PAIR_TEXT) {
         //Spuštění funkce pro vypsání textu pro párování
@@ -88,6 +92,13 @@ void FridgeDisplay::loop() {
     }
 }
 
+/**
+ * @brief Funkce, která vypíše text vycentrovaně
+ * 
+ * @param text Text, který se má zobrazit 
+ * @param font_size Velikost textu
+ * @param x Pozice x textu
+ */
 void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t x) {
     //Nastavení veškerých pixelů na log0
     FridgeDisplay::display->clearDisplay();
@@ -109,13 +120,11 @@ void FridgeDisplay::print_centered_text(String text, uint8_t font_size, int16_t 
     FridgeDisplay::display->display();
 }
 
+//Funkce pro vypsání textu pro párování 
 void FridgeDisplay::print_pair_text() {
-
+    //Spuštění funkce pro výpis vycentrovaného textu
     FridgeDisplay::print_centered_text(message, 2, x);
-   //Změna pozice, číslo vyjadřuje rychlost posunu v px  
-   x=x-1; 
-   if(x < minX) x= FridgeDisplay::display->width();
+    //Změna pozice, číslo vyjadřuje rychlost posunu v px  
+    x=x-1;
+    if(x < minX) x= FridgeDisplay::display->width();
 }
-
-
-
