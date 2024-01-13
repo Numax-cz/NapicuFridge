@@ -56,7 +56,9 @@ export class InfoPage {
     });
   }
 
+  //Funkce, která vrátí náhled naměřených hodnot
   public get_preview_char_data(): CharTempsData {
+    //Získání json naměřených hodnot
     const data: CharTempsData | null = AppComponent.get_full_json_temp_char();
     return [...(data?.[0] ? [data[0]] : this.default_preview_graph_data)];
   }
