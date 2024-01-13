@@ -1,14 +1,27 @@
 #include <include/dataJSONManager.h>
 #include <SPIFFS.h>
 
+//Funkce pro získání naměřených hodnot 
 void DataJSONReadySendCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     //Proměnná pro ukládání přijaté zprávy
-    std::string prijataZprava = pCharacteristic->getValue();
+    std::string msg = pCharacteristic->getValue();
 
     //Pokud obsahuje znak 1 provede se následující
-    if (prijataZprava == "1") {
+    if (msg == "1") {
         //Nastavení proměnné určující zda je zařízení připraveno k odeslání dat k připojenému zařízení na log1
         DataJSONManager::set_ready_to_send();
+    }
+}
+
+//Funkce pro smazání naměřených hodnot
+void DataJSONDeleteCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
+    //Proměnná pro ukládání přijaté zprávy
+    std::string msg = pCharacteristic->getValue();
+
+    //Pokud obsahuje znak 1 provede se následující
+    if (msg == "1") {
+        //Spuštění funkce pro smazání souboru ukládající naměřené hodnoty
+        DataJSONManager::delete_file();
     }
 }
 
@@ -18,8 +31,9 @@ void DataJSONReadySendCharacteristicCallback::onWrite(BLECharacteristic *pCharac
  * @param pService BLE služba
  * @param notify_uuid UUID pro oznamování naměřených dat
  * @param ready_to_send_uuid UUID pro vynucení odeslání dat
+ * @param delete_data_uuid UUID pro smazání naměřených hodnot
  */
-void DataJSONManager::begin(BLEService* pService, const char* notify_uuid, const char* ready_to_send_uuid) {
+void DataJSONManager::begin(BLEService* pService, const char* notify_uuid, const char* ready_to_send_uuid, const char* delete_data_uuid) {
     //Funkce pro inicializaci SPIFFS, pokud došlo k problému provede se následující
     if(!SPIFFS.begin(true, "/spiffs", 5)){
         //Vypsání hodnoty do konzole
@@ -49,6 +63,15 @@ void DataJSONManager::begin(BLEService* pService, const char* notify_uuid, const
 
     //Přiřazení zpětného volání k této charakteristice.
     readyDataCharacteristic->setCallbacks(new DataJSONReadySendCharacteristicCallback());
+
+    //Vytvoření BLE komunikačního kanálu pro komunikaci
+    BLECharacteristic *deleteDataCharacteristic = pService->createCharacteristic(
+        delete_data_uuid,
+        BLECharacteristic::PROPERTY_WRITE
+    );
+
+    //Přiřazení zpětného volání k této charakteristice.
+    deleteDataCharacteristic->setCallbacks(new DataJSONDeleteCharacteristicCallback());
 
     //Přečtení souboru a uložení třídy do proměnné
     File file = SPIFFS.open(DEFAULT_JSON_DATA_FILE_NAME, FILE_WRITE);
@@ -163,7 +186,6 @@ void DataJSONManager::write() {
         file2.flush();
     }
 }
-
 
 //Funkce, která odešle naměřená data do připojeného zařízení
 void DataJSONManager::send() {

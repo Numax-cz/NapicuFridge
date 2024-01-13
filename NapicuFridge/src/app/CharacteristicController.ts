@@ -91,6 +91,46 @@ export class CharacteristicController {
     return null;
   }
 
+  //Statická funkce pro vynucení naměřených JSON dat z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  public static forceJSONData(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if (AppComponent.connected_device) {
+      //Převedení stringu do bytes
+      let bytes: Uint8Array = BluetoothLE.stringToBytes("1");
+      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+      //Zapsání charakteristiky
+      return BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID,
+        value: encodedUnicodeString,
+      });
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
+
+  //Statická funkce pro vymazání naměřených JSON dat z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  public static deleteJSONData(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if (AppComponent.connected_device) {
+      //Převedení stringu do bytes
+      let bytes: Uint8Array = BluetoothLE.stringToBytes("1");
+      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
+      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
+      //Zapsání charakteristiky
+      return BluetoothLE.write({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_JSON_DATA_DELETE_UUID,
+        value: encodedUnicodeString,
+      });
+    }
+    //Vrácení null, pokud není připojené zařízení
+    return null;
+  }
+
   //Funkce pro zápis stavu displeje chytré ledničky (Pokud se vrátí null, zařízení není připojené)
   public static writeDisplayState(value: number): Promise<OperationResult> | null {
       //Kontrola, zda je zařízení spárované
@@ -258,26 +298,6 @@ export class CharacteristicController {
     return null;
   }
 
-  //Statická funkce pro vynucení naměřených JSON dat z chytré ledničky (Pokud se vrátí null, zařízení není připojené)
-  public static forceJSONData(): Promise<OperationResult> | null {
-    //Kontrola, zda je zařízení spárované
-    if (AppComponent.connected_device) {
-      //Převedení stringu do bytes
-      let bytes: Uint8Array = BluetoothLE.stringToBytes("1");
-      //Funkce pro převod pole unit8Array na řetězec v kódování base64 pro zápis znaků nebo deskriptorů
-      let encodedUnicodeString: string = BluetoothLE.bytesToEncodedString(bytes);
-      //Zapsání charakteristiky
-      return BluetoothLE.write({
-        address: AppComponent.connected_device.address,
-        service: Configuration.SERVICE_UUID,
-        characteristic: Configuration.CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID,
-        value: encodedUnicodeString,
-      });
-    }
-    //Vrácení null, pokud není připojené zařízení
-    return null;
-  }
-
   //Statická funkce pro uvedení chytré ledničky do továrního nastavení (Pokud se vrátí null, zařízení není připojené)
   public static factoryRestart(): Promise<OperationResult> | null {
     //Kontrola, zda je zařízení spárované
@@ -359,7 +379,6 @@ export class CharacteristicController {
     //Vrácení null, pokud není připojené zařízení
     return null;
   }
-
 
   /**
    * Statická funkce pro změnu barvy LED osvětlení (Pokud se vrátí null, zařízení není připojené)

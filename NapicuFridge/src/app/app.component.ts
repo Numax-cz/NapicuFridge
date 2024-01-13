@@ -697,7 +697,7 @@ export class AppComponent {
     //Pokud existuje uložená hodnota provede se následující
     if(i) return JSON.parse(i) as CharTempsData;
     //Vrácení výchozích hodnot pokud uložená data neexistují
-    return null
+    return AppComponent.fridge_data.json_graph_chars_format;
   }
 
   //Statická funkce, která vrátí celý json graf naměřených teplot

@@ -7,10 +7,12 @@ import {Color, ScaleType} from "@swimlane/ngx-charts";
 import {
   CHAR_COOLER_TEMP_COLOR,
   CHAR_IN_TEMP_COLOR,
-  CHAR_OUT_TEMP_COLOR, DEFAULT_ALERT_DISPLAY_TIME
+  CHAR_OUT_TEMP_COLOR, DEFAULT_ALERT_DISPLAY_TIME, DEFAULT_CHAR_VIEW_DATA_FOR_DEV
 } from "../../../config/configuration";
 import {alert_animations, arrows_expand_animations} from "../../Animation";
 import {NapicuOptionsData} from "../../../interface/NapicuOption";
+import {CharacteristicController} from "../../../CharacteristicController";
+import {environment} from "../../../../environments/environment";
 
 
 @Component({
@@ -117,6 +119,7 @@ export class ChartsComponent implements ViewWillLeave{
 
   //Funkce, která zkopíruje všechna naměřená data do schránky zařízení
   public copy_json_data_to_clipboard(): void {
+    //Zavolání funkce pro kopírování naměřených hodnot z grafu
     AppComponent.copy_json_data_to_clipboard()?.then(() => {
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
@@ -127,6 +130,18 @@ export class ChartsComponent implements ViewWillLeave{
           //Nastavení proměnné na log0
           this.copy_alert_display = false;
         }, DEFAULT_ALERT_DISPLAY_TIME);
+      });
+    });
+  }
+
+  //Funkce, která vymaže graf naměřených hodnot
+  public delete_char(): void {
+    //Spuštění funkce pro zápis charakteristiky na vymazání naměřených hodnot
+    CharacteristicController.deleteJSONData()?.then(() => {
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        AppComponent.fridge_data.json_graph_chars_format = null;
+        AppComponent.fridge_data.json_graph_chars_format_view = null;
       });
     });
   }

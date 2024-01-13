@@ -3,7 +3,6 @@ import {CharTempsData} from "../interface/CharData";
 import {RGB, RGBA} from "ngx-color/helpers/color.interfaces";
 
 export namespace Configuration {
-
   //Deklarace UUID
   export const SERVICE_UUID: string = "cea986c2-4405-11ee-be56-0242ac120002";
   export const CHARACTERISTIC_DISPLAY_ENABLE_UUID: string = "cea98ac8-4405-11ee-be56-0242ac120002";
@@ -17,6 +16,7 @@ export namespace Configuration {
   export const CHARACTERISTIC_NTC_COOLER_UUID: string =  "e67ad112-b64c-445f-8588-d358311d9612";
   export const CHARACTERISTIC_UPTIME_UUID: string = "1e95497f-7cff-4376-836e-d6d9b9f1eb7e";
   export const CHARACTERISTIC_JSON_DATA_UUID: string = "ddb31e15-aa44-4a42-b3e7-e253f457da2d";
+  export const CHARACTERISTIC_JSON_DATA_DELETE_UUID: string =  "c76cbe94-384f-4476-b57b-6176eb34b6e6";
   export const CHARACTERISTIC_READY_TO_SEND_JSON_DATA_UUID: string = "4e9a17e0-1c7e-48b8-9a16-7d3a91738ab0";
   export const CHARACTERISTIC_FACTORY_UUID: string = "a488b067-27fc-47e6-85b2-22416551775d";
   export const CHARACTERISTIC_DOOR_PAUSE_UUID: string = "bd5f15cf-94a7-4d19-b906-64bb570d57be";

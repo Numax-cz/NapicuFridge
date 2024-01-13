@@ -33,8 +33,9 @@ public:
      * @param pService BLE služba
      * @param notify_uuid UUID pro oznamování naměřených dat
      * @param ready_to_send_uuid UUID pro vynucení odeslání dat
+     * @param delete_data_uuid UUID pro smazání naměřených hodnot
      */
-    static void begin(BLEService* pService, const char* notify_uuid, const char* ready_to_send_uuid);
+    static void begin(BLEService* pService, const char* notify_uuid, const char* ready_to_send_uuid, const char* delete_data_uuid);
     //Statická loop funkce pro DataJSONManager
     static void loop();
     //Statická funkce, která odešle naměřená data do připojeného zařízení
@@ -45,7 +46,14 @@ public:
     static void delete_file();
 };
 
+//Deklarace třídy pro získání naměřených hodnot 
 class DataJSONReadySendCharacteristicCallback : public BLECharacteristicCallbacks {
+public:
+    void onWrite(BLECharacteristic *pCharacteristic);
+};
+
+//Deklarace třídy pro smazání naměřených hodnot
+class DataJSONDeleteCharacteristicCallback : public BLECharacteristicCallbacks {
 public:
     void onWrite(BLECharacteristic *pCharacteristic);
 };

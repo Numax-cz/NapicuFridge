@@ -65,6 +65,15 @@
   </div>
 
   <div>
+    <div class="mt-2 p-3 info-box has-background-danger has-text-white has-text-centered is-clickable"
+         [ngClass]="{'is-clickable': get_full_json_temp_char()?.length}"
+         [ngStyle]="!get_full_json_temp_char()?.length ? {'opacity': '0.5'} : null"
+         (click)="delete_char()">
+      <div class="has-text-weight-bold">Vymazat graf</div>
+    </div>
+  </div>
+
+  <div>
     <div class="mt-2 p-3 info-box has-background-grey-light has-text-white has-text-centered is-clickable"
          [ngClass]="{'is-clickable': get_full_json_temp_char()?.length}"
          [ngStyle]="!get_full_json_temp_char()?.length ? {'opacity': '0.5'} : null"
