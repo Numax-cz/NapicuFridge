@@ -43,8 +43,6 @@ export class InfoPage {
     ]
   };
 
-
-
   constructor(protected ngZone: NgZone) { }
 
   //Funkce, která zobrazí informační alert
@@ -60,7 +58,7 @@ export class InfoPage {
   public get_preview_char_data(): CharTempsData {
     //Získání json naměřených hodnot
     const data: CharTempsData | null = AppComponent.get_full_json_temp_char();
-    return [...(data?.[0] ? [data[0]] : this.default_preview_graph_data)];
+    return [...(data && data?.length > 1 ? [data[0]] : this.default_preview_graph_data)];
   }
 
   //Funkce, která zavře informační alert
@@ -86,6 +84,4 @@ export class InfoPage {
   public get_cooler_temp(): string {
     return AppComponent.get_cooler_temp();
   }
-
-  protected readonly open = open;
 }
