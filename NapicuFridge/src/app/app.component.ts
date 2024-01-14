@@ -932,10 +932,20 @@ export class AppComponent {
 
   //Statická funkce, která zkopíruje všechna naměřená data do schránky zařízení (Pokud se vrátí null, data neexistují )
   public static copy_json_data_to_clipboard(): Promise<void> | null {
+    //Získání naměřených dat
     const data: CharTempsData | null = this.get_full_json_temp_char();
+
+    //Pokud data existují provede se následující
     if(data) {
+      //Úprava struktury dat pro kopírování
+      const updatedData = data.map(item => {
+        const { series, ...rest } = item;
+        const updatedSeries = series.map(({ name, value }) => ({ value }));
+        return { ...rest, series: updatedSeries };
+      });
+
       return Clipboard.write({
-        string: data.toString()
+        string: JSON.stringify(updatedData)
       });
     }
     return null;
