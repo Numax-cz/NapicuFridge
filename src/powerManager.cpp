@@ -1,16 +1,11 @@
 #include <include/powerManager.h>
 
-
-
-
-
 void PowerManagerCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o režimu napájení");
     //Získání dat o režimu napájení z EEPROM 
     uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
     //TODO IF???
-
     //Nastavení hodnoty charakteristiky 
     pCharacteristic->setValue(String(data).c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -43,14 +38,11 @@ void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
 }
 
 
-//TODO MOŽNÁ SMAZAT
-//TODO MOŽNÁ SMAZAT
-void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) { //TODO MOŽNÁ SMAZAT
+void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) { 
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o stavu relátka vnitřních ventilátorů");
-
+    //Uložení log1/log0, podle toho zda je relátko otevřené/zavřené
     int value = relay_in_fans->get_is_open() ? 1 : 0;
-
     //Nastavení hodnoty charakteristiky 
     pCharacteristic->setValue(String(value).c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -60,7 +52,6 @@ void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) { 
 void InFansCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     //Proměnná pro ukládání přijaté zprávy
     std::string msg = pCharacteristic->getValue();
-
     //Kontrola přijaté zprávy
     //Pokud obsahuje znak 0, vypnou se vnitřní ventilátory
     if (msg == "0") {
@@ -81,7 +72,6 @@ void InFansCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
 void DoorCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     //Proměnná pro ukládání přijaté zprávy
     std::string msg = pCharacteristic->getValue();
-
     //Kontrola přijaté zprávy
     //Pokud obsahuje znak 0, lednička se nepozastaví při otevřených dveří
     if (msg == "0") {
@@ -348,4 +338,3 @@ void PowerManager::turn_on_in_fans() {
     //Potvrzení změn
     EEPROM.commit();
 }
-

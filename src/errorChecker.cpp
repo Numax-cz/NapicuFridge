@@ -83,8 +83,8 @@ void ErrorChecker::check_error() {
         ErrorChecker::fridge_error = true;
         //Pokud je zapntué piezo při chybě provede se následující 
         if(ErrorChecker::buzzing_on_error) {
-            //Spuštění piezo po dobu 60 sekund
-            PiezoManager::time_beep(60);
+            //Spuštění piezo po dobu 10 sekund
+            PiezoManager::time_beep(10);
         } 
         return;
     } else { //Pokud je vše v pořádku provede se následující
