@@ -135,7 +135,8 @@ export class AppComponent {
         //Získání verze aplikace
         AppVersion.getVersionNumber().then((value: string) => AppComponent.application_version_code = value);
         //Zamknutí orientace aplikace (na výšku)
-        screen.orientation.lock("portrait");
+        // @ts-ignore
+        screen.orientation.lock("portrait"); //Jelikož tato funkce není v některých prohlížečích již dostupná, použijeme ts-ignore
         //Pokud není aplikace ve vývojářském režimu provede se následující
         if(!environment.production) AppComponent.update_char_view_data();
       }
