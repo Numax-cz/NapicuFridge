@@ -273,5 +273,4 @@ export const DEFAULT_CHAR_VIEW_DATA_FOR_DEV: CharTempsData = [
         { name: "58m", value: 21.3 },
         { name: "59m", value: 24.5 },
         { name: "60m", value: 20.9 },
-
     ]}]
