@@ -26,7 +26,7 @@ public:
     ~FridgeTempDHT();
     //Definice funkce pro inicializaci DHT senzoru 
     void begin();
-    //Definice funkce pro odeslání teploty na připojené zařízení 
+    //Definice funkce, která pošle data skrze BLE do připojeného zařízení
     void sendTemperature();
     //Definice funkce pro aktualizování teploty
     void updateTemperature();

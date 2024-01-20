@@ -1,5 +1,13 @@
 #include <include/fridgeTempDHT.h>
 
+/**
+ * @brief Konstruktor pro vytvoření nové třídy DHT senzoru
+ * 
+ * @param pin Datový pin DHT senzoru 
+ * @param uuid UUID pro komunikaci 
+ * @param pService BLE služba
+ * @param value Reference hodnoty pro teplotu
+ */
 FridgeTempDHT::FridgeTempDHT(int pin, const char* uuid, BLEService* pService, String& value ) : value(value) {
     //Vytvoření nové DHT třídy
     this->dht = new DHT(pin, DHT_TYPE);
@@ -14,17 +22,19 @@ FridgeTempDHT::FridgeTempDHT(int pin, const char* uuid, BLEService* pService, St
     pCharacteristic->addDescriptor(new BLE2902());
 }
 
+//Dekonstruktoru
 FridgeTempDHT::~FridgeTempDHT() {
     //Smazání dht 
     delete this->dht;
 }
 
+//Funkce pro inicializaci DHT senzoru 
 void FridgeTempDHT::begin() {
     //Spuštění begin funkce v DHT třídy
     this->dht->begin();
 }
 
-//Funkce pro aktualizování aktuálních hodnot
+//Funkce pro aktualizování teploty
 void FridgeTempDHT::updateTemperature() {
     //Získání teploty
     float temp = this->dht->readTemperature();
