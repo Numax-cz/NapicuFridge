@@ -37,8 +37,6 @@
 
 //Definice propojovacích pinů
 
-//pro analogový vstup a LED diodu
-#define CONNECTION_LED 19
 //Definice pinu pro PIEZO
 #define PIEZO_PIN 18
 //Definice pinu pro snímání dveří 

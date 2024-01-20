@@ -99,8 +99,6 @@ void setup() {
   // Rychlostí 9600 baud
   Serial.begin(9600);
 
-  //Nastavení LED diod jako výstup
-  pinMode(CONNECTION_LED, OUTPUT);
   //Nastavení piezo pinu jako výstup
   pinMode(PIEZO_PIN, OUTPUT);
   //Nastavení pinu dveří jako vstup 
