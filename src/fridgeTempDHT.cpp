@@ -12,7 +12,6 @@ FridgeTempDHT::FridgeTempDHT(int pin, const char* uuid, BLEService* pService, St
     );
     //Přiřazení deskriptoru k této charakteristice.
     pCharacteristic->addDescriptor(new BLE2902());
-
 }
 
 FridgeTempDHT::~FridgeTempDHT() {
@@ -29,12 +28,6 @@ void FridgeTempDHT::begin() {
 void FridgeTempDHT::updateTemperature() {
     //Získání teploty
     float temp = this->dht->readTemperature();
-    
-    //Kontrola, zda je temp nan
-    if(isnan(temp)) {
-    
-    }
-
     //Převedení floatu na string s jedním desetinným místem
     this->value = String(temp, 1);
 }
@@ -45,6 +38,4 @@ void FridgeTempDHT::sendTemperature() {
     this->pCharacteristic->setValue(this->value.c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
     this->pCharacteristic->notify();
-    //Vytištění odeslané zprávy po sériové lince
-    // Serial.println(this->value);
 }
