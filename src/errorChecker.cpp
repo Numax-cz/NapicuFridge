@@ -1,6 +1,5 @@
 #include <include/errorChecker.h>
 
-
 void BuzzingOnErrorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o režimu piezo při erroru");
@@ -67,9 +66,6 @@ void ErrorChecker::begin() {
 
 //Loop funkce pro ErrorChecker
 void ErrorChecker::loop() {
-
-    //Spuštění funkce pro zkontrolování kritických chyb 
-    ErrorChecker::check_fatal_error();
     //Spuštění funkce pro zkontrolování chyb
     ErrorChecker::check_error();
 }
@@ -97,9 +93,3 @@ void ErrorChecker::check_error() {
         } 
     }
 }
-//Statická funkce, která zkontroluje kritické chyby
-void ErrorChecker::check_fatal_error() {
-
-}
-
-
