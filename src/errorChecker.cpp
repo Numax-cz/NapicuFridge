@@ -72,7 +72,7 @@ void ErrorChecker::loop() {
 
 //Statická funkce, která zkontroluje chyby
 void ErrorChecker::check_error() {
-    //Pokud se získaná vnitřní nebo venkovní teplota rovná "nan" provede se následující 
+    //Pokud se získaná vnitřní, venkovní teplota nebo teplota chladiče rovná "nan" provede se následující 
     if(FridgeData.in_temp == "nan" || 
        FridgeData.out_temp == "nan" || 
        FridgeData.cooler_temp == "nan") {
