@@ -74,7 +74,8 @@ void ErrorChecker::loop() {
 void ErrorChecker::check_error() {
     //Pokud se získaná vnitřní nebo venkovní teplota rovná "nan" provede se následující 
     if(FridgeData.in_temp == "nan" || 
-       FridgeData.out_temp == "nan") {
+       FridgeData.out_temp == "nan" || 
+       FridgeData.cooler_temp == "nan") {
         //Nastavení statické proměnné pro určování zda je lednička v chybě na log1
         ErrorChecker::fridge_error = true;
         //Pokud je zapntué piezo při chybě provede se následující 
