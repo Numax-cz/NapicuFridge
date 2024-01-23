@@ -86,7 +86,7 @@ void ErrorChecker::check_error() {
         return;
     } else { //Pokud je vše v pořádku provede se následující
         //Pokud je proměnné nastavená na log1 provede se následující
-        if(ErrorChecker::fridge_error){
+        if(ErrorChecker::fridge_error) {
             //Spuštění funkce pro vypnutí peizo
             PiezoManager::stop_beep();
             //Nastavení statické proměnné pro určování zda je lednička v chybě na log1
