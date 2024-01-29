@@ -15,25 +15,16 @@ void DisplayEnableCharacteristicCallback::onRead(BLECharacteristic *pCharacteris
 void DisplayEnableCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     //Proměnná pro ukládání přijaté zprávy
     std::string msg = pCharacteristic->getValue();
-
     //Kontrola přijaté zprávy
     //Pokud obsahuje znak 0, provede se následující 
     if (msg == "0") {
-        //Zapsání log0 hodnoty do EEPROM
-        EEPROM.write(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR, 0);
         //Spuštění funkce pro vypnutí displeje
         FridgeDisplay::disable_display();
-        //Potvrzení změn
-        EEPROM.commit();
     }
     //Pokud obsahuje znak 1, provede se následující 
     else if (msg == "1") {
-        //Zapsání log1 hodnoty do EEPROM
-        EEPROM.write(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR, 1);
         //Spuštění funkce pro zapnutí displeje
         FridgeDisplay::enable_display();
-        //Potvrzení změn
-        EEPROM.commit();
     }
 }
 
