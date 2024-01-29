@@ -46,7 +46,9 @@ public:
      * 
      * @param state Nový stav displeje 
      */
-    void static change_display_state(fridge_display_state state) {FridgeDisplay::display_state = state;}
+    void static change_display_state(fridge_display_state state);
+    //Definice statické funkce pro nastavení displeje z nastavení uložené v EEPROM
+    void static load_display_state_from_eeprom();
     //Definice statické funkce pro vrácení, zda je displej dostupný
     int static get_is_enable() {return FridgeDisplay::is_dislay_enable;}
     //Definice statické funkce pro vrácení aktuálního stavu displeje

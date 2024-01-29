@@ -85,9 +85,9 @@
 //Definice EEPROM pro ukládání MAC adresy 
 #define MAC_EEPROM_SIZE 6 //Délka MAC adresy v bajtech
 #define MAC_ADDRESS_EEPROM_ADDR 0 //Adresa v paměti EEPROM, na kterou bude MAC adresa uložena
-//Definice EEPROM pro ukládání stavu displeje log0/log1
-#define DISPLAY_AVAILABLE_EEPROM_SIZE 1 //Délka stavu displeje  -128 až 127
-#define DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR MAC_EEPROM_SIZE //Adresa v paměti EEPROM, na kterou bude stav displeje uložen log0/log1
+//Definice EEPROM pro ukládání on/off stavu displeje log0/log1
+#define DISPLAY_AVAILABLE_EEPROM_SIZE 1 //Délka on/off stavu displeje -128 až 127
+#define DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR MAC_EEPROM_SIZE //Adresa v paměti EEPROM, na kterou bude on/off stav displeje uložen log0/log1
 //Definice EEPROM pro ukládání stavu napájení ledničky
 #define POWER_MODE_EEPROM_SIZE 1 //Stav napájení -128 až 127
 #define POWER_MODE_EEPROM_ADDR DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR + 1 //Adresa v paměti EEPROM, na kterou bude mód napájení uložen podle enumerace fridge_power_mode
@@ -109,10 +109,11 @@
 //Definice EEPROM pro ukládání jasu LED osvětlení 
 #define LED_BRIGHTNESS_EEPROM_SIZE 1
 #define LED_BRIGHTNESS_EEPROM_ADDR LED_COLOR_EEPROM_ADDR + 3
-
-
+//Definice EEPROM pro ukládání stavu displeje
+#define DISPLAY_MODE_EEPROM_SIZE 1 //Délka stavu displeje -128 až 127
+#define DISPLAY_MODE_ADRESS_EEPROM_ADDR LED_BRIGHTNESS_EEPROM_ADDR + 1 //Adresa v paměti EEPROM, na kterou bude stav displeje uložen
 //Definice celkové délky 
-#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE + PIEZO_ON_ERROR_SIZE + FRIDGE_PAUSE_ON_DOOR_OPEN_SIZE + LED_AVAILABLE_EEPROM_SIZE + LED_COLOR_EEPROM_SIZE + LED_BRIGHTNESS_EEPROM_SIZE
+#define EEPROM_MAX_SIZE MAC_EEPROM_SIZE + DISPLAY_AVAILABLE_EEPROM_SIZE + POWER_MODE_EEPROM_SIZE + IN_FANS_EEPROM_SIZE + PIEZO_ON_ERROR_SIZE + FRIDGE_PAUSE_ON_DOOR_OPEN_SIZE + LED_AVAILABLE_EEPROM_SIZE + LED_COLOR_EEPROM_SIZE + LED_BRIGHTNESS_EEPROM_SIZE + DISPLAY_MODE_EEPROM_SIZE
 
 
 /////////////////////////////////////////////////////////////////////
@@ -152,6 +153,9 @@
 
 //Definice, která určuje výchozí dostupnost displeje
 #define DISPLAY_DEFAULT_AVAILABLE 1 //V tomto případě je displej při prvním zapnutí zapnutý
+
+//Definice, která určuje výchozí stav displeje
+#define DEFAULT_DISPLAY_MODE FRIDGE_DISPLAY_IN_TEMP_1 //V tomto případě je hlavní nastavení displeje nastaven, aby zobrazoval vnitřní teplotu
 
 //Definice, ktera určuje výchozí stav vnitřních ventilátorů
 #define IN_FANS_DEFAULT_AVAILABLE 1 //V tomto případě jsou vnitřní ventilátory při prvním zapnutí zapnutý

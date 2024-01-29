@@ -76,10 +76,9 @@ void ble_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t
             EEPROM.commit();
           } 
 
-          if(FridgeDisplay::get_display_state() == FRIDGE_DISPLAY_PAIR_TEXT) {
-            FridgeDisplay::change_display_state(FRIDGE_DISPLAY_IN_TEMP_1);
-          }
-
+          //Spuštění funkce pro nastavení displeje 
+          FridgeDisplay::load_display_state_from_eeprom();
+          
           //Nastavení proměnné na log1
           devicePaired = true;
         } else {
@@ -159,8 +158,8 @@ void setup() {
     }
     //Nastavení proměnné
     FridgeData.paired_device_address = data_from_eeprom;
-    //Změna displeje
-    FridgeDisplay::change_display_state(FRIDGE_DISPLAY_IN_TEMP_1);
+    //Spuštění funkce pro nastavení displeje
+    FridgeDisplay::load_display_state_from_eeprom();
   } else {
     //Změna displeje
     FridgeDisplay::change_display_state(FRIDGE_DISPLAY_PAIR_TEXT);

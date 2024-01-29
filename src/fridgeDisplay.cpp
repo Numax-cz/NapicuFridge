@@ -7,17 +7,17 @@ void FridgeDisplay::begin() {
     FridgeDisplay::display = new Adafruit_SSD1306(DISPLAY_W, DISPLAY_H, &Wire, -1);
     //Spuštění funkce pro inicializaci displeje
     FridgeDisplay::display->begin(SSD1306_SWITCHCAPVCC, 0x3C);
-    //Získání dat z EEPROM 
-    uint8_t data = EEPROM.read(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR);
+    //Získání on/off stavu z EEPROM 
+    uint8_t on_off_state_data = EEPROM.read(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR);
 
     //Pokud není uložena hodnota v EEPROM provede se následující 
-    if(data == 0xFF) {
+    if(on_off_state_data == 0xFF) {
         //Nastavení výchozí hodnoty
-        data = DISPLAY_DEFAULT_AVAILABLE;
+        on_off_state_data = DISPLAY_DEFAULT_AVAILABLE;
     } 
 
     //Pokud jsou uložená data rovny log1 provede se následující
-    if(data == 1) {
+    if(on_off_state_data == 1) {
         //Povolení displeje
         FridgeDisplay::enable_display();
     } else {
@@ -29,6 +29,24 @@ void FridgeDisplay::begin() {
     FridgeDisplay::x = FridgeDisplay::display->width();
     //Nastavení min pozice
     FridgeDisplay::minX = -12 * strlen(message);
+}
+
+//Funkce pro nastavení displeje z nastavení uložené v EEPROM
+void FridgeDisplay::load_display_state_from_eeprom() {
+    //Pokud je aktuální nastavení displeje nastaveno na zobrazování párovacího textu provede se následující
+    if(FridgeDisplay::get_display_state() == FRIDGE_DISPLAY_PAIR_TEXT) {
+        //Získání on/off stavu z EEPROM 
+        uint8_t settings_data = EEPROM.read(DISPLAY_MODE_ADRESS_EEPROM_ADDR);
+
+        //Pokud není uložena hodnota v EEPROM provede se následující 
+        if(settings_data == 0xFF) {
+            //Nastavení výchozí hodnoty
+            settings_data = DEFAULT_DISPLAY_MODE;
+        }
+
+        //Statické castování uint8_t na fridge_display_state a následené nastavení stavu displeje
+        FridgeDisplay::change_display_state(static_cast<fridge_display_state>(settings_data));
+    }
 }
 
 //Funkce pro povolení displeje
@@ -53,6 +71,15 @@ void FridgeDisplay::disable_display() {
     FridgeDisplay::display->clearDisplay();
     //Vypnutí displeje
     FridgeDisplay::display->ssd1306_command(SSD1306_DISPLAYOFF);
+    //Potvrzení změn
+    EEPROM.commit();
+}
+
+void FridgeDisplay::change_display_state(fridge_display_state state) {
+    //Zapsání nastavení displeje do EEPROM
+    EEPROM.write(DISPLAY_MODE_ADRESS_EEPROM_ADDR, state);
+    //Nastavení statické proměnné
+    FridgeDisplay::display_state = state;
     //Potvrzení změn
     EEPROM.commit();
 }

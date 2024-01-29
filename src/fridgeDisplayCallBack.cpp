@@ -53,7 +53,7 @@ void DisplayStateCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
     int value_number;
     //Převedení stringu na int a následná kontrola, zda je input správný a je možné převést na číslo
     if (sscanf(prijataZprava.c_str(), "%d", &value_number) == 1){
-        //Statické castování intu na fridge_display_state a následení nastavení stavu displeje
+        //Statické castování intu na fridge_display_state a následené nastavení stavu displeje
         FridgeDisplay::change_display_state(static_cast<fridge_display_state>(value_number));
     }
 }
