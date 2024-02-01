@@ -61,7 +61,11 @@ void FridgeDisplay::enable_display() {
     EEPROM.commit();
 }
 
-//Funkce pro zakázání displeje
+/**
+ * @brief Definice statické funkce pro změnu stavu displeje
+ * 
+ * @param state Nový stav displeje 
+ */
 void FridgeDisplay::disable_display() {
     //Zapsání log0 hodnoty do EEPROM
     EEPROM.write(DISPLAY_AVAILABLE_ADRESS_EEPROM_ADDR, 0);
@@ -75,6 +79,7 @@ void FridgeDisplay::disable_display() {
     EEPROM.commit();
 }
 
+//Funkce pro 
 void FridgeDisplay::change_display_state(fridge_display_state state) {
     //Zapsání nastavení displeje do EEPROM
     EEPROM.write(DISPLAY_MODE_ADRESS_EEPROM_ADDR, state);
