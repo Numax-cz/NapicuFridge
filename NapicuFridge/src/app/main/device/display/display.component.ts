@@ -61,16 +61,13 @@ export class DisplayComponent {
 
   //Funkce, která se zavolá po změně přepínače pro vypáníní displeje
   public display_available_input_change(event: any): void {
-    //Spuštění funkce uvnitř zóny Angularu
-    this.ngZone.run(() => { //TODO tohle dát asi na řádek 70
-      //Nastavení proměnné z configu na novou hodnotu
-      AppComponent.fridge_data.config.fridge_display_available = event.currentTarget.checked;
-    });
-
     //Zavolání funkce pro vypnutí, nebo zapnutí displeje
-    CharacteristicController.writeDisplayAvailable(AppComponent.fridge_data.config.fridge_display_available)?.catch((e) =>{
-      //Vypsání hodnoty do vývojářské konzole
-      console.error("error_write" + JSON.stringify(e));
+    CharacteristicController.writeDisplayAvailable(AppComponent.fridge_data.config.fridge_display_available)?.then(() => {
+      //Spuštění funkce uvnitř zóny Angularu
+      this.ngZone.run(() => {
+        //Nastavení proměnné z configu na novou hodnotu
+        AppComponent.fridge_data.config.fridge_display_available = event.currentTarget.checked;
+      });
     });
   }
 
