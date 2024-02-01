@@ -156,7 +156,11 @@ export class CharacteristicController {
     //Kontrola, zda je zařízení spárované
     if(AppComponent.connected_device) {
         //Získání stavu displeje
-        return BluetoothLE.read({address: AppComponent.connected_device.address, service: Configuration.SERVICE_UUID, characteristic: Configuration.CHARACTERISTIC_DISPLAY_STATE_UUID});
+        return BluetoothLE.read({
+          address: AppComponent.connected_device.address, 
+          service: Configuration.SERVICE_UUID, 
+          characteristic: Configuration.CHARACTERISTIC_DISPLAY_STATE_UUID
+        });
     }
     //Vrácení null, pokud není připojené zařízení
     return null;
