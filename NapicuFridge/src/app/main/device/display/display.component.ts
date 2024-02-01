@@ -59,7 +59,7 @@ export class DisplayComponent {
     });
   }
 
-  //Funkce, která se zavolá po změně přepínače pro vypáníní displeje
+  //Funkce, která se zavolá po změně přepínače pro vypínání/zapínání displeje
   public display_available_input_change(event: any): void {
     //Zavolání funkce pro vypnutí, nebo zapnutí displeje
     CharacteristicController.writeDisplayAvailable(AppComponent.fridge_data.config.fridge_display_available)?.then(() => {
