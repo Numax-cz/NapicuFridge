@@ -63,7 +63,6 @@ void RGBManager::loop() {
 void RGBManager::turn_on() {
     //Spuštění funkce pro nastavení jasu
     this->rgbWS->setBrightness(this->brightness);
-    //this->rgbWS->setBrightness(255); //TODO BY EEprom + documentation
 }
 
 //Definice funkce pro vypnutí RGB světla
