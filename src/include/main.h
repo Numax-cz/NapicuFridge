@@ -153,31 +153,24 @@
 
 //Definice, která určuje výchozí dostupnost displeje
 #define DISPLAY_DEFAULT_AVAILABLE 1 //V tomto případě je displej při prvním zapnutí zapnutý
-
 //Definice, která určuje výchozí stav displeje
 #define DEFAULT_DISPLAY_MODE FRIDGE_DISPLAY_IN_TEMP_1 //V tomto případě je hlavní nastavení displeje nastaven, aby zobrazoval vnitřní teplotu
-
 //Definice, ktera určuje výchozí stav vnitřních ventilátorů
 #define IN_FANS_DEFAULT_AVAILABLE 1 //V tomto případě jsou vnitřní ventilátory při prvním zapnutí zapnutý
-
 //Definice výchozího režimu napájení
 #define DEFAULT_POWER_MODE 0 //V tomto případě je lednička vypnutá podle struktury fridge_power_mode
-
 //Definice, která určuje, zda má být piezo aktivní při chybě
 #define DEFAULT_PIEZO_ON_ERROR 1 //V tomto případě je piezo aktivní při chybě
-
 //Definice, která určuje, po jaké době se mají ukládat data o naměřených hodnot
 #define DEFAULT_JSON_DATA_SAVE_INTERVAL 1000 * 60 //V tomto případě se každou minutu uloží naměřená data do JSON souboru na ESP
-
 //Definice výchozího nastavení, zda se má lednička pozastavit při otevřených dveří
 #define DEFAULT_FRIDGE_PAUSE_ON_DOOR_OPEN 1 //V tomto případě se lednička pozastaví při otevřených dveří
-//Zde následuje několik definicí ke správci dat pro graf (dataJSONManager) 
 
+//Zde následuje několik definicí ke správci dat pro graf (dataJSONManager) 
 //Definice výchozího nastavení LED osvětlení 
 #define DEFAULT_LED_ENABLE 1 //V tomto případě se LED osvětlení rozsvítí při otevření dveří 
 //Definice výchozího jasu LED osvětlení 
 #define DEFAULT_LED_BRIGHTNESS 100 //V tomto případě je jas nastaven na 100%
-
 //Definice názvu souboru pro ukládání dat v grafu
 #define DEFAULT_JSON_DATA_FILE_NAME "/fridge_data.json" 
 //Definice názvu klíče v JSON vnitřní teploty 
@@ -192,20 +185,15 @@
 /////////////////////////////////////////////////////////////////////
 //Definice proměnných
 
-
-
 //Proměnná pro ukládání zda je zařízení připojené
 extern bool devicePaired;
-
+//Definice stavů napájení chytré ledničky
 typedef enum {
-
-    FRIDGE_OFF_POWER = 0,
-    FRIDGE_MAX_POWER,
-    FRIDGE_NORMAL_POWER,
-    FRIDGE_ECO_POWER,
-    FRIDGE_PAUSED,
-
-
+    FRIDGE_OFF_POWER = 0, //Vypnuto
+    FRIDGE_MAX_POWER, //Maximální výkon
+    FRIDGE_NORMAL_POWER, //Vyvážený režim
+    FRIDGE_ECO_POWER, //Úsporný režim
+    FRIDGE_PAUSED, //Pozastavený režim
 } fridge_power_mode;
 
 //Definice struktury pro nastavení chytré ledničky 
@@ -213,19 +201,14 @@ struct fridge_data
 {
     //Proměnná pro ukládání mac adresy spárovaného zařízení
     BLEAddress* paired_device_address = nullptr;
-
     //Proměnná pro ukládání vnitřní teploty ledničky ve formátu string 
     String in_temp = "";
-
     //Proměnná pro ukládání venkovní teploty ve formátu string 
     String out_temp = "";
-
     //Proměnná pro ukládání teploty chladiče ve formátu string 
     String cooler_temp = "";
-
     //Proměnná pro uložení zda ve vnitřním teploměru došlo k chybě
     bool in_temp_error = false;
-
     //Proměnná pro uložení zda ve venkovním teploměru došlo k chybě
     bool out_temp_error = false;
 };
