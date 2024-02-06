@@ -744,7 +744,7 @@ export class AppComponent {
   //Statický funkce pro uvedení chytré ledničky do továrního nastavení
   public static factory_reset(): void {
     CharacteristicController.factoryRestart()?.then(() => {
-
+        //TODO FUNKCE PRO ZOBRAZENÍ
     });
   }
 
@@ -867,7 +867,6 @@ export class AppComponent {
     //Vrácení výchozí hodnoty
     return DEFAULT_POWER_MODE_ON_SWITCH;
   }
-
 
   //Statická funkce, která aktualizuje data naměřených teplot, které se mají zobrazit v grafu
   public static update_char_view_data(): void {
