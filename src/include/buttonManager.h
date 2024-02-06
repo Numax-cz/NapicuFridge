@@ -4,31 +4,35 @@
 class ButtonManager
 {
 private:
-    //Proměnná pro uložení pinu tlačítka    
+    //Deklarace proměnné pro uložení pinu tlačítka    
     int pin;
-    //Proměnná pro uložení stavu pinu tlačítka
+    //Deklarace proměnné pro uložení stavu pinu tlačítka
     int buttonState = 0;
-
-    //Čas, kdy bylo tlačítko naposledy stisknuto
+    //Deklarace proměnné času, kdy bylo tlačítko naposledy stisknuto
     unsigned long buttonPressTime = 0; 
-    //Proměnná, zda je tlačítko stisknuto
+    //Deklarace proměnné, která určuje zda je tlačítko stisknuto
     bool buttonPressed = false; 
-    //Proměnná pro sledování, zda byla funkce spuštěna
+    //Deklarace proměnné pro sledování, zda byla funkce spuštěna
     bool functionExecuted = false; 
-
-
-
 public:
-    //Constructor
+    /**
+     * @brief Deklarace konstruktoru třídy
+     * 
+     * @param pin Pin tlačítka
+     */
     ButtonManager(int pin);
-    //Funkce pro inicializaci tlačítka
+    //Deklarace funkce pro inicializaci tlačítka
     void begin();
-    //Funkce, která se spouští při každém loopu
+    //Deklarace funkce, která se spouští při každém loopu
     void loop();
-
-
+    //Deklarace funkce, která vrátí pokud je tlačítko drženo 
     bool is_pressed();
-
+    /**
+     * @brief Deklarace funkce, která spustí funkci po určité době držení tlačítka 
+     * 
+     * @param time_ms Doba po kterou se tlačítko musí držet pro spuštění funkce (čas v ms)
+     * @param callback Zpětná funkce 
+     */
     void button_hold_time(int time_ms, void (*callback)());
 };
 

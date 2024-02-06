@@ -41,7 +41,6 @@ void RGBManager::begin() {
 
     //Spuštění funkce pro nastavení barvy LED osvětlení 
     fridge_rgb->setColor(R, G, B);
-
     //Spuštění funkce pro nastavení jasu LED osvětlení 
     fridge_rgb->setBrightness(Brightness);
     //Spuštění funkce pro RGB světla

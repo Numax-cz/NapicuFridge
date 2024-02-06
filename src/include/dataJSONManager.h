@@ -18,17 +18,17 @@
 class DataJSONManager
 {
 private:
-    //Statická proměnná aktuální doby 
+    //Deklarace statické proměnné pro uložení aktuální doby 
     static inline long time_now = 0;
-    //Statická proměnná BLE komunikačního kanálu pro odesílání dat
+    //Deklarace statické proměnné BLE komunikačního kanálu pro odesílání dat
     static inline BLECharacteristic *pCharacteristic = NULL;
-    //Statická proměnná, která určuje zda jsou data připravená k odeslání do připojeného zařízení
+    //Deklarace statické proměnné, která určuje zda jsou data připravená k odeslání do připojeného zařízení
     static inline bool ready_to_send = false;
-    //Statická funkce pro zápis dat do souboru
+    //Deklarace statické funkce pro zápis dat do souboru
     static void write();
 public:
     /**
-     * @brief Statická funkce pro inicializaci DataJsonManager 
+     * @brief Deklarace statické funkce pro inicializaci DataJsonManager 
      * 
      * @param pService BLE služba
      * @param notify_uuid UUID pro oznamování naměřených dat
@@ -36,13 +36,13 @@ public:
      * @param delete_data_uuid UUID pro smazání naměřených hodnot
      */
     static void begin(BLEService* pService, const char* notify_uuid, const char* ready_to_send_uuid, const char* delete_data_uuid);
-    //Statická loop funkce pro DataJSONManager
+    //Deklarace statické loop funkce pro DataJSONManager
     static void loop();
-    //Statická funkce, která odešle naměřená data do připojeného zařízení
+    //Deklarace statické funkce, která odešle naměřená data do připojeného zařízení
     static void send();
-    //Statická funkce, která nastaví proměnnou, která určuje zda jsou data připravená k odeslání do připojeného zařízení na log1
+    //Deklarace statické funkce, která nastaví proměnnou, která určuje zda jsou data připravená k odeslání do připojeného zařízení na log1
     static void set_ready_to_send() {DataJSONManager::ready_to_send = true;}
-    //Statická funkce pro smazání souboru ukládající naměřené hodnoty
+    //Deklarace statické funkce pro smazání souboru ukládající naměřené hodnoty
     static void delete_file();
 };
 

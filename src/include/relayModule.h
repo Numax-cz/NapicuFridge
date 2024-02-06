@@ -1,26 +1,25 @@
 #pragma once
 #include "main.h"
 
-
 class RelayModule {
 private:
-    //Pin pro ovládání relátka
+    //Deklarace proměnné pro uložení pinu relátka
     int pin;
-
-    //Proměnná pro uložení zda je relátko otevřeno
+    //Deklarace proměnné pro uložení zda je relátko otevřené
     bool is_open;
 public:
-    //Constructor
+    /**
+     * @brief Deklarace konstruktoru třídy
+     * 
+     * @param pin Pin relátka 
+     */
     RelayModule(int pin);
-    //Definice funkce pro inicializace relátka
+    //Deklarace funkce pro inicializace relátka
     void begin();
-    //Definice funkce pro otevření relátka
+    //Deklarace funkce pro otevření relátka
     void open();
-    //Definice funkce pro zavření relátka
+    //Deklarace funkce pro zavření relátka
     void close();
-    //Funkce, která vrátí zda je relátko otevřeno
+    //Deklarace funkce, která vrátí zda je relátko otevřené
     bool get_is_open() {return this->is_open;};
 };
-
-
-

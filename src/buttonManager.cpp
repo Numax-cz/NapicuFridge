@@ -1,6 +1,6 @@
 #include <include/buttonManager.h>
 
-//Constructor
+//Konstruktor třídy 
 ButtonManager::ButtonManager(int pin) {
     //Uložení pinu z parametru constructoru do privátní proměnné
     this->pin = pin;
@@ -18,11 +18,17 @@ void ButtonManager::loop() {
     this->buttonState = digitalRead(this->pin);
 }
 
+//Funkce, která vrátí pokud je tlačítko drženo 
 bool ButtonManager::is_pressed() {
     return this->pin == HIGH;
 }
 
-
+/**
+  * @brief Funkce, která spustí funkci po určité době držení tlačítka 
+  * 
+  * @param time_ms Doba po kterou se tlačítko musí držet pro spuštění funkce (čas v ms)
+  * @param callback Zpětná funkce 
+  */
 void ButtonManager::button_hold_time(int time_ms, void (*callback)()) {
   // Pokud je tlačítko stisknuto a funkce nebyla spuštěna 
   if (buttonState == HIGH && !this->functionExecuted) {

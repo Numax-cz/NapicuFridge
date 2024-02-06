@@ -12,25 +12,23 @@
 //Připojení main knihovny
 #include "main.h"
 
-
 class DigitalPotentiometer {
 private:
-    //Proměnná, která uchovává třídu digitálního potenciometru
+    //Deklarace proměnné, která uchovává třídu digitálního potenciometru
     DigiPot* potentiometer = NULL;
-
 public:
     /**
-     * @brief Konstruktor pro vytvoření nové třídy digitálního potenciometru
+     * @brief Deklarace konstruktoru třídy
      * 
      * @param incPin Pin INC pinu potenciometru
      * @param udPin Pin UD pinu potenciometru 
      * @param csPin Pin CS pinu potenciometru
      */
     DigitalPotentiometer(uint8_t incPin, uint8_t udPin, uint8_t csPin);
-    //Dekonstruktor pro třídu digitálního potenciometru
+    //Deklarace dekonstruktoru třídy
     ~DigitalPotentiometer();
     /**
-     * @brief Funkce, která nastaví hodnotu potenciometru
+     * @brief Deklarace funkce, která nastaví hodnotu potenciometru
      * 
      * @param value Hodnota v procentech 
      */

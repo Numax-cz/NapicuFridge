@@ -62,7 +62,6 @@ void RGBColorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) 
     uint8_t B = EEPROM.read(LED_COLOR_EEPROM_ADDR + 2);
     //Sjednocení veškerých hodnot
     String color = String(R) + "," + String(G) + "," + String(B);
-
     //Nastavení hodnoty charakteristiky 
     pCharacteristic->setValue(color.c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -74,11 +73,9 @@ void RGBColorCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic)
     std::string msg = pCharacteristic->getValue();
     //Proměnné pro uložení hodnoty červené, zelené, modré
     uint8_t r, g, b;
-    
     std::istringstream iss(msg);
     // Vytvoření vektoru pro uchování hodnot RGB
     std::vector<int> rgbValues;
-
     // Rozdělení řetězce podle čárky a přidání hodnot do vektoru
     std::string token;
     while (std::getline(iss, token, ',')) {

@@ -48,4 +48,3 @@ void DisplayStateCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
         FridgeDisplay::change_display_state(static_cast<fridge_display_state>(value_number));
     }
 }
-

@@ -12,7 +12,7 @@
 //Připojení main knihovny
 #include "main.h"
 
-
+//Deklarace třídy pro čtení doby od spuštění 
 class FridgeUpTimeCharacteristicCallback : public BLECharacteristicCallbacks {
 public:
     void onRead(BLECharacteristic *pCharacteristic);

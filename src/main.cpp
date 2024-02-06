@@ -352,7 +352,7 @@ void setup() {
   pAdvertising->setMinPreferred(0x06); 
   pAdvertising->setMinPreferred(0x12);
  
-  // Zapnutí viditelnosti BLE 
+  //Zapnutí viditelnosti BLE 
   BLEDevice::startAdvertising();
 
   //Pokud je zapnutý vývojářký režim, provede se následující 

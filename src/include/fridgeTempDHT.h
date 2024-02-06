@@ -1,20 +1,17 @@
 #pragma once
 #include "main.h"
 
-
-
 class FridgeTempDHT {
 private:
-    // Proměnná pro DHT senzor 
+    //Deklarace proměnné pro DHT senzor 
     DHT *dht;
-    // Proměnná BLE komunikačního kanálu pro odesílání dat
+    //Deklarace BLE komunikačního kanálu pro odesílání dat
     BLECharacteristic *pCharacteristic;
-    //Reference proměnné pro ukládání teploty 
-    String& value;
-    
+    //Deklarace referenční proměnné pro ukládání teploty 
+    String& value; 
 public:
     /**
-     * @brief Definice konstruktor pro vytvoření nové třídy DHT senzoru
+     * @brief Deklarace konstruktor třídy
      * 
      * @param pin Datový pin DHT senzoru 
      * @param uuid UUID pro komunikaci 
@@ -22,13 +19,13 @@ public:
      * @param value Reference hodnoty pro teplotu
      */
     FridgeTempDHT(int pin, const char* uuid, BLEService* pService, String& value);
-    //Definice dekonstruktoru
+    //Deklarace dekonstruktoru třídy
     ~FridgeTempDHT();
-    //Definice funkce pro inicializaci DHT senzoru 
+    //Deklarace funkce pro inicializaci DHT senzoru 
     void begin();
-    //Definice funkce, která pošle data skrze BLE do připojeného zařízení
+    //Deklarace funkce, která pošle data skrze BLE do připojeného zařízení
     void sendTemperature();
-    //Definice funkce pro aktualizování teploty
+    //Deklarace funkce pro aktualizování teploty
     void updateTemperature();
 };
 

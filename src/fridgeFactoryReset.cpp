@@ -11,7 +11,6 @@ void FridgeFactoryReset::factory_reset() {
     }
     //Potvrzení změn
     EEPROM.commit();
-
     //Spuštění funkce pro pípnutí piezo
     PiezoManager::tone_beep(2, []() {
         //Po ukončení pípání piezo se provede následující
@@ -23,7 +22,6 @@ void FridgeFactoryReset::factory_reset() {
 void FactoryResetCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     //Proměnná pro ukládání přijaté zprávy
     std::string prijataZprava = pCharacteristic->getValue();
-
     //Pokud obsahuje znak 1 provede se následující
     if (prijataZprava == "1") {
         //Spuštění funkce pro uvedení zařízení do továrního nastavení

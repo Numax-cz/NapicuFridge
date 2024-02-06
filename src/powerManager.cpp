@@ -5,7 +5,6 @@ void PowerManagerCharacteristicCallback::onRead(BLECharacteristic *pCharacterist
     Serial.println("Odeslání informací o režimu napájení");
     //Získání dat o režimu napájení z EEPROM 
     uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
-    //TODO IF???
     //Nastavení hodnoty charakteristiky 
     pCharacteristic->setValue(String(data).c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
@@ -15,15 +14,12 @@ void PowerManagerCharacteristicCallback::onRead(BLECharacteristic *pCharacterist
 void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteristic) {
     //Proměnná pro ukládání přijaté zprávy
     std::string msg = pCharacteristic->getValue();
-
     //Zkouška části kódu
     try {
         //Převod řetězce na celé číslo
         int number = std::stoi(msg); 
-
+        //Spuštění funkce pro změnu režimu
         PowerManager::change_power_mode(number);
-
-
     } catch (std::invalid_argument const &e) {
         //Vypsání chybné hlášky do konzole
         Serial.print("Nelze převést řetězec na číslo: ");
@@ -36,7 +32,6 @@ void PowerManagerCharacteristicCallback::onWrite(BLECharacteristic *pCharacteris
         Serial.print(e.what());
     }
 }
-
 
 void InFansCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) { 
     //Vypsání hodnoty do konzole
@@ -112,7 +107,6 @@ void DoorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
 //Begin funkce pro PowerManager
 void PowerManager::begin(BLEService* pService, const char* notify_uuid) {
     digital_potentiometer->set(100);
-
     // vytvoření BLE komunikačního kanálu pro odesílání (TX)
     PowerManager::pCharacteristic = pService->createCharacteristic(
         notify_uuid,
@@ -169,7 +163,6 @@ void PowerManager::load_config_from_eeprom() { //TODO Optimalizovat
         //Nastavení výchozí hodnoty
         PowerManager::fridge_pause_on_door_open = DEFAULT_FRIDGE_PAUSE_ON_DOOR_OPEN;
     }
-
     //Získání dat z EEPROM 
     uint8_t led_data = EEPROM.read(LED_AVAILABLE_EEPROM_ADDR);
     //Pokud je uložena hodnota v EEPROM provede se následující 
@@ -228,7 +221,6 @@ void PowerManager::change_power_mode(int mode) {
 void PowerManager::begin_in_fans() {
     //Proměnná pro uložení dat z EEPROM
     uint8_t data = EEPROM.read(IN_FANS_EEPROM_ADDR);
-
     //Pokud není uložená hodnota v EEPROM proveď následující 
     if(data == 0xFF) {
         //Nastaví se výchozí hodnota
@@ -259,14 +251,12 @@ void PowerManager::loop() {
                 //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
                 PowerManager::is_door_open = true;
             }
-
             //Pokud je proměnná určující, zda se má LED osvětlení zapnout při otevření dveří nastavena na log1
             if(PowerManager::fridge_led_enable_on_door_open) {
                 //Spuštění funkce pro zapnutí RGB světla
                 fridge_rgb->turn_on();
             }
         }
-
     } else { //Pokud jsou dveře zavřené provede se následující 
         //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log1
         if(PowerManager::is_door_open) {

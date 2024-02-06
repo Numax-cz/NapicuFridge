@@ -15,17 +15,15 @@
 class ThermistorManager
 {
 private:
-
-    //Ukazovací proměnná pro ukládání třídy termistoru
+    //Deklarace ukazovací proměnné pro ukládání třídy termistoru
     Thermistor* ntc_thermistor;
-    //Proměnná BLE komunikačního kanálu pro odesílání dat
+    //Deklarace proměnné BLE komunikačního kanálu pro odesílání dat
     BLECharacteristic *pCharacteristic;
-    //Reference proměnné pro ukládání teploty 
+    //Deklarace referenční proměnné pro ukládání teploty 
     String& value;
-  
 public:
     /**
-     * @brief Konstruktor pro vytvoření nové třídy
+     * @brief Deklarace konstruktoru třídy
      *
      * @param pin Pin pro získávání dat z termistoru
      * @param uuid UUID pro odesílání dat
@@ -38,11 +36,11 @@ public:
      * @param adcResolution Analogové rozlišení
      */
     ThermistorManager(int pin, const char* uuid, BLEService* pService, String& value, double referenceResistance, double nominalResistance, double nominalTemperatureCelsius, double bValue, int adcResolution = 1023);
-    //Dekonstruktor pro třídu 
+    //Deklarace dekonstruktor pro třídu 
     ~ThermistorManager();
-    //Funkce, která pošle data skrze BLE do připojeného zařízení
+    //Deklarace funkce, která pošle data skrze BLE do připojeného zařízení
     void sendTemperature();
-    //Funkce pro aktualizování hodnoty
+    //Deklarace funkce pro aktualizování hodnoty
     void updateTemperature();
 };
 

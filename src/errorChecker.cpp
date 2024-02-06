@@ -46,7 +46,7 @@ void BuzzingOnErrorCharacteristicCallback::onWrite(BLECharacteristic *pCharacter
     }
 }
 
-//Statická funkce pro inicializaci 
+//Dunkce pro inicializaci 
 void ErrorChecker::begin() {
     //Získání dat o režimu piezo z EEPROM 
     uint8_t data = EEPROM.read(PIEZO_ON_ERROR_ADDR);
@@ -70,7 +70,7 @@ void ErrorChecker::loop() {
     ErrorChecker::check_error();
 }
 
-//Statická funkce, která zkontroluje chyby
+//Funkce, která zkontroluje chyby
 void ErrorChecker::check_error() {
     //Pokud se získaná vnitřní, venkovní teplota nebo teplota chladiče rovná "nan" provede se následující 
     if(FridgeData.in_temp == "nan" || 

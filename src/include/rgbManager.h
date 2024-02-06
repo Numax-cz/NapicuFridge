@@ -14,44 +14,43 @@
 //Připojení potřebných knihoven 
 #include <Adafruit_NeoPixel.h>
 
-
 class RGBManager
 {
 private:
-    //Proměnná pro uložení třídy RGB světla 
+    //Deklarace proměnné pro uložení třídy RGB světla 
     Adafruit_NeoPixel* rgbWS = NULL;
-    //Proměnná pro uložení aktuálního nastavení RGB
+    //Deklarace proměnné pro uložení aktuálního nastavení RGB
     uint32_t rgb = 0;
-    //Proměnná pro uložení aktuální hodnoty jasu 
+    //Deklarace proměnné pro uložení aktuální hodnoty jasu 
     uint8_t brightness = 0;
-    //Konstantní proměnná pro uložení počtů LED
+    //Deklarace konstantní proměnné pro uložení počtů LED
     const uint16_t leds;
 public:
     /**
-     * @brief Konstruktor pro vytvoření nové třídy pro RGB světlo 
+     * @brief Deklarace konstruktor třídy 
      * 
      * @param leds Počet led 
      * @param pin Pin RGB 
      */
     RGBManager(uint16_t leds, int16_t pin);
-    //Definice funkce pro inicializace RGB světla
+    //Deklarace funkce pro inicializaci RGB světla
     void begin();
-    //Definice loop funkce pro RGB světlo
+    //Deklarace loop funkce pro RGB světlo
     void loop();
-    //Definice funkce pro zapnutí RGB světla
+    //Deklarace funkce pro zapnutí RGB světla
     void turn_on();
-    //Definice funkce pro vypnutí RGB světla
+    //Deklarace funkce pro vypnutí RGB světla
     void turn_off();
     /**
-     * @brief Definice funkce pro nastavení RGB 
+     * @brief Deklarace funkce pro nastavení RGB 
      * 
-     * @param r Červená (0-255) 
-     * @param g Zelená (0-255) 
-     * @param b Modrá (0-255) 
+     * @param r Hodnota červená (0-255) 
+     * @param g Hodnota zelená (0-255) 
+     * @param b Hodonta modrá (0-255) 
      */
     void setColor(uint8_t r, uint8_t g, uint8_t b);
     /**
-     * @brief Definice funkce pro nastavení jasu RGB světla
+     * @brief Deklarace funkce pro nastavení jasu RGB světla
      * 
      * @param brightness Hodnota jasu (0-100)
      */
@@ -60,30 +59,22 @@ public:
     ~RGBManager();
 };
 
-//Definice třídy pro vypnutí/zapnutí RGB osvětlení při otevření dveří
+//Deklarace třídy pro vypnutí/zapnutí RGB osvětlení při otevření dveří
 class RGBEnableCharacteristicCallback : public BLECharacteristicCallbacks {
 public: 
-    //Definice funkce, která se spustí při čtení charakteristiky
     void onWrite(BLECharacteristic *pCharacteristic);
-    //Definice funkce, která se spustí při zápisu charakteristiky
     void onRead(BLECharacteristic *pCharacteristic);
 };
-
-//Definice třídy pro změnu barvy RGB osvětlení
+//Deklarace třídy pro změnu barvy RGB osvětlení
 class RGBColorCharacteristicCallback : public BLECharacteristicCallbacks {
 public: 
-    //Definice funkce, která se spustí při čtení charakteristiky
     void onWrite(BLECharacteristic *pCharacteristic);
-    //Definice funkce, která se spustí při zápisu charakteristiky
     void onRead(BLECharacteristic *pCharacteristic);
 };
-
-//Definice třídy pro změnu jasu RGB osvětlení
+//Deklarace třídy pro změnu jasu RGB osvětlení
 class RGBBrightnessCharacteristicCallback : public BLECharacteristicCallbacks {
 public: 
-    //Definice funkce, která se spustí při čtení charakteristiky
     void onWrite(BLECharacteristic *pCharacteristic);
-    //Definice funkce, která se spustí při zápisu charakteristiky
     void onRead(BLECharacteristic *pCharacteristic);
 };
 

@@ -1,7 +1,7 @@
 #include <include/fridgeTempDHT.h>
 
 /**
- * @brief Konstruktor pro vytvoření nové třídy DHT senzoru
+ * @brief Konstruktor třídy
  * 
  * @param pin Datový pin DHT senzoru 
  * @param uuid UUID pro komunikaci 

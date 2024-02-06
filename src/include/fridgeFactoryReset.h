@@ -14,11 +14,11 @@
 
 class FridgeFactoryReset {
 public: 
-    //Statická funkce, která uvede zařízení do továrního nastavení 
+    //Deklarace statické funkce, která uvede zařízení do továrního nastavení 
     static void factory_reset();
 };
 
-//Třída pro správu displeje chytré ledničky
+//Deklarace třídy pro čtení/zápis o továrním nasatvení chytré ledničky
 class FactoryResetCharacteristicCallback : public BLECharacteristicCallbacks {
 public: 
     void onWrite(BLECharacteristic *pCharacteristic);

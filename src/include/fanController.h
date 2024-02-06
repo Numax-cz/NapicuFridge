@@ -23,15 +23,15 @@ template <uint8_t pwm_pin, uint8_t tach_pin>
 class   FanController
 {
 private:
-    //Statická proměnná pro ukládání počtů záznamů 
+    //Deklarace statické proměnné pro ukládání počtů záznamů 
     static int count;
-    //Statická proměnná doby, po kterou se má čekat mezi kontrolou
+    //Deklarace statické proměnné doby, po kterou se má čekat mezi kontrolou
     static const int fan_data_period;
-    //Statická proměnná aktuální doby v kontrole
+    //Deklarace statické proměnné aktuální doby v kontrole
     static unsigned long fan_time_now;
-    //Statická proměnná pro ukládání zda ventilátor běží
+    //Deklarace statické proměnné pro ukládání zda ventilátor běží
     static bool running;
-    //Funkce pro počítání 
+    //Statická Funkce pro počítání 
     static void counter() {
         //Přičteme ke statické proměnné 1 
         FanController<pwm_pin, tach_pin>::count++;
@@ -46,7 +46,7 @@ public:
         //Nastavení výchozí hodnoty na 100%
         analogWrite(pwm_pin, 255);
     }
-    //Statická funkce, která se spouští při každém loopu
+    //Statická loop funkce, která se spouští při každém loopu
     void static loop() {
         //Uložíme aktuální čas běhu do konstantní proměnné time 
         const unsigned long time = millis();
@@ -72,21 +72,17 @@ public:
     }
 };
 
-//Inicializace statických proměnn
+//Deklarace statických proměnn
 
-//Statická proměnná pro ukládání počtů záznamů 
+//Deklarace statické proměnné pro ukládání počtů záznamů 
 template <uint8_t pwm_pin, uint8_t tach_pin>
 int FanController<pwm_pin, tach_pin>::count = 0;
-
-//Statická proměnná doby, po kterou se má čekat mezi kontrolou
+//Deklarace statické proměnné doby, po kterou se má čekat mezi kontrolou
 template <uint8_t pwm_pin, uint8_t tach_pin>
 const int FanController<pwm_pin, tach_pin>::fan_data_period = 1000;
-
-//Statická proměnná aktuální doby v kontrole
+//Deklarace statické proměnné aktuální doby v kontrole
 template <uint8_t pwm_pin, uint8_t tach_pin>
 unsigned long FanController<pwm_pin, tach_pin>::fan_time_now = 0;
-
-//Statická proměnná pro ukládání zda ventilátor běží
+//Deklarace statické proměnné pro ukládání zda ventilátor běží
 template <uint8_t pwm_pin, uint8_t tach_pin>
 bool FanController<pwm_pin, tach_pin>::running = true;
-
