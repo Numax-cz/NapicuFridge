@@ -3,9 +3,8 @@
 void DisplayEnableCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o stavu displeje");
-
+    //Získání zda je displej dostupný a převedení na log1/log0
     int value = FridgeDisplay::get_is_enable() ? 1 : 0;
-
     //Nastavení hodnoty charakteristiky 
     pCharacteristic->setValue(String(value).c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení

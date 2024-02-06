@@ -390,8 +390,6 @@ void loop() {
     FridgeFactoryReset::factory_reset();
   });
 
-
-
   //Načasování programu
   if(time >= data_send_time_now + data_send_period) {
     data_send_time_now += data_send_period;
