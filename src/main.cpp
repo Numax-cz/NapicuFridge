@@ -46,7 +46,6 @@ PowerManager* fridge_power_manager = NULL;
 //Proměnná pro uložení třídy RGB světla
 RGBManager* fridge_rgb = NULL;
 
-
 //Proměnná doby, po kterou se má čekat mezi komunikací s bluetooth
 const int data_send_period = 1000;
 //Proměnná aktuální doby v komunikací s bluetooth
@@ -293,7 +292,6 @@ void setup() {
   //Nastavení zpětného volání pro danou charakteristiku                      
   rgbEnableCharacteristic->setCallbacks(new RGBEnableCharacteristicCallback());
 
-
   //Vytvoření BLE komunikačního kanálu pro komunikaci
   BLECharacteristic *rgbColorCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_LED_COLOR_UUID,
@@ -343,7 +341,6 @@ void setup() {
   //Inicializace šifrovacího klíče serverem
   pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
-
   //Uložení advertising do proměnné
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   //Nastavení adversting
@@ -360,8 +357,6 @@ void setup() {
     Serial.println("BLE nastaveno, ceka na pripojeni..");
   }
 }
-
-int per = 0;
 
 void loop() {
   //Uložíme aktuální čas běhu do konstantní proměnné time 
@@ -438,4 +433,3 @@ BLEAddress* read_paired_device_mac_address_from_eeprom() {
   //Vrácení null ukazatele
   return nullptr;
 }
-
