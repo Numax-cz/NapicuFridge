@@ -177,7 +177,7 @@ void setup() {
   //Nastavení zpětného volání pro server
   pServer->setCallbacks(new ServerCallBack());
   // Vytvoření BLE služby
-  BLEService *pService = pServer->createService(BLEUUID(SERVICE_UUID), 40, 0);
+  BLEService *pService = pServer->createService(BLEUUID(SERVICE_UUID), 50, 0);
 
   // Vytvoření teploměru pro vnitřní zaznamenávání teploty
   inside_temp_dht = new FridgeTempDHT(DHT_INSIDE, CHARACTERISTIC_DHT_INSIDE_UUID, pService, FridgeData.in_temp);
@@ -378,8 +378,7 @@ void loop() {
   fridge_rgb->loop();
 
   //Spuštění loop funkce ventilátoru
-  // cooling_fans_pwm.loop();  
-  
+  cooling_fans_pwm.loop();  
 
   //Spuštění loop funkce tlačítka
   resetButton->loop();

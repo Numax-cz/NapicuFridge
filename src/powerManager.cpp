@@ -181,6 +181,8 @@ void PowerManager::load_config_from_eeprom() { //TODO Optimalizovat
  * @param mode Režim napájení který se nastaví
  */
 void PowerManager::change_power_mode(int mode) {
+    //Pokud se lednička nachází v kritické chybě provede se následující 
+    if(ErrorChecker::is_fridge_on_fatal_error()) return;
     //Zkontroluje, zda převedené číslo odpovídá některé hodnotě enumerace
     if (mode == FRIDGE_OFF_POWER) {
         //Spuštění funkce pro smazání souboru ukládající naměřené hodnoty
@@ -244,10 +246,8 @@ void PowerManager::loop() {
         if(!PowerManager::is_door_open) {
             //Pokud je povolena pauza chladícího systému při otevření provede se následující 
             if(PowerManager::fridge_pause_on_door_open) {
-                //Spuštění funkce pro přepnutí napájecího režimu na stav "vypnuto"
-                PowerManager::change_power_mode(FRIDGE_PAUSED);
-                //Spuštění funkce pro oznámení o změně chladícího systému připojenému zařízení 
-                PowerManager::notify_power_config();
+                //Spuštění funkce pro uvedení ledničky do pauzy 
+                PowerManager::pause_fridge();
                 //Nastavení proměnné, určující, zda jsou dveře otevřeny na log1
                 PowerManager::is_door_open = true;
             }
@@ -260,16 +260,29 @@ void PowerManager::loop() {
     } else { //Pokud jsou dveře zavřené provede se následující 
         //Pokud je proměnná určující, zda jsou dveře otevřeny nastavena na log1
         if(PowerManager::is_door_open) {
-            //Spuštění funkce proč načtení veškerých nastavení z EEPROM
-            PowerManager::load_config_from_eeprom();
-            //TODO DOC
-            PowerManager::notify_power_config();
+            //Spuštění funkce, která zruší pauzu ledničky
+            PowerManager::cancel_pause_fridge();
             //Nastavení proměnné, určující, zda jsou dveře otevřeny na log0
             PowerManager::is_door_open = false;
             //Spuštění funkce pro vypnutí RGB světla
             fridge_rgb->turn_off();
         }
     }
+}
+//Funkce, která uvede ledničku do pauzy
+void PowerManager::pause_fridge() {
+    //Spuštění funkce pro přepnutí napájecího režimu na stav "vypnuto"
+    PowerManager::change_power_mode(FRIDGE_PAUSED);
+    //Spuštění funkce pro oznámení o změně chladícího systému připojenému zařízení 
+    PowerManager::notify_power_config();
+}
+
+//Funkce, která zruší pauzu ledničky
+void PowerManager::cancel_pause_fridge() {
+    //Spuštění funkce proč načtení veškerých nastavení z EEPROM
+    PowerManager::load_config_from_eeprom();
+    //Spuštění funkce pro oznámení o změně chladícího systému připojenému zařízení 
+    PowerManager::notify_power_config();
 }
 
 //Funkce pro vypnutí celého chladícího systému
@@ -278,10 +291,10 @@ void PowerManager::power_off() {
     relay_peltier_power_mode->close();
     //Zavření relátka pro hlavní napájení peltierů
     relay_peltier->close();
-    //Spuštění funkce pro zavření relátka vnitřních ventilátorů
+    //Spuštění funkce pro zavření relátka vnitřních ventilátorů 
     relay_in_fans->close();
-    //Spuštění funkce pro vypnutí chladících ventilátorů
-    PowerManager::turn_off_cooling_fans();
+    //Spuštění funkce pro vypnutí chladících ventilátorů pokud ventilátory běží
+    if (cooling_fans_pwm.get_is_fan_running())  PowerManager::turn_off_cooling_fans();
 }
 
 //Funkce pro zapnutí celého chladícího systému

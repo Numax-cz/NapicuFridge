@@ -19,6 +19,10 @@ private:
     static inline bool fridge_error = false;
     //Deklarace statické proměnné která určuje, zda je lednička v kritické chybě
     static inline bool fridge_fatal_error = false;
+    //Deklarace funkce, která uvede chytrou ledničku do chybného režimu
+    static void error_mode();
+    //Deklarace funkce, která uvede chytrou ledničku do kritického režimu
+    static void fatal_error_mode();
     //Deklarace funkce, která zkontroluje chyby
     static void check_error();
 public:
@@ -28,6 +32,8 @@ public:
     static void begin();
     //Deklarace statické loop funkce pro ErrorChecker
     static void loop();
+    //Deklarace statické funkce, která vrátí, zda se lednička nachází v kritické chybě
+    static bool is_fridge_on_fatal_error();
 };
 
 //Deklarace třída pro správu piezo při erroru

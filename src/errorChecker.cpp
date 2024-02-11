@@ -70,27 +70,59 @@ void ErrorChecker::loop() {
     ErrorChecker::check_error();
 }
 
+//Funkce, která uvede chytrou ledničku do chybného režimu
+void ErrorChecker::error_mode() {
+    //Nastavení statické proměnné pro určování zda je lednička v chybě na log1
+    ErrorChecker::fridge_error = true;
+    //Pokud je zapntué piezo při chybě provede se následující 
+    if(ErrorChecker::buzzing_on_error) {
+        //Spuštění piezo po dobu 10 sekund
+        PiezoManager::time_beep(10);
+    } 
+}
+//Funkce, která uvede chytrou ledničku do kritického režimu
+void ErrorChecker::fatal_error_mode() {
+    //Spuštění funkce pro uvedení chytré ledničky do chybného stavu
+    ErrorChecker::error_mode();
+    //Spuštění funkce pro pozastavení chytré ledničky
+    PowerManager::pause_fridge();
+}
+
 //Funkce, která zkontroluje chyby
 void ErrorChecker::check_error() {
     //Pokud se získaná vnitřní, venkovní teplota nebo teplota chladiče rovná "nan" provede se následující 
     if(FridgeData.in_temp == "nan" || 
        FridgeData.out_temp == "nan" || 
        FridgeData.cooler_temp == "nan") {
-        //Nastavení statické proměnné pro určování zda je lednička v chybě na log1
-        ErrorChecker::fridge_error = true;
-        //Pokud je zapntué piezo při chybě provede se následující 
-        if(ErrorChecker::buzzing_on_error) {
-            //Spuštění piezo po dobu 10 sekund
-            PiezoManager::time_beep(10);
-        } 
-        return;
+        //Spuštění funkce pro uvedení chytré ledničky do chybného stavu
+        ErrorChecker::error_mode();
+    } 
+    //Pokud se chladící ventilátory netočí, provede se následující 
+    else if (!cooling_fans_pwm.get_is_fan_running() && relay_cooling_fans->get_is_open()) {
+        //Spuštění funkce, která uvede chytrou ledničku do kritického režimu
+        if(!ErrorChecker::fridge_fatal_error) ErrorChecker::fatal_error_mode();
+        //Nastavení proměnné, která určuje, zda je lednička v kritické chybě na log1
+        ErrorChecker::fridge_fatal_error = true;
+
     } else { //Pokud je vše v pořádku provede se následující
         //Pokud je proměnné nastavená na log1 provede se následující
-        if(ErrorChecker::fridge_error) {
+        if(ErrorChecker::fridge_error || ErrorChecker::fridge_fatal_error) {
+            //Pokud je proměnná nastavena na log1 provede se následující
+            if(ErrorChecker::fridge_fatal_error) {
+                //Nastavení statické proměnné pro určování zda je lednička v kritické chybě na log0
+                ErrorChecker::fridge_fatal_error = false;
+                //Spuštění funkce, která zruší pauzu ledničky
+                PowerManager::cancel_pause_fridge();
+            }
             //Spuštění funkce pro vypnutí peizo
             PiezoManager::stop_beep();
-            //Nastavení statické proměnné pro určování zda je lednička v chybě na log1
+            //Nastavení statické proměnné pro určování zda je lednička v chybě na log0
             ErrorChecker::fridge_error = false;
         } 
     }
+}
+
+//Funkce, která vrátí, zda se lednička nachází v kritické chybě
+bool ErrorChecker::is_fridge_on_fatal_error() {
+    return ErrorChecker::fridge_fatal_error;
 }

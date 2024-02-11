@@ -66,6 +66,10 @@ public:
     static void turn_on_in_fans();
     //Deklarace statické funkce, která vrací zda je chladící systém zapnutý 
     static bool is_power_on();
+    //Deklarace statické funkce, která uvede ledničku do pauzy
+    static void pause_fridge();
+    //Deklarace statické funkce, která zruší pauzu ledničky
+    static void cancel_pause_fridge();
 };
 
 //Deklarace třídy pro zápis/čtení informací pro správce napájení 
