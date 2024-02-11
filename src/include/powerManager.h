@@ -70,6 +70,8 @@ public:
     static void pause_fridge();
     //Deklarace statické funkce, která zruší pauzu ledničky
     static void cancel_pause_fridge();
+    //Deklarace statické funkce, která vrátí vybraní napájecí režim
+    static int get_selected_mode();
 };
 
 //Deklarace třídy pro zápis/čtení informací pro správce napájení 

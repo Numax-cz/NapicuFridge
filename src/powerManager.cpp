@@ -3,10 +3,8 @@
 void PowerManagerCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
     //Vypsání hodnoty do konzole
     Serial.println("Odeslání informací o režimu napájení");
-    //Získání dat o režimu napájení z EEPROM 
-    uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
     //Nastavení hodnoty charakteristiky 
-    pCharacteristic->setValue(String(data).c_str());
+    pCharacteristic->setValue(String(PowerManager::get_selected_mode()).c_str());
     //Odeslání zprávy skrze BLE do připojeného zařízení
     pCharacteristic->notify();
 }
@@ -340,4 +338,9 @@ void PowerManager::turn_on_in_fans() {
     relay_in_fans->open();
     //Potvrzení změn
     EEPROM.commit();
+}
+
+//Funkce, která vrátí vybraní napájecí režim
+int PowerManager::get_selected_mode() {
+    return PowerManager::selected_mode;
 }
