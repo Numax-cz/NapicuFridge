@@ -90,10 +90,18 @@ void ErrorChecker::fatal_error_mode() {
 
 //Funkce, která zkontroluje chyby
 void ErrorChecker::check_error() {
+    char error_log[5] = "1111";
+
     //Pokud se získaná vnitřní, venkovní teplota nebo teplota chladiče rovná "nan" provede se následující 
     if(FridgeData.in_temp == "nan" || 
        FridgeData.out_temp == "nan" || 
        FridgeData.cooler_temp == "nan") {
+        
+        if (FridgeData.in_temp == "nan") error_log[0] = '0';
+        if (FridgeData.out_temp == "nan") error_log[1] = '0';
+        if (FridgeData.cooler_temp == "nan") error_log[2] = '0';
+
+
         //Spuštění funkce pro uvedení chytré ledničky do chybného stavu
         ErrorChecker::error_mode();
     } 
@@ -104,6 +112,7 @@ void ErrorChecker::check_error() {
         //Nastavení proměnné, která určuje, zda je lednička v kritické chybě na log1
         ErrorChecker::fridge_fatal_error = true;
 
+        error_log[3] = '0';
     } else { //Pokud je vše v pořádku provede se následující
         //Pokud je proměnné nastavená na log1 provede se následující
         if(ErrorChecker::fridge_error || ErrorChecker::fridge_fatal_error) {
