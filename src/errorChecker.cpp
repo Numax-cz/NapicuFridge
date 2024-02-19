@@ -47,7 +47,17 @@ void BuzzingOnErrorCharacteristicCallback::onWrite(BLECharacteristic *pCharacter
 }
 
 //Dunkce pro inicializaci 
-void ErrorChecker::begin() {
+void ErrorChecker::begin(BLEService* pService, const char* notify_uuid) {
+    //Vytvoření BLE komunikačního kanálu pro odesílání (TX)
+    ErrorChecker::pCharacteristic = pService->createCharacteristic(
+        notify_uuid,
+        BLECharacteristic::PROPERTY_INDICATE |
+        BLECharacteristic::PROPERTY_NOTIFY |
+        BLECharacteristic::PROPERTY_READ
+    );
+    //Přiřazení deskriptoru k této charakteristice.
+    ErrorChecker::pCharacteristic->addDescriptor(new BLE2902());
+
     //Získání dat o režimu piezo z EEPROM 
     uint8_t data = EEPROM.read(PIEZO_ON_ERROR_ADDR);
 
@@ -90,6 +100,7 @@ void ErrorChecker::fatal_error_mode() {
 
 //Funkce, která zkontroluje chyby
 void ErrorChecker::check_error() {
+    //Deklarace proměnné pro ukládání aktuálního stavu
     std::string error_log = "1111";
 
     //Pokud se získaná vnitřní, venkovní teplota nebo teplota chladiče rovná "nan" provede se následující 
@@ -97,12 +108,10 @@ void ErrorChecker::check_error() {
        FridgeData.out_temp == "nan" || 
        FridgeData.cooler_temp == "nan") {
         
-        if (FridgeData.in_temp == "nan") error_log[0] = '0';
-        if (FridgeData.out_temp == "nan") error_log[1] = '0';
-        if (FridgeData.cooler_temp == "nan") error_log[2] = '0';
-
-
-
+        //Zde zapíšeme v error logu log0 do příslušné pozice, pokud platí podmínky
+        if (FridgeData.in_temp == "nan") error_log[0] = 48;
+        if (FridgeData.out_temp == "nan") error_log[1] = 48;
+        if (FridgeData.cooler_temp == "nan") error_log[2] = 48;
 
         //Spuštění funkce pro uvedení chytré ledničky do chybného stavu
         ErrorChecker::error_mode();
@@ -114,7 +123,8 @@ void ErrorChecker::check_error() {
         //Nastavení proměnné, která určuje, zda je lednička v kritické chybě na log1
         ErrorChecker::fridge_fatal_error = true;
 
-        error_log[3] = '0';
+        //Uložíme log0 do příslušné pozice v error logu
+        error_log[3] = 48;
     } else { //Pokud je vše v pořádku provede se následující
         //Pokud je proměnné nastavená na log1 provede se následující
         if(ErrorChecker::fridge_error || ErrorChecker::fridge_fatal_error) {
@@ -131,6 +141,17 @@ void ErrorChecker::check_error() {
             ErrorChecker::fridge_error = false;
         } 
     }
+
+    //Pokud aktuální stav není roven předchozímu provede se následující 
+    if(last_error_log != error_log) {
+        //Nastavení hodnoty charakteristiky 
+        PowerManager::pCharacteristic->setValue(error_log.c_str());
+        //Odeslání zprávy skrze BLE do připojeného zařízení
+        PowerManager::pCharacteristic->notify();
+    }
+
+    //Uložení aktuálního satvu do proměnné 
+    last_error_log = error_log;
 }
 
 //Funkce, která vrátí, zda se lednička nachází v kritické chybě

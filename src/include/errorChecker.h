@@ -15,6 +15,8 @@
 class ErrorChecker
 {
 private:
+    //Deklarace statické proměnné BLE komunikačního kanálu pro odesílání dat
+    static inline BLECharacteristic *pCharacteristic = NULL;
     //Deklarace statické proměnné která určuje, zda je lednička v chybě 
     static inline bool fridge_error = false;
     //Deklarace statické proměnné která určuje, zda je lednička v kritické chybě
@@ -31,7 +33,7 @@ public:
     //Deklarace statické proměnné, která určuje, zda se má spustit piezo při chybě
     static inline bool buzzing_on_error = false;
     //Deklarace statické funkce pro inicializaci 
-    static void begin();
+    static void begin(BLEService* pService, const char* notify_uuid);
     //Deklarace statické loop funkce pro ErrorChecker
     static void loop();
     //Deklarace statické funkce, která vrátí, zda se lednička nachází v kritické chybě
@@ -45,3 +47,9 @@ public:
     void onRead(BLECharacteristic *pCharacteristic);
 };
 
+
+class ErrorStateCharacteristicCallback : public BLECharacteristicCallbacks {
+public: 
+    void onWrite(BLECharacteristic *pCharacteristic);
+    void onRead(BLECharacteristic *pCharacteristic);
+};

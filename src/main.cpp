@@ -319,7 +319,7 @@ void setup() {
   PowerManager::begin(pService, CHARACTERISTIC_POWER_MODE_CHANGE_UUID);
 
   //Spuštění begin funkce ErrorCheckeru
-  ErrorChecker::begin();
+  ErrorChecker::begin(pService, CHARACTERISTIC_ERROR_STATE_UUID);
 
   //Vytvoření nové třídy pro RGB světlo 
   fridge_rgb = new RGBManager(RGB_LED_COUNT, RGB_PIN);
