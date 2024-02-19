@@ -25,6 +25,8 @@ private:
     static void fatal_error_mode();
     //Deklarace funkce, která zkontroluje chyby
     static void check_error();
+    //Deklarace statické proměnné, která uchovává předchozí stav
+    static std::string last_error_log = "1111";
 public:
     //Deklarace statické proměnné, která určuje, zda se má spustit piezo při chybě
     static inline bool buzzing_on_error = false;
