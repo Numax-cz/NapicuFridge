@@ -91,7 +91,8 @@ export class AppComponent {
     errors: {
       fridge_out_temp: false,
       fridge_in_temp: false,
-      fridge_cooler_temp: false
+      fridge_cooler_temp: false,
+      fridge_fan: false
     },
     char_settings: {
       display_in_temp: true,
@@ -202,6 +203,8 @@ export class AppComponent {
             AppComponent.subscribe_json_data();
             //Spuštění funkce pro přihlášení se k odběru charakteristiky napájecího režimu
             AppComponent.subscribe_power_mode();
+            //Spuštění funkce pro přihlášení se k odběru charakteristiky 
+            AppComponent.subscribe_error_state();
             //Spuštění funkce pro vynucení naměřených JSON dat z chytré ledničky
             AppComponent.force_json_data();
             //Spuštění resolve funkce Promisu
@@ -624,6 +627,44 @@ export class AppComponent {
                 this.fridge_data.config.fridge_power_mode = Number(value[0]);
                 //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
                 this.fridge_data.config.fridge_in_fans = Boolean(Number(value[1]));
+              });
+              //Spuštění resolve funkce Promisu
+              resolve();
+            }
+          },
+          error: (e) => {
+            //Vypsání hodnoty do vývojářské konzole
+            console.log("error" + JSON.stringify(e));
+            //Spuštění reject funkce Promisu
+             reject();
+          }
+        }
+      );
+    })
+  }
+
+  //Statická funkce pro přihlášení se k odběru pro získávání stavů errorů 
+  public static subscribe_error_state(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      CharacteristicController.subscribeErrorState()?.subscribe(
+        {
+          next: (data: OperationResult) => {
+            //Po získání dat z bluetooth charakteristiky provést následující
+            if(data.value) {
+              //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+              let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+              //Převést bytes na string
+              let value: string = BluetoothLE.bytesToString(bytes);
+              //Spuštění funkce uvnitř zóny Angularu
+              this.ngZone.run(() => {
+                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+                this.fridge_data.errors.fridge_in_temp = Boolean(Number(value[0]));
+                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+                this.fridge_data.errors.fridge_out_temp = Boolean(Number(value[1]));
+                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+                this.fridge_data.errors.fridge_cooler_temp = Boolean(Number(value[2]));
+                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+                this.fridge_data.errors.fridge_fan = Boolean(Number(value[3]));
               });
               //Spuštění resolve funkce Promisu
               resolve();

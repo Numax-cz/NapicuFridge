@@ -23,6 +23,7 @@ export namespace Configuration {
   export const CHARACTERISTIC_LED_ENABLE_UUID: string = "27537e3a-92d1-11ee-b9d1-0242ac120002";
   export const CHARACTERISTIC_LED_COLOR_UUID: string = "27538114-92d1-11ee-b9d1-0242ac120002";
   export const CHARACTERISTIC_LED_BRIGHTNESS_UUID: string = "2753827c-92d1-11ee-b9d1-0242ac120002";
+  export const CHARACTERISTIC_ERROR_STATE_UUID: string = "3213fee2-aef8-4841-941a-ff1e78baba9d";
 }
 
 export const DEFAULT_ALERT_DISPLAY_TIME: number = 3500;

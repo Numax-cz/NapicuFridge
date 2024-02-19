@@ -44,7 +44,8 @@ export declare interface FridgeData {
   errors: {
     fridge_in_temp: boolean,
     fridge_out_temp: boolean,
-    fridge_cooler_temp: boolean
+    fridge_cooler_temp: boolean,
+    fridge_fan: boolean
   }
 
   user_favorites_colors: RGB[],
