@@ -49,6 +49,11 @@ void RGBManager::begin() {
 
 //Loop funkce pro RGB světlo
 void RGBManager::loop() {
+    //Loop, který nastavý barvu všem LED diodám 
+    for (int i = 0; i < this->leds; i++) {
+        //Nastavení barvy pro danou LED diodu podle indexu (i)
+        this->rgbWS->setPixelColor(i, rgb);
+    }
     //Spuštění funkce pro aktualizaci barev na všech modulech
     this->rgbWS->show();
 }
@@ -74,11 +79,6 @@ void RGBManager::turn_off() {
 void RGBManager::setColor(uint8_t r, uint8_t g, uint8_t b) {
     //Spuštění funkce pro nastavení RGB
     this->rgb = this->rgbWS->Color(r, g, b);
-    //Loop, který nastavý barvu všem LED diodám 
-    for (int i = 0; i < this->leds; i++) {
-        //Nastavení barvy pro danou LED diodu podle indexu (i)
-        this->rgbWS->setPixelColor(i, rgb);
-    }
 }
 
 /**
