@@ -65,6 +65,9 @@ export class AppComponent {
   //Statická proměnná pro uložení hodnoty, zda je alert viditelný
   public static device_connection_alert_display: boolean = false;
 
+  //Statická proměnná pro uložení hodnoty, zda je alert o úspěšném resetování zařízení viditelný 
+  public static device_factory_reset_alert_display: boolean = false;
+
   //Statická proměnná pro uložení jednotlivých balíčků naměřených hodnot
   protected static temp_json_graph_string: string | null = null;
 
@@ -777,6 +780,9 @@ export class AppComponent {
 
   //Statický funkce pro uvedení chytré ledničky do továrního nastavení
   public static factory_reset(): void {
+    //Uložení do proměnné log1
+    AppComponent.device_factory_reset_alert_display = true;
+
     CharacteristicController.factoryRestart()?.then(() => {
         //TODO FUNKCE PRO ZOBRAZENÍ
     });
@@ -849,6 +855,11 @@ export class AppComponent {
   //Funkce, která vrátí zda je alert zobrazen
   public get_device_connection_alert_display(): boolean {
     return AppComponent.device_connection_alert_display;
+  }
+
+  //Funkce, která vrátí zda se má alert o úspěšném resetu zařízení zobrazovat 
+  public get_device_factory_reset_alert_display(): boolean {
+    return AppComponent.device_factory_reset_alert_display;
   }
 
   //Statická funkce, která vrátí zda jsou vnitřní ventilátory zapnuté

@@ -13,4 +13,11 @@
       </ng-container>
     </div>
   </div>
+
+  <div *ngIf="get_device_factory_reset_alert_display()" @AlertAnimationTop class="box info-box alert-container alert-container-top" style="overflow: hidden">
+    <div class="is-flex is-align-items-center is-justify-content-center" style="width: max-content;margin: auto;">
+        <ion-icon name="refresh-outline" class="mr-2"></ion-icon>
+        <p class="is-size-6 has-text-weight-medium has-text-centered">Zařízení bylo vyresetováno</p>
+    </div>
+  </div>
 </ion-app>

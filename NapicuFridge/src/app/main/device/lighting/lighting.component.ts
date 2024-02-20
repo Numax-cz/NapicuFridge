@@ -35,6 +35,8 @@ export class LightingComponent  {
   public shaking_color_interval: number = -1;
   //Proměnná pro uložení, zda je aktivován odstraňovací režim oblíbených barev
   public delete_color_mode: boolean = false;
+  //Proměnná, která určuje zda je možné přidat barvu 
+  public can_add_color: boolean = true;
   //Proměnná pro uložení stavu alertu
   public hint_alert: boolean = false;
 
@@ -61,6 +63,8 @@ export class LightingComponent  {
     if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     //Spuštění funkce uvnitř zóny Angularu
     this.ngZone.run(() => {
+      //Aktualizování proměnné
+      this.can_add_color = !this.is_color_saved();
       //Zapíšeme aktuální barvu LED osvětlení
       AppComponent.fridge_data.config.fridge_led_rgb = {
         r: color.r,
@@ -143,11 +147,51 @@ export class LightingComponent  {
     return `rgb(${color.r}, ${color.g}, ${color.b})`
   }
 
+  //Funkce, která vrátí z typu string formát RGB (Pokud string není validní, vrátí se null)
+  public get_rgb_color_from_string(color_format: string): RGB | null {
+    //Extrahovaná hodnota r,g,b pomocí regulárního výrazu 
+    const matches: RegExpMatchArray | null = color_format.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+    //Pokud extrahované hodnoty existují, provede se následující
+    if(matches) {
+      //Uložíme hodnotu červené do proměnné
+      const r: number = parseInt(matches[1], 10);
+      //Uložíme hodnotu zelené do proměnné
+      const g: number = parseInt(matches[2], 10);
+      //Uložíme hodnotu modré do proměnné 
+      const b: number = parseInt(matches[3], 10);
+      //Vrátíme hodnoty ve formátu RGB
+      return {r: r, g: g, b: b};
+    }
+
+    return null;
+  } 
+
+  //Funkce, která porovnává 2 pole RGB
+  public is_rgb_match(color_1: RGB, color_2: RGB): boolean {
+    return color_1.r === color_2.r
+        && color_1.g === color_2.g
+        && color_1.b === color_2.b
+  }
+
+  //Funkce, která vrátí 
+  public is_color_saved(): boolean {
+
+    for(const i of this.get_user_favorites_colors()) {
+      if(this.is_rgb_match(this.get_led_color(), i)) return true;
+    }
+
+
+    return false;
+  }
+
   //Funkce, která přidá barvu do oblíbených barev osvětlení
   public add_user_favorite_color(): void {
     if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     //Přidání oblíbené barvy do seznamu oblíbených
     AppComponent.add_user_favorite_color(AppComponent.fridge_data.config.fridge_led_rgb);
+      //Aktualizování proměnné
+      this.can_add_color = !this.is_color_saved();
     //Pokud je povoleno zobrazování nápovědy provede se následující
     if(AppComponent.get_is_delete_color_hint_enabled()) {
       //Nastavení proměnné pro zobrazení nápovědy na log1
