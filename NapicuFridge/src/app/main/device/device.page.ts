@@ -128,4 +128,9 @@ export class DevicePage {
   public get_is_cooler_temp_in_error(): boolean {
     return AppComponent.get_is_cooler_temp_in_error();
   }
+
+  //Funkce, která vrátí zda jsou ventilátory v chybě
+  public get_is_fans_in_error(): boolean {
+    return AppComponent.get_is_fans_in_error();
+  }
 }

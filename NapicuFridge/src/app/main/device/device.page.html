@@ -70,8 +70,20 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="get_is_fans_in_error()">
+      <div class="is-flex is-justify-content-space-between is-align-items-center" (click)="active_error_info_cooler_temp = !active_error_info_cooler_temp">
+        <div class="is-flex is-justify-content-flex-start is-align-items-center">
+          <ion-icon name="alert-circle" class="error-red-color is-size-3"></ion-icon>
+          <div class="has-text-weight-medium pl-2">Chyba ventilátorů</div>
+        </div>
+        <div [@InfoBoxRotatedState]="active_error_info_cooler_temp" class="is-size-5">></div>
+      </div>
+      <div  *ngIf="active_error_info_cooler_temp" class="is-size-7 box mt-2 has-background-light has-text-weight-normal has-text-left">
+        Chyba ventilátorů chladiče. Zkontrolujte, zda jsou správně připojen, nebo uveďte ledničku do továrního nastavení. V případě,
+        že nebyl nalezen problém, vyměňte ventilátory za nové popřípadě kontaktujte výrobce.
+      </div>
+    </ng-container>
   </div>
-
 
   <div class="is-flex is-justify-content-space-between is-align-items-center box info-box  is-size-4 has-text-weight-bold has-text-centered"
        [ngStyle]="!is_connected() || get_is_fridge_on_fatal_error() || get_is_fridge_paused() ? {'opacity': '0.5'} : null">

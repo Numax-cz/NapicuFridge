@@ -445,11 +445,8 @@ export class AppComponent {
               let value: string = BluetoothLE.bytesToString(bytes);
               //Spuštění funkce uvnitř zóny Angularu
               this.ngZone.run(() => {
-                //Pokud získaná hodnota je rovna "nan" provede se následující
-                //Zapíšeme do proměnné o vnitřní chybě log1
-                if(value === "nan") this.fridge_data.errors.fridge_in_temp = true;
                 //Pokud získaná hodnota není rovna "nan" provede se následující
-                else {
+                if(value !== "nan") {
                   //Zapsat převedený bytes na string do proměnné in_temp
                   this.fridge_data.in_temp = value;
                   //Zapíšeme do proměnné o vnitřní chybě teploměru log0
@@ -486,11 +483,8 @@ export class AppComponent {
               let value: string = BluetoothLE.bytesToString(bytes);
               //Spuštění funkce uvnitř zóny Angularu
               this.ngZone.run(() => {
-                //Pokud získaná hodnota je rovna "nan" provede se následující
-                //Zapíšeme do proměnné o venkovní chybě teploměru log1
-                if(value === "nan") this.fridge_data.errors.fridge_out_temp = true;
                 //Pokud získaná hodnota není rovna "nan" provede se následující
-                else {
+                if(value !== "nan") {
                   //Zapsat převedený bytes na string do proměnné out_temp
                   this.fridge_data.out_temp = value;
                   //Zapíšeme do proměnné o venkovní chybě teploměru log0
@@ -527,11 +521,8 @@ export class AppComponent {
               let value: string = BluetoothLE.bytesToString(bytes);
               //Spuštění funkce uvnitř zóny Angularu
               this.ngZone.run(() => {
-                //Pokud získaná hodnota je rovna "nan" provede se následující
-                //Zapíšeme do proměnné o chybě teploměru na chladiči log1
-                if(value === "nan") this.fridge_data.errors.fridge_cooler_temp = true;
                 //Pokud získaná hodnota není rovna "nan" provede se následující
-                else {
+                if (value !== "nan"){
                   //Zapsat převedený bytes na string do proměnné cooler_temp
                   this.fridge_data.cooler_temp = value;
                   //Zapíšeme do proměnné o chybě teploměru na chladiči log0
@@ -665,6 +656,8 @@ export class AppComponent {
                 this.fridge_data.errors.fridge_cooler_temp = Boolean(Number(value[2]));
                 //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
                 this.fridge_data.errors.fridge_fan = Boolean(Number(value[3]));
+                //Pokud platí následující podmínka, nastaví se proměnná, která určuje kritické chyby na log1 
+                if(this.fridge_data.errors.fridge_cooler_temp || this.fridge_data.errors.fridge_fan) this.fridge_fatal_error = true;
               });
               //Spuštění resolve funkce Promisu
               resolve();
@@ -689,7 +682,7 @@ export class AppComponent {
 
   //Funkce, která vrátí aktuální hodnotu na daném displej statu
   public static get_display_value_by_state(): string | null {
-    //TODO DOC
+    //V následující části vrátíme hodnotu, která se má zobrazit na displeji, podle proměnné 
     switch (AppComponent.fridge_data.config.fridge_display_state) {
       case FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1:
         return AppComponent.fridge_data.in_temp;
@@ -1015,7 +1008,9 @@ export class AppComponent {
   public static get_is_fridge_on_error(): boolean {
     return (this.fridge_data.errors.fridge_in_temp
       || this.fridge_data.errors.fridge_out_temp
-      || this.fridge_data.errors.fridge_cooler_temp) && this.is_connected();
+      || this.fridge_data.errors.fridge_cooler_temp
+      ||this.fridge_data.errors.fridge_fan
+      ) && this.is_connected();
   }
 
   //Statická funkce, která vrátí zda je vnitřní teploměr v chybě
@@ -1028,9 +1023,14 @@ export class AppComponent {
     return this.fridge_data.errors.fridge_out_temp;
   }
 
-  //Statická funkce, která vártí zda je teploměr na chladiči v chybě
+  //Statická funkce, která vrátí zda je teploměr na chladiči v chybě
   public static get_is_cooler_temp_in_error(): boolean {
     return this.fridge_data.errors.fridge_cooler_temp;
+  }
+
+  //Statická funkce, která vrátí zda jsou ventilátory v chybě 
+  public static get_is_fans_in_error(): boolean {
+    return this.fridge_data.errors.fridge_fan;
   }
 
   //Statická funkce, která vrátí zda došlo v ledničce k vážné poruše
