@@ -72,11 +72,21 @@
           </div>
         </div>
       </div>
-      <div *ngIf="get_is_fridge_paused()" class="error-red-color is-size-5 has-text-weight-bold">
+
+     
+
+      <div *ngIf="get_is_fridge_paused() && !get_is_fridge_on_fatal_error()" class="box error-red-background has-text-white is-size-5 has-text-weight-bold">
         <div>
           *Dveře jsou otevřené
         </div>
       </div>
+      <div *ngIf="get_is_fans_in_error()" class="error-red-color is-size-5 has-text-weight-bold">
+        <div>
+          *Chyba chladících ventilátorů 
+        </div>
+      </div>
+
+
     </div>
   </section>
 </section>

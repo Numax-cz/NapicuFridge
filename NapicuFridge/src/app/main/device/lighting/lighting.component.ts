@@ -174,14 +174,13 @@ export class LightingComponent  {
         && color_1.b === color_2.b
   }
 
-  //Funkce, která vrátí 
+  //Funkce, která určí, zda je vybraná barva již uložena
   public is_color_saved(): boolean {
-
+    //Loop všech uložených barev
     for(const i of this.get_user_favorites_colors()) {
+      //Spuštění funkce pro porovnání, zda se vybraná barva rovná uložené barvě. Pokud podmínka platí vrátí se log1
       if(this.is_rgb_match(this.get_led_color(), i)) return true;
     }
-
-
     return false;
   }
 
@@ -190,8 +189,6 @@ export class LightingComponent  {
     if(!this.get_is_connected() || !this.get_fridge_led_enable()) return
     //Přidání oblíbené barvy do seznamu oblíbených
     AppComponent.add_user_favorite_color(AppComponent.fridge_data.config.fridge_led_rgb);
-      //Aktualizování proměnné
-      this.can_add_color = !this.is_color_saved();
     //Pokud je povoleno zobrazování nápovědy provede se následující
     if(AppComponent.get_is_delete_color_hint_enabled()) {
       //Nastavení proměnné pro zobrazení nápovědy na log1
