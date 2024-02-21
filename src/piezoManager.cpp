@@ -17,8 +17,6 @@ void PiezoManager::loop() {
 
             //Zapsání log1, nebo log0 dle následující podmínky do reset piezo pinu
             digitalWrite(PIEZO_PIN, !pin_value ? 1 : 0);
-
-            Serial.println(PiezoManager::piezo_tone_count_now);
             //Pokud je po přičtení 1 piezo_tone_count_now větší než statická proměnná piezo_tone_count provede se následující
             if(PiezoManager::piezo_tone_count_now >= PiezoManager::piezo_tone_count) {
                 //Pokud je deklarované zpětné volání, spustí se funkce

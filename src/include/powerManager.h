@@ -20,8 +20,6 @@ class FanController;
 
 class PowerManager {
 protected: 
-    //Deklarace statické proměnné BLE komunikačního kanálu pro odesílání dat
-    static inline BLECharacteristic *pCharacteristic = NULL;
     //Deklarace statické proměnné pro ukládání zda jsou dveře otevřeny
     static inline bool is_door_open = false;
     //Deklarace statické proměnné, která ukládá aktuální zvolený napájecí režim 
@@ -39,6 +37,8 @@ protected:
     //Deklarace statické funkce, která pošle připojenému zařízení aktuální režim napájení + nastavení vnitřních ventilátorů
     static void notify_power_config();
 public: 
+    //Deklarace statické proměnné BLE komunikačního kanálu pro odesílání dat
+    static inline BLECharacteristic *pCharacteristic = NULL;
     //Deklarace statické proměnné, která určuje zda se lednička pozastaví při otevřených dveří 
     static inline int fridge_pause_on_door_open = -1;
     //Deklarace statické proměnné, která určuje zda se má LED osvětlení zapnout při otevřených dveří
