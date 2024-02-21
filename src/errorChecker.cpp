@@ -107,16 +107,13 @@ void ErrorChecker::check_error() {
     if(FridgeData.in_temp == "nan" || 
        FridgeData.out_temp == "nan" || 
        FridgeData.cooler_temp == "nan") {
-        
-
-
         //Spuštění funkce pro uvedení chytré ledničky do chybného stavu
         ErrorChecker::error_mode();
     } 
-    //Pokud se chladící ventilátory netočí, provede se následující 
+    //Pokud se chladící ventilátory netočí a relátko pro ventilátory je sepnuté, provede se následující 
     else if (!cooling_fans_pwm.get_is_fan_running() && relay_cooling_fans->get_is_open()) {
-        //Spuštění funkce, která uvede chytrou ledničku do kritického režimu
-        if(!ErrorChecker::fridge_fatal_error) ErrorChecker::fatal_error_mode();
+        //Spuštění funkce, která uvede chytrou ledničku do kritického režimu pokud není nastavený vývojářský režim 
+        if(!ErrorChecker::fridge_fatal_error && !DEV_MODE) ErrorChecker::fatal_error_mode();
         //Nastavení proměnné, která určuje, zda je lednička v kritické chybě na log1
         ErrorChecker::fridge_fatal_error = true;
         //Uložíme log0 do příslušné pozice v error logu
