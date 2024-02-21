@@ -20,7 +20,7 @@
         Porucha
       </div>
     </ng-container>
-    <ng-container *ngIf="is_connected() && get_is_fridge_paused()">
+    <ng-container *ngIf="is_connected() && get_is_fridge_paused() && !get_is_fridge_on_fatal_error()">
       <div class="is-size-5">
         Pozastaveno
       </div>
