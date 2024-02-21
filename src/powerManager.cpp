@@ -203,12 +203,11 @@ void PowerManager::change_power_mode(int mode) {
         relay_peltier_power_mode->open();
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
-    } else {
-
     }
 
-    //TODO IF 
+    //Uložení nastaveného módu do proměnné
     PowerManager::selected_mode = mode;
+    //Pokud se nastavený mód nerovná pauze provede se následující 
     if(mode != FRIDGE_PAUSED) {
         //Zapsání režimu do EEPROM
         EEPROM.write(POWER_MODE_EEPROM_ADDR, mode);
