@@ -65,7 +65,7 @@ export class AppComponent {
   //Statická proměnná pro uložení hodnoty, zda je alert viditelný
   public static device_connection_alert_display: boolean = false;
 
-  //Statická proměnná pro uložení hodnoty, zda je alert o úspěšném resetování zařízení viditelný 
+  //Statická proměnná pro uložení hodnoty, zda je alert o úspěšném resetování zařízení viditelný
   public static device_factory_reset_alert_display: boolean = false;
 
   //Statická proměnná pro uložení jednotlivých balíčků naměřených hodnot
@@ -206,7 +206,7 @@ export class AppComponent {
             AppComponent.subscribe_json_data();
             //Spuštění funkce pro přihlášení se k odběru charakteristiky napájecího režimu
             AppComponent.subscribe_power_mode();
-            //Spuštění funkce pro přihlášení se k odběru charakteristiky 
+            //Spuštění funkce pro přihlášení se k odběru charakteristiky
             AppComponent.subscribe_error_state();
             //Spuštění funkce pro vynucení naměřených JSON dat z chytré ledničky
             AppComponent.force_json_data();
@@ -452,8 +452,6 @@ export class AppComponent {
                 if(value !== "nan") {
                   //Zapsat převedený bytes na string do proměnné in_temp
                   this.fridge_data.in_temp = value;
-                  //Zapíšeme do proměnné o vnitřní chybě teploměru log0
-                  this.fridge_data.errors.fridge_in_temp = false;
                 }
               });
               //Spuštění resolve funkce Promisu
@@ -490,8 +488,6 @@ export class AppComponent {
                 if(value !== "nan") {
                   //Zapsat převedený bytes na string do proměnné out_temp
                   this.fridge_data.out_temp = value;
-                  //Zapíšeme do proměnné o venkovní chybě teploměru log0
-                  this.fridge_data.errors.fridge_out_temp = false;
                 }
               });
               //Spuštění resolve funkce Promisu
@@ -528,8 +524,6 @@ export class AppComponent {
                 if (value !== "nan"){
                   //Zapsat převedený bytes na string do proměnné cooler_temp
                   this.fridge_data.cooler_temp = value;
-                  //Zapíšeme do proměnné o chybě teploměru na chladiči log0
-                  this.fridge_data.errors.fridge_cooler_temp = false;
                 }
               });
               //Spuštění resolve funkce Promisu
@@ -637,7 +631,7 @@ export class AppComponent {
     })
   }
 
-  //Statická funkce pro přihlášení se k odběru pro získávání stavů errorů 
+  //Statická funkce pro přihlášení se k odběru pro získávání stavů errorů
   public static subscribe_error_state(): Promise<void> {
     return new Promise((resolve, reject) => {
       CharacteristicController.subscribeErrorState()?.subscribe(
@@ -652,14 +646,14 @@ export class AppComponent {
               //Spuštění funkce uvnitř zóny Angularu
               this.ngZone.run(() => {
                 //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_in_temp = Boolean(Number(value[0]));
+                this.fridge_data.errors.fridge_in_temp = !Boolean(Number(value[0]));
                 //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_out_temp = Boolean(Number(value[1]));
+                this.fridge_data.errors.fridge_out_temp = !Boolean(Number(value[1]));
                 //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_cooler_temp = Boolean(Number(value[2]));
+                this.fridge_data.errors.fridge_cooler_temp = !Boolean(Number(value[2]));
                 //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_fan = Boolean(Number(value[3]));
-                //Pokud platí následující podmínka, nastaví se proměnná, která určuje kritické chyby na log1 
+                this.fridge_data.errors.fridge_fan = !Boolean(Number(value[3]));
+                //Pokud platí následující podmínka, nastaví se proměnná, která určuje kritické chyby na log1
                 if(this.fridge_data.errors.fridge_cooler_temp || this.fridge_data.errors.fridge_fan) this.fridge_fatal_error = true;
               });
               //Spuštění resolve funkce Promisu
@@ -685,7 +679,7 @@ export class AppComponent {
 
   //Funkce, která vrátí aktuální hodnotu na daném displej statu
   public static get_display_value_by_state(): string | null {
-    //V následující části vrátíme hodnotu, která se má zobrazit na displeji, podle proměnné 
+    //V následující části vrátíme hodnotu, která se má zobrazit na displeji, podle proměnné
     switch (AppComponent.fridge_data.config.fridge_display_state) {
       case FridgeDisplayState.FRIDGE_DISPLAY_IN_TEMP_1:
         return AppComponent.fridge_data.in_temp;
@@ -857,7 +851,7 @@ export class AppComponent {
     return AppComponent.device_connection_alert_display;
   }
 
-  //Funkce, která vrátí zda se má alert o úspěšném resetu zařízení zobrazovat 
+  //Funkce, která vrátí zda se má alert o úspěšném resetu zařízení zobrazovat
   public get_device_factory_reset_alert_display(): boolean {
     return AppComponent.device_factory_reset_alert_display;
   }
@@ -1039,7 +1033,7 @@ export class AppComponent {
     return this.fridge_data.errors.fridge_cooler_temp;
   }
 
-  //Statická funkce, která vrátí zda jsou ventilátory v chybě 
+  //Statická funkce, která vrátí zda jsou ventilátory v chybě
   public static get_is_fans_in_error(): boolean {
     return this.fridge_data.errors.fridge_fan;
   }

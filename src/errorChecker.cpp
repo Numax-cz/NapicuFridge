@@ -100,18 +100,15 @@ void ErrorChecker::fatal_error_mode() {
 
 //Funkce, která zkontroluje chyby
 void ErrorChecker::check_error() {
-    //Deklarace proměnné pro ukládání aktuálního stavu
-    std::string error_log = "1111";
+    //Deklarace proměnné pro ukládání předchozího stavu
+    const std::string last_error_log = ErrorChecker::error_log;
 
     //Pokud se získaná vnitřní, venkovní teplota nebo teplota chladiče rovná "nan" provede se následující 
     if(FridgeData.in_temp == "nan" || 
        FridgeData.out_temp == "nan" || 
        FridgeData.cooler_temp == "nan") {
         
-        //Zde zapíšeme v error logu log0 do příslušné pozice, pokud platí podmínky
-        if (FridgeData.in_temp == "nan") error_log[0] = 48;
-        if (FridgeData.out_temp == "nan") error_log[1] = 48;
-        if (FridgeData.cooler_temp == "nan") error_log[2] = 48;
+
 
         //Spuštění funkce pro uvedení chytré ledničky do chybného stavu
         ErrorChecker::error_mode();
@@ -122,19 +119,11 @@ void ErrorChecker::check_error() {
         if(!ErrorChecker::fridge_fatal_error) ErrorChecker::fatal_error_mode();
         //Nastavení proměnné, která určuje, zda je lednička v kritické chybě na log1
         ErrorChecker::fridge_fatal_error = true;
-
         //Uložíme log0 do příslušné pozice v error logu
         error_log[3] = 48;
     } else { //Pokud je vše v pořádku provede se následující
         //Pokud je proměnné nastavená na log1 provede se následující
         if(ErrorChecker::fridge_error || ErrorChecker::fridge_fatal_error) {
-            //Pokud je proměnná nastavena na log1 provede se následující
-            if(ErrorChecker::fridge_fatal_error) {
-                //Nastavení statické proměnné pro určování zda je lednička v kritické chybě na log0
-                ErrorChecker::fridge_fatal_error = false;
-                //Spuštění funkce, která zruší pauzu ledničky
-                PowerManager::cancel_pause_fridge();
-            }
             //Spuštění funkce pro vypnutí peizo
             PiezoManager::stop_beep();
             //Nastavení statické proměnné pro určování zda je lednička v chybě na log0
@@ -142,16 +131,23 @@ void ErrorChecker::check_error() {
         } 
     }
 
-    //Pokud aktuální stav není roven předchozímu provede se následující 
-    if(last_error_log != error_log) {
-        //Nastavení hodnoty charakteristiky 
-        PowerManager::pCharacteristic->setValue(error_log.c_str());
-        //Odeslání zprávy skrze BLE do připojeného zařízení
-        PowerManager::pCharacteristic->notify();
-    }
+    //Zde zapíšeme v error logu log0 do příslušné pozice, pokud platí podmínky
+    if (FridgeData.in_temp == "nan") ErrorChecker::error_log[0] = 48;
+    else ErrorChecker::error_log[0] = 49;
+    if (FridgeData.out_temp == "nan") ErrorChecker::error_log[1] = 48;
+    else ErrorChecker::error_log[1] = 49;
+    if (FridgeData.cooler_temp == "nan") ErrorChecker::error_log[2] = 48;
+    else ErrorChecker::error_log[2] = 49;
 
-    //Uložení aktuálního satvu do proměnné 
-    last_error_log = error_log;
+    //! Pro chybu ventilátorů je nutné restart zařízení...
+
+    //Pokud aktuální stav není roven předchozímu provede se následující 
+    if(last_error_log != ErrorChecker::error_log) {
+        //Nastavení hodnoty charakteristiky 
+        ErrorChecker::pCharacteristic->setValue(ErrorChecker::error_log.c_str());
+        //Odeslání zprávy skrze BLE do připojeného zařízení
+        ErrorChecker::pCharacteristic->notify();
+    }
 }
 
 //Funkce, která vrátí, zda se lednička nachází v kritické chybě
