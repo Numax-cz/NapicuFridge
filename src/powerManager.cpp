@@ -136,7 +136,7 @@ void PowerManager::notify_power_config() {
 }
 
 //Funkce, která načte veškerá nastavení z EEPROM
-void PowerManager::load_config_from_eeprom() { //TODO Optimalizovat 
+void PowerManager::load_config_from_eeprom() {
     //Proměnná pro uložení dat z EEPROM
     uint8_t data = EEPROM.read(POWER_MODE_EEPROM_ADDR);
     //Pokud není uložená hodnota v EEPROM proveď následující 
