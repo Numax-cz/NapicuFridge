@@ -82,7 +82,7 @@ export class CharacteristicController {
 
   //Statická funkce, která se přihlásí k odběru pro získávání aktuálních informacích o chybách (Pokud se vrátí null, zařízení není připojené)
   public static subscribeErrorState(): Observable<OperationResult> | null {
-    //Kontrola, zda je zařízení spárované 
+    //Kontrola, zda je zařízení spárované
     if(AppComponent.connected_device) {
       //Přihlášení se k odběru charakteristiky JSON dat
       return BluetoothLE.subscribe({
@@ -91,6 +91,21 @@ export class CharacteristicController {
         characteristic: Configuration.CHARACTERISTIC_ERROR_STATE_UUID
       });
     }
+    return null;
+  }
+
+  //Statická funkce pro získání aktuálního stavu chyb chytré ledničky (Pokud se vrátí null, zařízení není připojené)
+  public static readErrorState(): Promise<OperationResult> | null {
+    //Kontrola, zda je zařízení spárované
+    if(AppComponent.connected_device) {
+      //Získání informací o chybách
+      return BluetoothLE.read({
+        address: AppComponent.connected_device.address,
+        service: Configuration.SERVICE_UUID,
+        characteristic: Configuration.CHARACTERISTIC_FORCE_ERROR_STATE_UUID
+      });
+    }
+    //Vrácení null, pokud není připojené zařízení
     return null;
   }
 
@@ -171,8 +186,8 @@ export class CharacteristicController {
     if(AppComponent.connected_device) {
         //Získání stavu displeje
         return BluetoothLE.read({
-          address: AppComponent.connected_device.address, 
-          service: Configuration.SERVICE_UUID, 
+          address: AppComponent.connected_device.address,
+          service: Configuration.SERVICE_UUID,
           characteristic: Configuration.CHARACTERISTIC_DISPLAY_STATE_UUID
         });
     }
@@ -206,8 +221,8 @@ export class CharacteristicController {
     if(AppComponent.connected_device) {
         //Získání zda je displej povolen
         return BluetoothLE.read({
-          address: AppComponent.connected_device.address, 
-          service: Configuration.SERVICE_UUID, 
+          address: AppComponent.connected_device.address,
+          service: Configuration.SERVICE_UUID,
           characteristic: Configuration.CHARACTERISTIC_DISPLAY_ENABLE_UUID
         });
     }

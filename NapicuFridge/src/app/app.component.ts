@@ -401,6 +401,17 @@ export class AppComponent {
         //Nastavení proměnné na hodnotu podle získaných dat
         this.fridge_data.config.fridge_led_brightness = Number(value);
       });
+
+    //Získání stavu chyb
+    await CharacteristicController.readErrorState()
+      ?.then((data: OperationResult) => {
+      //Převést string v kódování base64 z hodnoty charakteristiky na objekt uint8Array
+      let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
+      //Převést bytes na string
+      let value: string = BluetoothLE.bytesToString(bytes);
+      //Spuštění funkce pro nastavení chyb
+      this.setErrorsByLog(value);
+    });
   }
 
   //Statická funkce, která načte uložené hodnoty
@@ -643,19 +654,8 @@ export class AppComponent {
               let bytes: Uint8Array = BluetoothLE.encodedStringToBytes(data.value);
               //Převést bytes na string
               let value: string = BluetoothLE.bytesToString(bytes);
-              //Spuštění funkce uvnitř zóny Angularu
-              this.ngZone.run(() => {
-                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_in_temp = !Boolean(Number(value[0]));
-                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_out_temp = !Boolean(Number(value[1]));
-                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_cooler_temp = !Boolean(Number(value[2]));
-                //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
-                this.fridge_data.errors.fridge_fan = !Boolean(Number(value[3]));
-                //Pokud platí následující podmínka, nastaví se proměnná, která určuje kritické chyby na log1
-                if(this.fridge_data.errors.fridge_cooler_temp || this.fridge_data.errors.fridge_fan) this.fridge_fatal_error = true;
-              });
+              //Spuštění funkce pro nastavení chyb
+              this.setErrorsByLog(value);
               //Spuštění resolve funkce Promisu
               resolve();
             }
@@ -664,11 +664,28 @@ export class AppComponent {
             //Vypsání hodnoty do vývojářské konzole
             console.log("error" + JSON.stringify(e));
             //Spuštění reject funkce Promisu
-             reject();
+            reject();
           }
         }
       );
     })
+  }
+
+  //Statická funkce, která nastaví proměnné chyb podle vstupních dat
+  private static setErrorsByLog(error_log: string): void {
+    //Spuštění funkce uvnitř zóny Angularu
+    this.ngZone.run(() => {
+      //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+      this.fridge_data.errors.fridge_in_temp = !Boolean(Number(error_log[0]));
+      //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+      this.fridge_data.errors.fridge_out_temp = !Boolean(Number(error_log[1]));
+      //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+      this.fridge_data.errors.fridge_cooler_temp = !Boolean(Number(error_log[2]));
+      //Převedení string na number následně na boolean hodnotu a následné nastavení proměnné na hodnotu získaných dat
+      this.fridge_data.errors.fridge_fan = !Boolean(Number(error_log[3]));
+      //Pokud platí následující podmínka, nastaví se proměnná, která určuje kritické chyby na log1
+      if(this.fridge_data.errors.fridge_cooler_temp || this.fridge_data.errors.fridge_fan) this.fridge_fatal_error = true;
+    });
   }
 
   //Statická funkce pro vynucení naměřených JSON dat z chytré ledničky (Pokud se vrátí null, zařízení není připojené)

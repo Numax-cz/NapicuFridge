@@ -46,17 +46,36 @@ void BuzzingOnErrorCharacteristicCallback::onWrite(BLECharacteristic *pCharacter
     }
 }
 
-//Dunkce pro inicializaci 
-void ErrorChecker::begin(BLEService* pService, const char* notify_uuid) {
+//Třída pro získávání informací od chybách 
+void ErrorStateCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
+    //Vypsání hodnoty do konzole
+    Serial.println("Odeslání informací o chybách");
+    //Nastavení hodnoty charakteristiky 
+    pCharacteristic->setValue(ErrorChecker::get_error_log().c_str());
+    //Odeslání zprávy skrze BLE do připojeného zařízení
+    pCharacteristic->notify();
+}
+
+//Funkce pro inicializaci 
+void ErrorChecker::begin(BLEService* pService, const char* notify_uuid, const char* force_uuid) {
     //Vytvoření BLE komunikačního kanálu pro odesílání (TX)
-    ErrorChecker::pCharacteristic = pService->createCharacteristic(
+    ErrorChecker::pCharacteristicNotify = pService->createCharacteristic(
         notify_uuid,
         BLECharacteristic::PROPERTY_INDICATE |
         BLECharacteristic::PROPERTY_NOTIFY |
         BLECharacteristic::PROPERTY_READ
     );
     //Přiřazení deskriptoru k této charakteristice.
-    ErrorChecker::pCharacteristic->addDescriptor(new BLE2902());
+    ErrorChecker::pCharacteristicNotify->addDescriptor(new BLE2902());
+
+
+    //Vytvoření BLE komunikačního kanálu pro komunikaci
+    BLECharacteristic *errorCharacteristicForce = pService->createCharacteristic(
+        force_uuid,
+        BLECharacteristic::PROPERTY_READ
+    );
+    //Nastavení zpětného volání pro danou charakteristiku                                                       
+    errorCharacteristicForce->setCallbacks(new ErrorStateCharacteristicCallback());
 
     //Získání dat o režimu piezo z EEPROM 
     uint8_t data = EEPROM.read(PIEZO_ON_ERROR_ADDR);
@@ -140,10 +159,12 @@ void ErrorChecker::check_error() {
 
     //Pokud aktuální stav není roven předchozímu provede se následující 
     if(last_error_log != ErrorChecker::error_log) {
+        //Vypsání hodnoty do konzole
+        Serial.println("Odeslání informací o chybách");
         //Nastavení hodnoty charakteristiky 
-        ErrorChecker::pCharacteristic->setValue(ErrorChecker::error_log.c_str());
+        ErrorChecker::pCharacteristicNotify->setValue(ErrorChecker::error_log.c_str());
         //Odeslání zprávy skrze BLE do připojeného zařízení
-        ErrorChecker::pCharacteristic->notify();
+        ErrorChecker::pCharacteristicNotify->notify();
     }
 }
 
