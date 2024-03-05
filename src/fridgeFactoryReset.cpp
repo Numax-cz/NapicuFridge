@@ -2,8 +2,10 @@
 
 //Funkce, která uvede zařízení do továrního nastavení 
 void FridgeFactoryReset::factory_reset() {
-    //Vypsání hodnoty do konzole
-    Serial.println("Tovární nastavení...");
+    if(DEV_MODE) {
+        //Vypsání hodnoty do konzole
+        Serial.println("Tovární nastavení...");
+    }
     //Následně vymaževe veškeré data z EEPROM (nastavíme veškeré adresy, které využíváme na 0xFF - 255)
     for(int i = 0; i < EEPROM_MAX_SIZE; i++) {
         //Zapsání hodnoty do EEPROM
