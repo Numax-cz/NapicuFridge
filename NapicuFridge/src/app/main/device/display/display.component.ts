@@ -41,7 +41,7 @@ export class DisplayComponent {
 
   //Funkce pro změnu stavu displeje
   public change_input_display_state(value: number): void {
-    //Pokud zařízení není připojené, nebo display není povolen provede se následující 
+    //Pokud zařízení není připojené, nebo display není povolen provede se následující
     if(!this.get_is_connected() || !this.get_is_display_available()) return;
     //Zavolání funkce pro zapsání stavu displeje
     CharacteristicController.writeDisplayState(value)?.then(() => {
@@ -61,12 +61,14 @@ export class DisplayComponent {
 
   //Funkce, která se zavolá po změně přepínače pro vypínání/zapínání displeje
   public display_available_input_change(event: any): void {
+   //Proměnná, která uchovává aktuální stav přepínače
+    const slider: boolean = event.currentTarget.checked;
     //Zavolání funkce pro vypnutí, nebo zapnutí displeje
-    CharacteristicController.writeDisplayAvailable(AppComponent.fridge_data.config.fridge_display_available)?.then(() => {
+    CharacteristicController.writeDisplayAvailable(slider)?.then(() => {
       //Spuštění funkce uvnitř zóny Angularu
       this.ngZone.run(() => {
         //Nastavení proměnné z configu na novou hodnotu
-        AppComponent.fridge_data.config.fridge_display_available = event.currentTarget.checked;
+        AppComponent.fridge_data.config.fridge_display_available = slider;
       });
     });
   }
