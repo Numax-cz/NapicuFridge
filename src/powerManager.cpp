@@ -104,6 +104,7 @@ void DoorCharacteristicCallback::onRead(BLECharacteristic *pCharacteristic) {
 
 //Begin funkce pro PowerManager
 void PowerManager::begin(BLEService* pService, const char* notify_uuid) {
+    //Nastavení digitálního potenciometru
     digital_potentiometer->set(100);
     // vytvoření BLE komunikačního kanálu pro odesílání (TX)
     PowerManager::pCharacteristic = pService->createCharacteristic(
@@ -192,17 +193,32 @@ void PowerManager::change_power_mode(int mode) {
         PowerManager::power_off();
     }
     else if (mode == FRIDGE_MAX_POWER) {
+        //Nastavení digitálního potenciometru
+        digital_potentiometer->set(100);
+        //Zavolání funkce pro zavření relátka ovládající napájecí režim
         relay_peltier_power_mode->close();
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
+        //Nastavení otáček ventilátorů
+        cooling_fans_pwm.set_fan_speed_in_percentage(100);
     } else if (mode == FRIDGE_NORMAL_POWER) {
+        //Nastavení digitálního potenciometru
+        digital_potentiometer->set(100);
+        //Zavolání funkce pro otevření relátka ovládající napájecí režim
         relay_peltier_power_mode->open();
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
+        //Nastavení otáček ventilátorů
+        cooling_fans_pwm.set_fan_speed_in_percentage(60);
     } else if (mode == FRIDGE_ECO_POWER) {
+        //Nastavení digitálního potenciometru
+        digital_potentiometer->set(80);
+        //Zavolání funkce pro otevření relátka ovládající napájecí režim
         relay_peltier_power_mode->open();
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
+        //Nastavení otáček ventilátorů
+        cooling_fans_pwm.set_fan_speed_in_percentage(40);
     }
 
     //Uložení nastaveného módu do proměnné

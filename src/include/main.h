@@ -30,7 +30,7 @@
 #include <include/rgbManager.h>
 /////////////////////////////////////////////////////////////////////
 
-#define DEV_MODE 1
+#define DEV_MODE 0
 
 //Definice výchozího názvu BLE názvu
 #define DEFAULT_BLE_NAME "NapicuFridge"

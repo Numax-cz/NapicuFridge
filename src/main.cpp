@@ -90,7 +90,6 @@ void ble_gap_event_handler(esp_gap_ble_cb_event_t  event, esp_ble_gap_cb_param_t
   }
 }
 
-
 //Setup funkce, která se spustí po zapnutí
 void setup() {
   // Zahájení komunikace po sériové lince
@@ -139,6 +138,9 @@ void setup() {
 
   //Vytvoření třídy pro digitální potenciometr
   digital_potentiometer = new DigitalPotentiometer(X9_INC, X9_UD, X9_CS);
+  
+  //Spuštění begin funkce PWM ventilátorů 
+  cooling_fans_pwm.begin();
 
   //Spuštění begin funkce displeje 
   FridgeDisplay::begin();
