@@ -117,7 +117,7 @@ void PowerManager::begin(BLEService* pService, const char* notify_uuid) {
     PowerManager::pCharacteristic->addDescriptor(new BLE2902());
 
     //Spuštění begin funkce pro inicializaci chladících ventilátorů 
-    cooling_fans_pwm.begin();
+    if (PWM_FAN) cooling_fans_pwm.begin();
     //Spuštění funkce pro načtení nastavení 
     PowerManager::load_config_from_eeprom();
 }
@@ -200,7 +200,7 @@ void PowerManager::change_power_mode(int mode) {
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
         //Nastavení otáček ventilátorů
-        cooling_fans_pwm.set_fan_speed_in_percentage(100);
+        if (PWM_FAN) cooling_fans_pwm.set_fan_speed_in_percentage(100);
     } else if (mode == FRIDGE_NORMAL_POWER) {
         //Nastavení digitálního potenciometru
         digital_potentiometer->set(100);
@@ -209,7 +209,7 @@ void PowerManager::change_power_mode(int mode) {
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
         //Nastavení otáček ventilátorů
-        cooling_fans_pwm.set_fan_speed_in_percentage(60);
+        if (PWM_FAN) cooling_fans_pwm.set_fan_speed_in_percentage(60);
     } else if (mode == FRIDGE_ECO_POWER) {
         //Nastavení digitálního potenciometru
         digital_potentiometer->set(80);
@@ -218,7 +218,7 @@ void PowerManager::change_power_mode(int mode) {
         //Zavolání funkce pro zapnutí chladícího systému
         PowerManager::power_on();
         //Nastavení otáček ventilátorů
-        cooling_fans_pwm.set_fan_speed_in_percentage(40);
+        if (PWM_FAN) cooling_fans_pwm.set_fan_speed_in_percentage(40);
     }
 
     //Uložení nastaveného módu do proměnné
@@ -308,6 +308,7 @@ void PowerManager::power_off() {
     relay_in_fans->close();
     //Spuštění funkce pro vypnutí chladících ventilátorů pokud ventilátory běží
     if (cooling_fans_pwm.get_is_fan_running())  PowerManager::turn_off_cooling_fans();
+
 }
 
 //Funkce pro zapnutí celého chladícího systému

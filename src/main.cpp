@@ -139,8 +139,6 @@ void setup() {
   //Vytvoření třídy pro digitální potenciometr
   digital_potentiometer = new DigitalPotentiometer(X9_INC, X9_UD, X9_CS);
   
-  //Spuštění begin funkce PWM ventilátorů 
-  cooling_fans_pwm.begin();
 
   //Spuštění begin funkce displeje 
   FridgeDisplay::begin();
@@ -380,7 +378,7 @@ void loop() {
   fridge_rgb->loop();
 
   //Spuštění loop funkce ventilátoru
-  cooling_fans_pwm.loop();  
+  if(PWM_FAN) cooling_fans_pwm.loop();  
 
   //Spuštění loop funkce tlačítka
   resetButton->loop();

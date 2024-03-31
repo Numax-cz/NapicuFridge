@@ -30,7 +30,11 @@
 #include <include/rgbManager.h>
 /////////////////////////////////////////////////////////////////////
 
+//Definice, zda se program spustí ve vývojářském režimu
 #define DEV_MODE 0
+
+//Definice, zda se v chytré ledničce nachází ventilátory, které lze ovládat pomocí PWM
+#define PWM_FAN 0 
 
 //Definice výchozího názvu BLE názvu
 #define DEFAULT_BLE_NAME "NapicuFridge"
